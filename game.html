@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>A.I Creator: Project Neko</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="hud-title">LEVEL <span id="level-num">1</span></div>
+    <div class="hud-stats">
+      <span id="gold-display">🪙 0</span>
+      <button class="pause-btn" onclick="togglePause()">⚙️ PAUSE</button>
+    </div>
+  </header>
+
+  <div class="arena" id="arena-bg">
+    <div class="wave-tracker" id="enemy-counter">ENEMIES LEFT: 5 / 5</div>
+    
+    <svg class="mountain-back" viewBox="0 0 500 150" preserveAspectRatio="none">
+      <path d="M0,150 L0,80 L120,30 L250,90 L380,20 L500,100 L500,150 Z"/>
+    </svg>
+    <svg class="mountain-front" viewBox="0 0 500 100" preserveAspectRatio="none">
+      <path d="M0,100 L0,50 L80,20 L200,60 L320,10 L440,50 L500,30 L500,100 Z"/>
+    </svg>
+
+    <div class="battle-track" id="click-zone">
+      <!-- Cat Unit -->
+      <div class="unit-box cat-box">
+        <div class="hp-wrapper">
+          <div class="lives-text" id="lives-display">🐾 9 / 9 LIVES</div>
+          <div class="hp-bar-outer"><div class="hp-bar-inner cat-hp-inner" id="cat-hp-bar"></div></div>
+        </div>
+        <svg class="cat-unit" id="cat-sprite" viewBox="0 0 100 110">
+          <polygon points="20,38 30,12 45,30" id="cat-ear-left" fill="#fb8500"/>
+          <polygon points="80,38 70,12 55,30" id="cat-ear-right" fill="#fb8500"/>
+          <ellipse cx="50" cy="75" rx="30" ry="25" id="cat-body" fill="#fb8500"/>
+          <circle cx="50" cy="48" r="30" id="cat-head" fill="#ffb703"/>
+          <circle cx="40" cy="45" r="3.5" fill="#023e8a"/>
+          <circle cx="60" cy="45" r="3.5" fill="#023e8a"/>
+          <ellipse cx="50" cy="52" rx="2.5" ry="1.5" fill="#e63946"/>
+          <rect x="32" y="68" width="36" height="4" rx="2" fill="#e63946"/>
+          <circle cx="50" cy="73" r="3.5" fill="#ffb703"/>
+        </svg>
+      </div>
+
+      <!-- Enemy Unit -->
+      <div class="unit-box enemy-box" id="enemy-box">
+        <div class="hp-wrapper">
+          <div class="hp-bar-outer"><div class="hp-bar-inner" id="hp-bar"></div></div>
+        </div>
+        <svg class="enemy-unit" id="enemy" viewBox="0 0 100 100"></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upgrade Drawer -->
+  <div class="controls">
+    <div class="upgrade-card">
+      <div>
+        <div class="card-title">Damage Boost <span id="dmg-lvl" style="color:#ffb703">Lv.1</span></div>
+        <div class="card-sub">ATK: <span id="dmg-val">10</span></div>
+      </div>
+      <button class="buy-btn" id="btn-dmg" onclick="buyDamage()">
+        <span id="dmg-cost">20</span> 🪙
+      </button>
+    </div>
+
+    <div class="upgrade-card">
+      <div>
+        <div class="card-title">Attack Speed <span id="spd-lvl" style="color:#2196F3">Lv.1</span></div>
+        <div class="card-sub">Delay: <span id="spd-val">1000</span>ms</div>
+      </div>
+      <button class="buy-btn" id="btn-spd" style="background:#2196F3; color:#fff" onclick="buySpeed()">
+        <span id="spd-cost">50</span> 🪙
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Pause Modal -->
+<div class="modal-overlay" id="pause-modal">
+  <div class="modal-card">
+    <h2 style="margin-bottom:15px; color:#ffb703;">GAME PAUSED</h2>
+    <button class="modal-btn" id="btn-audio" onclick="toggleAudio()">Audio: ON</button>
+    <button class="modal-btn" id="btn-vib" onclick="toggleVib()">Vibration: ON</button>
+    <button class="modal-btn" style="background:#e63946;" onclick="window.location.href='levels.html'">Exit to Roadmap</button>
+    <button class="modal-btn" style="background:#2ecc71;" onclick="togglePause()">Resume Game</button>
+  </div>
+</div>
+
+<script src="js/state.js"></script>
+<script src="js/game.js?v=1.0.1"></script>
+</body>
+</html>

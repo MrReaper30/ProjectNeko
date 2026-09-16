@@ -1,0 +1,145 @@
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; width: 100%; overflow: hidden; background: #0b0e14; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #f5f6fa; }
+
+.app-container { display: flex; flex-direction: column; height: 100dvh; width: 100%; position: relative; }
+
+/* Top Header HUD */
+header { background: rgba(11, 14, 20, 0.95); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.hud-title { font-size: 0.85rem; font-weight: 800; letter-spacing: 1.5px; color: #ffb703; }
+.hud-stats { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; font-weight: 800; }
+.pause-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 12px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+
+/* Dynamic Level Themes */
+.arena { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; position: relative; padding-bottom: 25px; overflow: hidden; transition: background 0.5s ease; }
+.theme-1 { background: linear-gradient(180deg, #1b263b 0%, #0d1b2a 100%); } /* Mountain Dusk */
+.theme-2 { background: linear-gradient(180deg, #2d00f7 0%, #10002b 100%); } /* Midnight Forest */
+.theme-3 { background: linear-gradient(180deg, #9b5de5 0%, #3c096c 100%); } /* Mystic Cave */
+
+/* Parallax Scenery */
+.mountain-back { position: absolute; bottom: 0; width: 100%; height: 160px; fill: #14213d; opacity: 0.6; }
+.mountain-front { position: absolute; bottom: 0; width: 100%; height: 90px; fill: #000814; }
+
+.wave-tracker { position: absolute; top: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: #00f5d4; padding: 4px 14px; border-radius: 15px; font-size: 0.75rem; font-weight: 800; }
+
+/* Battle Field Track */
+.battle-track { width: 100%; max-width: 360px; height: 120px; position: relative; z-index: 5; margin-bottom: 10px; }
+.unit-box { position: absolute; bottom: 0; display: flex; flex-direction: column; align-items: center; }
+
+/* Hero Cat */
+.cat-box { left: 20px; }
+.cat-unit { width: 80px; height: 90px; animation: idleBounce 1.8s infinite ease-in-out; transition: transform 0.1s; }
+.cat-slash { transform: translateX(35px) scale(1.1); }
+.cat-hurt { filter: brightness(2.5) drop-shadow(0 0 12px #e63946); }
+
+/* Enemy Approach */
+.enemy-box { right: -90px; transition: right 1.8s linear; }
+.enemy-box.in-range { right: 85px; }
+.enemy-unit { width: 70px; height: 70px; cursor: pointer; transition: transform 0.08s; }
+.hit-flash { filter: brightness(2.5) drop-shadow(0 0 12px #ff4757); transform: scale(0.9); }
+
+/* HP Bars & Lives */
+.hp-wrapper { width: 75px; margin-bottom: 6px; text-align: center; }
+.hp-bar-outer { width: 100%; height: 6px; background: rgba(0,0,0,0.5); border-radius: 3px; overflow: hidden; }
+.hp-bar-inner { width: 100%; height: 100%; background: #2ecc71; transition: width 0.1s linear; }
+.cat-hp-inner { background: #ff4757; }
+.lives-text { font-size: 0.7rem; font-weight: 900; color: #ff7979; margin-bottom: 2px; }
+
+/* Floating Popups */
+.dmg-popup { position: absolute; font-weight: 900; font-size: 1.1rem; color: #ffbe0b; pointer-events: none; animation: floatUp 0.6s ease-out forwards; z-index: 20; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+/* Scrollable Upgrade Cards */
+.controls { background: #0b0e14; border-top: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 16px; padding-bottom: calc(20px + env(safe-area-inset-bottom, 15px)); display: flex; flex-direction: column; gap: 10px; max-height: 40vh; overflow-y: auto; z-index: 10; }
+.upgrade-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); padding: 12px 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+.card-title { font-weight: 700; font-size: 0.85rem; color: #ffffff; }
+.card-sub { font-size: 0.75rem; color: #8d99ae; margin-top: 2px; }
+
+/* Dynamic Button Color Toggle */
+.buy-btn { background: #ffb703; color: #000814; font-weight: 800; padding: 8px 14px; border-radius: 18px; font-size: 0.8rem; border: none; cursor: pointer; transition: all 0.2s; }
+.buy-btn.disabled { background: #3a3f4d !important; color: #717a8a !important; cursor: not-allowed; opacity: 0.6; }
+
+/* Pause Overlay */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 100; gap: 15px; }
+.modal-overlay.active { display: flex; }
+.modal-card { background: #151a24; border: 1px solid rgba(255,255,255,0.1); padding: 24px; border-radius: 16px; width: 80%; max-width: 300px; text-align: center; }
+.modal-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; background: #2196F3; color: #fff; }
+
+@keyframes idleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes floatUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-28px); } }
+
+/* Modal & Overlay Utilities */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.modal-content {
+  background: #1a1f2c;
+  border: 2px solid #3a415a;
+  border-radius: 12px;
+  padding: 20px;
+  width: 85%;
+  max-width: 360px;
+  text-align: center;
+  color: #fff;
+}
+
+/* Original UI Layout & Circle Swatch Styles */
+.app-container { max-width: 420px; margin: 0 auto; padding: 20px; text-align: center; }
+.game-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 20px; }
+.name-input { width: 100%; padding: 14px; border-radius: 12px; border: 2px solid #ffb703; background: #1a1f2c; color: #fff; font-size: 1rem; text-align: center; font-weight: bold; margin-bottom: 15px; box-sizing: border-box; }
+
+.menu-btn { width: 100%; padding: 14px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.95rem; margin-bottom: 10px; cursor: pointer; transition: transform 0.1s; }
+.menu-btn:active { transform: scale(0.98); }
+
+.btn-play { background: #ffb703; color: #000; }
+.btn-shop { background: #00f5d4; color: #000; }
+.btn-leaderboard { background: #7209b7; color: #fff; }
+.btn-devlog { background: #00f5d4; color: #000; }
+.btn-settings { background: #4a5568; color: #fff; }
+.btn-legal { background: #2d3748; color: #a0aec0; }
+.btn-close { background: #00b4d8; color: #fff; width: 100%; margin-top: 10px; }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; }
+.modal-overlay.active { display: flex; }
+.modal-card { background: #181c28; border: 1px solid #2d3748; border-radius: 20px; padding: 24px; width: 85%; max-width: 320px; text-align: center; }
+.modal-title { color: #00f5d4; font-size: 1.2rem; font-weight: 900; margin-bottom: 20px; }
+
+.color-swatches { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
+.circle-swatch { width: 48px; height: 48px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); cursor: pointer; transition: transform 0.15s; }
+.circle-swatch:active { transform: scale(0.9); }
+
+/* Native App Feel Overrides */
+html, body {
+  touch-action: manipulation;
+  overscroll-behavior-y: none; /* Prevents Chrome pull-to-refresh */
+  user-select: none; /* Prevents text highlighting */
+  -webkit-user-select: none;
+  -webkit-touch-callout: none; /* Prevents long-press popups */
+  -webkit-tap-highlight-color: transparent; /* Removes blue tap box */
+  overflow-x: hidden;
+}
+
+button, input {
+  touch-action: manipulation;
+  outline: none;
+}
+
+/* Active Button Animation */
+.menu-btn:active, .circle-swatch:active, .btn-primary:active {
+  transform: scale(0.95) !important;
+  transition: transform 0.05s ease;
+}
+
+/* Dynamic Page Fade-in Effect */
+body {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

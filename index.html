@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A.I Creator: Project Neko</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="main-header">
+      <h1 class="game-title">🐱 A.I CREATOR:<br>PROJECT NEKO</h1>
+    </header>
+
+    <main class="menu-body">
+      <input type="text" id="player-name-input" class="name-input" placeholder="Enter Name..." value="CatHero">
+
+      <button class="menu-btn btn-play" onclick="saveNameAndPlay()">► PLAY GAME</button>
+      <button class="menu-btn btn-shop" onclick="openShopModal()">🛍️ CAT COLOR SHOP</button>
+      <button class="menu-btn btn-leaderboard" onclick="showToast('Leaderboard coming soon!')">🏆 LEADERBOARD</button>
+      <button class="menu-btn btn-devlog" onclick="window.location.href='changelog.html'">📜 DEV LOG & HISTORY</button>
+      <button class="menu-btn btn-settings" onclick="openSettingsModal()">⚙️ SETTINGS</button>
+      <button class="menu-btn btn-legal" onclick="openLegalModal()">📜 LEGAL & TOS</button>
+    </main>
+
+    <!-- Color Shop Modal -->
+    <div id="shop-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="modal-title">CAT COLOR SHOP</h2>
+        <div class="color-swatches">
+          <button class="circle-swatch" style="background:#ffb703;" onclick="buySkin('#ffb703')"></button>
+          <button class="circle-swatch" style="background:#2a9d8f;" onclick="buySkin('#2a9d8f')"></button>
+          <button class="circle-swatch" style="background:#7209b7;" onclick="buySkin('#7209b7')"></button>
+          <button class="circle-swatch" style="background:#4cc9f0;" onclick="buySkin('#4cc9f0')"></button>
+        </div>
+        <button class="menu-btn btn-close" onclick="closeShopModal()">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="modal-title">SETTINGS</h2>
+        <p style="margin:15px 0; color:#a0aec0; font-size:0.9rem;">Audio and vibration settings are accessible inside the combat view pause menu.</p>
+        <button class="menu-btn btn-close" onclick="closeSettingsModal()">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- Legal Modal -->
+    <div id="legal-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="modal-title">LEGAL & TOS</h2>
+        <div style="font-size:0.8rem; text-align:left; color:#cbd5e0; margin:15px 0; line-height:1.5;">
+          <p><strong>Terms of Service:</strong> Project Neko is provided as-is. Progress saves locally.</p>
+          <p><strong>Privacy Policy:</strong> No tracking metrics or personal data are collected.</p>
+          <p><strong>Virtual Purchases:</strong> In-game cosmetics hold no monetary value and are non-refundable.</p>
+        </div>
+        <button class="menu-btn btn-close" onclick="closeLegalModal()">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/state.js?v=1.0.2"></script>
+  <script src="js/shop.js?v=1.0.2"></script>
+  <script>
+    function saveNameAndPlay() {
+      const input = document.getElementById('player-name-input');
+      if (input && typeof GameState !== 'undefined') {
+        GameState.playerName = input.value || 'CatHero';
+        GameState.save();
+      }
+      window.location.href = 'cities.html';
+    }
+
+    function openShopModal() { document.getElementById('shop-modal').classList.add('active'); }
+    function closeShopModal() { document.getElementById('shop-modal').classList.remove('active'); }
+
+    function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
+    function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
+
+    function openLegalModal() { document.getElementById('legal-modal').classList.add('active'); }
+    function closeLegalModal() { document.getElementById('legal-modal').classList.remove('active'); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const input = document.getElementById('player-name-input');
+      if (input && typeof GameState !== 'undefined' && GameState.playerName) {
+        input.value = GameState.playerName;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Level Roadmap</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .roadmap-container { height: 100dvh; display: flex; flex-direction: column; background: #131924; overflow-y: auto; padding: 20px; align-items: center; position: relative; }
+    .map-path { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; max-width: 300px; margin-top: 20px; position: relative; }
+    .node { width: 55px; height: 55px; border-radius: 50%; background: #ffb703; color: #000; font-weight: 900; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 4px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.5); z-index: 5; }
+    .node.locked { background: #4a5568; color: #a0aec0; border-color: #2d3748; cursor: not-allowed; }
+    .node-offset-left { transform: translateX(-60px); }
+    .node-offset-right { transform: translateX(60px); }
+  </style>
+</head>
+<body>
+
+<div class="roadmap-container">
+  <h2 style="color:#ffb703;" id="city-title">CITY ROADMAP</h2>
+
+  <div class="map-path" id="nodes-container"></div>
+
+  <button class="buy-btn" style="margin-top:25px; padding:12px 24px; background:#e63946; color:#fff;" onclick="window.location.href='cities.html'">← CITY SELECT</button>
+</div>
+
+<script src="js/state.js"></script>
+<script>
+  document.getElementById('city-title').innerText = "CITY " + GameState.currentCity + " ROADMAP";
+  const container = document.getElementById('nodes-container');
+
+  for (let i = 1; i <= 10; i++) {
+    const node = document.createElement('div');
+    let offsetClass = i % 2 === 0 ? 'node-offset-right' : 'node-offset-left';
+    if (i % 4 === 0) offsetClass = '';
+
+    node.className = `node ${offsetClass} ${i > GameState.unlockedLevel ? 'locked' : ''}`;
+    node.innerText = i;
+    node.onclick = () => {
+      if (i <= GameState.unlockedLevel) {
+        GameState.currentLevel = i;
+        GameState.save();
+        window.location.href = 'game.html?level=' + i;
+      } else {
+        
+      }
+    };
+    container.appendChild(node);
+  }
+</script>
+</body>
+</html>
