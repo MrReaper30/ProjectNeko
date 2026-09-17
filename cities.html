@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Select City Region - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.3.0">
+  <link rel="stylesheet" href="style.css?v=2.4.0">
 </head>
 <body class="home-page">
   <div class="app-container">
@@ -13,13 +13,12 @@
     </header>
 
     <main class="menu-body" style="width: 100%; max-width: 340px;" id="city-list">
-      <!-- Generated Dynamically based on Unlocked Progress -->
     </main>
 
     <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top: 15px;">← MAIN MENU</button>
   </div>
 
-  <script src="js/state.js?v=2.3.0"></script>
+  <script src="js/state.js?v=2.4.0"></script>
   <script>
     function renderCities() {
       const container = document.getElementById('city-list');
@@ -43,9 +42,9 @@
           `;
         } else {
           return `
-            <div class="city-card" style="background: rgba(30, 40, 60, 0.6); margin-bottom: 12px; padding: 18px; border-radius: 16px; opacity:0.6; border: 2px dashed #64748b;">
+            <div class="city-card" onclick="alert('🔒 Complete City ${c.id - 1} (All 5 Waves) to Unlock!')" style="background: rgba(30, 40, 60, 0.75); margin-bottom: 12px; padding: 18px; border-radius: 16px; border: 2px dashed #64748b; cursor: not-allowed;">
               <h3 style="color:#94a3b8; font-size:1.1rem; font-weight:900;">🔒 ${c.name.split('. ')[1]}</h3>
-              <p style="color:#64748b; font-size:0.8rem; margin-top:4px;">Defeat City ${c.id - 1} (All 5 Waves) to Unlock</p>
+              <p style="color:#94a3b8; font-size:0.8rem; margin-top:4px;">Defeat City ${c.id - 1} (All 5 Waves) to Unlock</p>
             </div>
           `;
         }

@@ -1,4 +1,4 @@
-// Project Neko - Combat Engine v2.3.0
+// Project Neko - Combat Engine v2.4.0 (Coins Upgrades Fix)
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
@@ -53,44 +53,6 @@
     }, GameState.upgrades.attackSpeed);
   }
 
-  function spawnParticles(targetEl, count, symbolArray) {
-    if (!targetEl) return;
-    const rect = targetEl.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      p.textContent = symbolArray[Math.floor(Math.random() * symbolArray.length)];
-      
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 30 + Math.random() * 45;
-      const dx = `${Math.cos(angle) * distance}px`;
-      const dy = `${Math.sin(angle) * distance}px`;
-      
-      p.style.setProperty('--dx', dx);
-      p.style.setProperty('--dy', dy);
-      p.style.left = `${centerX}px`;
-      p.style.top = `${centerY}px`;
-
-      document.body.appendChild(p);
-      setTimeout(() => p.remove(), 600);
-    }
-  }
-
-  function spawnCoinPop(targetEl, text) {
-    if (!targetEl) return;
-    const rect = targetEl.getBoundingClientRect();
-    const p = document.createElement('div');
-    p.className = 'coin-particle';
-    p.textContent = text;
-    p.style.left = `${rect.left + rect.width / 2 - 15}px`;
-    p.style.top = `${rect.top}px`;
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 800);
-  }
-
   function playerAttack() {
     if (enemyHp <= 0 || enemiesRemaining <= 0 || isPaused) return;
 
@@ -107,14 +69,9 @@
 
     let dmg = GameState.upgrades.damage;
     const critChance = GameState.skills.critLvl * 0.05;
-    const isCrit = Math.random() < critChance;
-
-    if (isCrit) {
+    if (Math.random() < critChance) {
       dmg *= 2;
-      spawnParticles(slime, 8, ['🔥', '⚡', '💥']);
       alert("💥 CRITICAL HIT!");
-    } else {
-      spawnParticles(slime, 5, ['✨', '⚔️', '💛']);
     }
 
     enemyHp -= dmg;
@@ -126,8 +83,6 @@
       const bonusMult = 1 + (GameState.skills.magLvl * 0.10);
       const coinsDropped = Math.floor(baseCoins * bonusMult);
       waveCoinsEarned += coinsDropped;
-
-      spawnCoinPop(slime, `+${coinsDropped} 🪙`);
 
       if (enemiesRemaining > 0) {
         setTimeout(spawnNextEnemy, 400);
@@ -150,8 +105,6 @@
     if (slime) slime.classList.add('attacking-slime');
     if (cat) cat.classList.add('hit-cat');
 
-    spawnParticles(cat, 5, ['🩸', '🐾', '💢']);
-
     setTimeout(() => {
       if (slime) slime.classList.remove('attacking-slime');
       if (cat) cat.classList.remove('hit-cat');
@@ -170,7 +123,6 @@
     isPaused = true;
     const earnedSardines = GameState.convertCoinsToSardines(waveCoinsEarned);
     
-    // Reset Wave progress to 1/5 upon death
     GameState.currentWave = 1;
     GameState.save();
 
@@ -180,18 +132,12 @@
     const convBox = document.getElementById('conversion-summary');
     if (convBox) {
       convBox.innerHTML = `
-        <div class="conv-anim">
+        <div class="conv-anim" style="background:rgba(0,245,212,0.15); border:1px solid #00f5d4; padding:10px; border-radius:14px; color:#fff; font-weight:bold; display:flex; justify-content:space-around;">
           <span>🪙 ${waveCoinsEarned} Coins</span>
           <span style="color:#00f5d4;">➔</span>
           <span style="color:#00f5d4; font-weight:bold;">+${earnedSardines} 🐟 Sardines</span>
         </div>
-        <small style="color:#e2e8f0; display:block; margin-top:4px;">(Defeat Reset: Waves restart at 1/5)</small>
       `;
-    }
-
-    const recText = document.getElementById('recommendation-text');
-    if (recText) {
-      recText.textContent = `You lost your 9 HP lives! Re-arm yourself in the Mega Shop or Skill Tree, then restart from Wave 1/5!`;
     }
 
     const defSardines = document.getElementById('def-sardine-count');
@@ -203,7 +149,7 @@
   window.retryWave = function () {
     isPaused = false;
     waveCoinsEarned = 0;
-    GameState.currentWave = 1; // Strict restart from Wave 1
+    GameState.currentWave = 1;
     GameState.save();
     const defeatModal = document.getElementById('defeat-modal');
     if (defeatModal) defeatModal.classList.remove('active');
@@ -225,7 +171,6 @@
       const earnedSardines = GameState.convertCoinsToSardines(waveCoinsEarned);
       GameState.addYarn(5);
       
-      // Unlock next city
       if (GameState.currentCity >= GameState.unlockedCityMax) {
         GameState.unlockedCityMax = GameState.currentCity + 1;
       }
@@ -239,7 +184,7 @@
       const vicSummary = document.getElementById('victory-summary');
       if (vicSummary) {
         vicSummary.innerHTML = `
-          <div class="conv-anim">
+          <div class="conv-anim" style="background:rgba(0,245,212,0.15); border:1px solid #00f5d4; padding:10px; border-radius:14px; color:#fff; font-weight:bold; display:flex; justify-content:space-around;">
             <span>🪙 ${waveCoinsEarned} Coins</span>
             <span style="color:#00f5d4;">➔</span>
             <span style="color:#00f5d4; font-weight:bold;">+${earnedSardines} 🐟 Sardines</span>
@@ -301,7 +246,6 @@
     if (spdBtn) spdBtn.textContent = `${GameState.getSpdCoinCost()} 🪙`;
   }
 
-  // Combat Boosts Now Deduct Coins
   window.buyDamageBoost = function () {
     const cost = GameState.getDmgCoinCost();
     if (waveCoinsEarned >= cost) {
@@ -312,7 +256,7 @@
       updateHUD();
       alert("💥 Damage Upgraded!");
     } else {
-      alert(`❌ Need ${cost} 🪙 Coins! Defeat enemies to earn coins.`);
+      alert(`❌ Need ${cost} 🪙 Coins! Defeat enemies in combat.`);
     }
   };
 
@@ -327,7 +271,7 @@
       updateHUD();
       alert("⚡ Speed Upgraded!");
     } else {
-      alert(`❌ Need ${cost} 🪙 Coins! Defeat enemies to earn coins.`);
+      alert(`❌ Need ${cost} 🪙 Coins! Defeat enemies in combat.`);
     }
   };
 
