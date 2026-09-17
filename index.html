@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.6.0">
+  <link rel="stylesheet" href="style.css?v=1.7.0">
 </head>
 <body class="home-page">
   <div class="app-container">
@@ -53,25 +53,32 @@
         <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:12px;">Select or unlock custom hero skins:</p>
 
         <div class="skin-grid">
-          <div class="skin-card" onclick="selectColor('#ffb703')">
+          <!-- Golden Neko -->
+          <div class="skin-card" onclick="handleSkinSelect('#ffb703', 'free', 0)">
             <div class="skin-preview" style="background:#ffb703;"></div>
             <span>Golden Neko</span>
-            <small style="color:#00f5d4;">Unlocked</small>
+            <small id="skin-status-ffb703" style="color:#00f5d4;">Unlocked</small>
           </div>
-          <div class="skin-card" onclick="selectColor('#ff4757')">
+
+          <!-- Crimson Cat -->
+          <div class="skin-card" onclick="handleSkinSelect('#ff4757', 'free', 0)">
             <div class="skin-preview" style="background:#ff4757;"></div>
             <span>Crimson Cat</span>
-            <small style="color:#00f5d4;">Unlocked</small>
+            <small id="skin-status-ff4757" style="color:#00f5d4;">Unlocked</small>
           </div>
-          <div class="skin-card" onclick="selectColor('#00f5d4')">
+
+          <!-- Neon Aqua -->
+          <div class="skin-card" onclick="handleSkinSelect('#00f5d4', 'sardines', 50)">
             <div class="skin-preview" style="background:#00f5d4;"></div>
             <span>Neon Aqua</span>
-            <small style="color:#ffb703;">50 🐟</small>
+            <small id="skin-status-00f5d4" style="color:#ffb703;">50 🐟</small>
           </div>
-          <div class="skin-card" onclick="selectColor('#7209b7')">
+
+          <!-- Royal Shadow -->
+          <div class="skin-card" onclick="handleSkinSelect('#7209b7', 'yarn', 5)">
             <div class="skin-preview" style="background:#7209b7;"></div>
             <span>Royal Shadow</span>
-            <small style="color:#ffb703;">5 🧶</small>
+            <small id="skin-status-7209b7" style="color:#ff007f;">5 🧶</small>
           </div>
         </div>
 
@@ -120,13 +127,69 @@
 
   </div>
 
-  <script src="js/state.js?v=1.6.0"></script>
+  <script src="js/state.js?v=1.7.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
       document.getElementById('yarn-count').textContent = GameState.yarn;
       document.getElementById('lb-city').textContent = GameState.currentCity;
       document.getElementById('lb-wave').textContent = GameState.currentWave;
+      updateSkinStoreUI();
+    }
+
+    function updateSkinStoreUI() {
+      const skins = [
+        { hex: '#ffb703', id: 'skin-status-ffb703', costText: 'Unlocked' },
+        { hex: '#ff4757', id: 'skin-status-ff4757', costText: 'Unlocked' },
+        { hex: '#00f5d4', id: 'skin-status-00f5d4', costText: '50 🐟' },
+        { hex: '#7209b7', id: 'skin-status-7209b7', costText: '5 🧶' }
+      ];
+
+      skins.forEach(s => {
+        const el = document.getElementById(s.id);
+        if (el) {
+          if (GameState.catColor === s.hex) {
+            el.textContent = '✨ EQUIPPED';
+            el.style.color = '#00f5d4';
+          } else if (GameState.isSkinUnlocked(s.hex)) {
+            el.textContent = 'Unlocked';
+            el.style.color = '#a0aec0';
+          } else {
+            el.textContent = s.costText;
+          }
+        }
+      });
+    }
+
+    function handleSkinSelect(hex, costType, costAmount) {
+      if (GameState.isSkinUnlocked(hex)) {
+        GameState.catColor = hex;
+        GameState.save();
+        alert('✨ Cat skin equipped!');
+        updateCurrencies();
+        return;
+      }
+
+      // Purchase flow
+      if (costType === 'sardines') {
+        if (GameState.unlockSkin(hex, 'sardines', costAmount)) {
+          GameState.catColor = hex;
+          GameState.save();
+          alert('🎉 Unlocked & Equipped Neon Aqua Skin!');
+          updateCurrencies();
+        } else {
+          alert(`❌ Need 50 🐟 Sardines! You have ${GameState.sardines} 🐟.`);
+        }
+      } else if (costType === 'yarn') {
+        if (GameState.unlockSkin(hex, 'yarn', costAmount)) {
+          GameState.catColor = hex;
+          GameState.save();
+          alert('🎉 Unlocked & Equipped Royal Shadow Skin!');
+          updateCurrencies();
+        } else {
+          alert(`❌ Need 5 🧶 Yarn Balls! You have ${GameState.yarn} 🧶.`);
+        }
+      }
     }
 
     const nameInput = document.getElementById('player-name-input');
@@ -141,14 +204,6 @@
     function openModal(id) { document.getElementById(id).classList.add('active'); updateCurrencies(); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-    function selectColor(hex) {
-      GameState.catColor = hex;
-      GameState.save();
-      alert('Cat skin equipped!');
-      closeModal('shop-modal');
-    }
-
-    // Strict 3-Match Casino Gacha Logic
     function spinSlots() {
       if (GameState.sardines < 10) {
         alert("Not enough 🐟 Sardines! Fight enemies to earn more.");
@@ -171,7 +226,6 @@
         document.getElementById('reel2').textContent = r2;
         document.getElementById('reel3').textContent = r3;
 
-        // Strict 3-Match Check Only
         if (r1 === r2 && r2 === r3) {
           if (r1 === '🐱' || r1 === '👑') {
             alert("🎉 GRAND JACKPOT! You won +10 🧶 Yarn Balls!");

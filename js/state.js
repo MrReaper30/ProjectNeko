@@ -1,4 +1,4 @@
-// Project Neko - Persistent State Manager v1.6.0
+// Project Neko - Persistent State Manager v1.7.0
 window.GameState = {
   playerName: localStorage.getItem('neko_player_name') || 'CatHero',
   sardines: parseInt(localStorage.getItem('neko_sardines')) || 100,
@@ -11,11 +11,39 @@ window.GameState = {
   soundEnabled: localStorage.getItem('neko_sound') !== 'false',
   vibrationEnabled: localStorage.getItem('neko_vibe') !== 'false',
 
+  // Skin Ownership Array (hex values)
+  unlockedSkins: JSON.parse(localStorage.getItem('neko_unlocked_skins')) || ['#ffb703', '#ff4757'],
+
   upgrades: {
     damageLvl: parseInt(localStorage.getItem('neko_dmg_lvl')) || 1,
     damage: parseInt(localStorage.getItem('neko_dmg_val')) || 10,
     speedLvl: parseInt(localStorage.getItem('neko_spd_lvl')) || 1,
     attackSpeed: parseInt(localStorage.getItem('neko_spd_val')) || 1000
+  },
+
+  isSkinUnlocked: function(hex) {
+    return this.unlockedSkins.includes(hex);
+  },
+
+  unlockSkin: function(hex, costType, costAmount) {
+    if (this.isSkinUnlocked(hex)) return true;
+
+    if (costType === 'sardines') {
+      if (this.sardines >= costAmount) {
+        this.sardines -= costAmount;
+        this.unlockedSkins.push(hex);
+        this.save();
+        return true;
+      }
+    } else if (costType === 'yarn') {
+      if (this.yarn >= costAmount) {
+        this.yarn -= costAmount;
+        this.unlockedSkins.push(hex);
+        this.save();
+        return true;
+      }
+    }
+    return false;
   },
 
   getDmgCost: function() {
@@ -108,6 +136,7 @@ window.GameState = {
     localStorage.setItem('neko_cat_color', this.catColor);
     localStorage.setItem('neko_sound', this.soundEnabled);
     localStorage.setItem('neko_vibe', this.vibrationEnabled);
+    localStorage.setItem('neko_unlocked_skins', JSON.stringify(this.unlockedSkins));
     localStorage.setItem('neko_dmg_lvl', this.upgrades.damageLvl);
     localStorage.setItem('neko_dmg_val', this.upgrades.damage);
     localStorage.setItem('neko_spd_lvl', this.upgrades.speedLvl);
