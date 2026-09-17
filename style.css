@@ -156,3 +156,47 @@ body.game-page {
   -webkit-backdrop-filter: blur(8px) !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
+
+/* Force Transparent Combat Area over Forest Artwork */
+body.game-page .app-container,
+body.game-page .game-container,
+body.game-page .battle-stage,
+body.game-page .arena,
+body.game-page .stage-area {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Remove Dark Vector Hills & Flat Shadows */
+body.game-page .hills,
+body.game-page .ground,
+body.game-page .shadow-overlay,
+body.game-page .arena-bg {
+  display: none !important;
+  opacity: 0 !important;
+}
+
+/* Position Combat Floor lower near the grass artwork */
+body.game-page .combat-stage {
+  background: transparent !important;
+  min-height: 55vh;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding-bottom: 40px;
+}
+
+/* Glassmorphic UI overlays for Level Header & Upgrades */
+body.game-page .top-bar,
+body.game-page .header-hud,
+body.game-page .stats-panel,
+body.game-page .upgrade-container,
+body.game-page .upgrade-card {
+  background: rgba(18, 24, 38, 0.7) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 16px !important;
+}
