@@ -1,4 +1,4 @@
-// Project Neko - Persistent State Manager v1.4.0
+// Project Neko - Persistent State Manager v1.6.0
 window.GameState = {
   playerName: localStorage.getItem('neko_player_name') || 'CatHero',
   sardines: parseInt(localStorage.getItem('neko_sardines')) || 100,
@@ -32,6 +32,13 @@ window.GameState = {
 
   getSpdYarnCost: function() {
     return Math.max(1, Math.ceil(this.getSpdCost() / 40));
+  },
+
+  convertCoinsToSardines: function(coins) {
+    const earnedSardines = Math.floor(coins / 5);
+    this.sardines += earnedSardines;
+    this.save();
+    return earnedSardines;
   },
 
   addSardines: function(amount) {
@@ -110,25 +117,11 @@ window.GameState = {
 
 window.alert = function(msg) {
   let toast = document.createElement('div');
-  toast.style.cssText = `
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #00f5d4;
-    color: #000;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: 800;
-    font-size: 0.85rem;
-    z-index: 9999;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    transition: opacity 0.3s ease;
-  `;
+  toast.className = 'toast-popup';
   toast.textContent = msg;
   document.body.appendChild(toast);
   setTimeout(() => {
     toast.style.opacity = '0';
     setTimeout(() => toast.remove(), 300);
-  }, 2000);
+  }, 2200);
 };

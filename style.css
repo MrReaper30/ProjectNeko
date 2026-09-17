@@ -206,7 +206,7 @@ body.game-page {
 .slime-enemy::before { left: 18px; }
 .slime-enemy::after { right: 18px; }
 
-/* Slot Machine Gacha Styles */
+/* Slot Machine Animations */
 .slot-machine {
   display: flex;
   justify-content: center;
@@ -228,6 +228,36 @@ body.game-page {
   align-items: center;
   font-size: 2rem;
   border: 1px solid rgba(255,255,255,0.2);
+  transition: transform 0.2s;
+}
+
+@keyframes reelSpin {
+  0% { transform: translateY(-20px) scale(0.8); opacity: 0.5; }
+  50% { transform: translateY(20px) scale(1.1); opacity: 0.8; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.slot-reel.spinning {
+  animation: reelSpin 0.15s infinite ease-in-out;
+}
+
+/* Conversion Animation Card */
+.conv-anim {
+  background: rgba(0, 245, 212, 0.1);
+  border: 1px solid #00f5d4;
+  padding: 10px 14px;
+  border-radius: 14px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 /* Skin Grid Store */
@@ -247,7 +277,10 @@ body.game-page {
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  transition: transform 0.15s;
 }
+
+.skin-card:active { transform: scale(0.95); }
 
 .skin-preview {
   width: 44px;
@@ -259,28 +292,7 @@ body.game-page {
 
 .skin-card span { font-size: 0.8rem; font-weight: bold; color: #fff; }
 
-/* Settings Row */
-.setting-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  font-weight: bold;
-}
-
-.setting-toggle {
-  background: #00f5d4;
-  color: #000;
-  border: none;
-  padding: 6px 16px;
-  border-radius: 12px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-/* Upgrade Buttons Bottom Layout */
+/* Upgrade Action Buttons */
 .upgrades-panel {
   display: flex;
   flex-direction: row;
@@ -302,7 +314,10 @@ body.game-page {
   gap: 4px;
   color: #fff;
   cursor: pointer;
+  transition: transform 0.1s;
 }
+
+.upgrade-btn:active { transform: scale(0.95); }
 
 .upg-title { font-size: 0.82rem; font-weight: 800; color: #fff; }
 .upg-title span { color: #00f5d4; margin-left: 2px; }
@@ -312,7 +327,9 @@ body.game-page {
 /* Modals & Menu Buttons */
 .game-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; }
 .name-input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 0.95rem; text-align: center; margin-bottom: 10px; }
-.menu-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.88rem; margin-bottom: 8px; cursor: pointer; }
+.menu-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.88rem; margin-bottom: 8px; cursor: pointer; transition: transform 0.1s; }
+.menu-btn:active { transform: scale(0.96); }
+
 .btn-play { background: #ffb703; color: #000; }
 .btn-gacha { background: #ff007f; color: #fff; }
 .btn-shop { background: #00f5d4; color: #000; }
@@ -323,6 +340,23 @@ body.game-page {
 .btn-close { background: #00b4d8; color: #fff; width: 100%; margin-top: 10px; }
 
 .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
-.modal-overlay.active { display: flex; }
+.modal-overlay.active { display: flex; animation: popIn 0.25s ease-out; }
 .modal-card { background: rgba(24, 28, 40, 0.95); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 88%; max-width: 340px; text-align: center; }
 .modal-title { color: #00f5d4; font-size: 1.15rem; font-weight: 900; margin-bottom: 10px; }
+
+.toast-popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #00f5d4;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  animation: popIn 0.25s ease-out;
+  transition: opacity 0.3s ease;
+}

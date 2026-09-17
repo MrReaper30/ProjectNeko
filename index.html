@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.5.0">
+  <link rel="stylesheet" href="style.css?v=1.6.0">
 </head>
 <body class="home-page">
   <div class="app-container">
@@ -33,7 +33,7 @@
     <div id="gacha-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">🎰 NEKO CASINO SLOTS</h2>
-        <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:10px;">Match 3 symbols to win 🧶 Yarn Balls!</p>
+        <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:10px;">Match ALL 3 symbols to win 🧶 Yarn Balls!</p>
         
         <div class="slot-machine">
           <div class="slot-reel" id="reel1">🐟</div>
@@ -120,7 +120,7 @@
 
   </div>
 
-  <script src="js/state.js?v=1.5.0"></script>
+  <script src="js/state.js?v=1.6.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
@@ -148,6 +148,7 @@
       closeModal('shop-modal');
     }
 
+    // Strict 3-Match Casino Gacha Logic
     function spinSlots() {
       if (GameState.sardines < 10) {
         alert("Not enough 🐟 Sardines! Fight enemies to earn more.");
@@ -156,28 +157,34 @@
       GameState.sardines -= 10;
       updateCurrencies();
 
-      const symbols = ['🐟', '🧶', '🐱', '👑'];
-      const r1 = symbols[Math.floor(Math.random() * symbols.length)];
-      const r2 = symbols[Math.floor(Math.random() * symbols.length)];
-      const r3 = symbols[Math.floor(Math.random() * symbols.length)];
+      const reels = [document.getElementById('reel1'), document.getElementById('reel2'), document.getElementById('reel3')];
+      reels.forEach(r => r.classList.add('spinning'));
 
-      document.getElementById('reel1').textContent = r1;
-      document.getElementById('reel2').textContent = r2;
-      document.getElementById('reel3').textContent = r3;
+      setTimeout(() => {
+        reels.forEach(r => r.classList.remove('spinning'));
+        const symbols = ['🐟', '🧶', '🐱', '👑'];
+        const r1 = symbols[Math.floor(Math.random() * symbols.length)];
+        const r2 = symbols[Math.floor(Math.random() * symbols.length)];
+        const r3 = symbols[Math.floor(Math.random() * symbols.length)];
 
-      if (r1 === r2 && r2 === r3) {
-        if (r1 === '🧶' || r1 === '👑') {
-          alert("🎉 JACKPOT! You won +10 🧶 Yarn Balls!");
-          GameState.addYarn(10);
+        document.getElementById('reel1').textContent = r1;
+        document.getElementById('reel2').textContent = r2;
+        document.getElementById('reel3').textContent = r3;
+
+        // Strict 3-Match Check Only
+        if (r1 === r2 && r2 === r3) {
+          if (r1 === '🐱' || r1 === '👑') {
+            alert("🎉 GRAND JACKPOT! You won +10 🧶 Yarn Balls!");
+            GameState.addYarn(10);
+          } else {
+            alert("🎉 MATCH 3! You won +5 🧶 Yarn Balls!");
+            GameState.addYarn(5);
+          }
         } else {
-          alert("🎉 MATCH 3! You won +5 🧶 Yarn Balls!");
-          GameState.addYarn(5);
+          alert("No match! Try again!");
         }
-      } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-        alert("Nice! Pair matched: +15 🐟 Sardines refund!");
-        GameState.addSardines(15);
-      }
-      updateCurrencies();
+        updateCurrencies();
+      }, 400);
     }
 
     function toggleSound() {

@@ -1,4 +1,4 @@
-// Project Neko - Combat Engine v1.4.0
+// Project Neko - Combat Engine v1.6.0
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
@@ -6,6 +6,7 @@
   let maxEnemyHp = 30;
   let enemiesInWave = 4;
   let enemiesRemaining = 4;
+  let waveCoinsEarned = 0;
 
   let attackTimer = null;
   let isPaused = false;
@@ -39,6 +40,7 @@
     maxEnemyHp = Math.floor(25 + (cityMultiplier * 15) + (waveMultiplier * 8));
     enemyHp = maxEnemyHp;
     playerHp = maxPlayerHp;
+    waveCoinsEarned = 0;
   }
 
   function startCombatLoop() {
@@ -69,7 +71,8 @@
     if (enemyHp <= 0) {
       enemyHp = 0;
       enemiesRemaining--;
-      GameState.addSardines(10 + GameState.currentWave * 4);
+      const coinsDropped = 15 + GameState.currentWave * 5;
+      waveCoinsEarned += coinsDropped;
 
       if (enemiesRemaining > 0) {
         setTimeout(spawnNextEnemy, 400);
@@ -108,8 +111,23 @@
 
   function triggerDefeat() {
     isPaused = true;
+    const earnedSardines = GameState.convertCoinsToSardines(waveCoinsEarned);
+    
     const defeatModal = document.getElementById('defeat-modal');
     if (defeatModal) defeatModal.classList.add('active');
+
+    const convBox = document.getElementById('conversion-summary');
+    if (convBox) {
+      convBox.innerHTML = `
+        <div class="conv-anim">
+          <span>🪙 ${waveCoinsEarned} Coins</span>
+          <span style="color:#00f5d4;">➔</span>
+          <span style="color:#00f5d4; font-weight:bold;">+${earnedSardines} 🐟 Sardines</span>
+        </div>
+        <small style="color:#a0aec0; display:block; margin-top:4px;">(Conversion Rate: 5 🪙 = 1 🐟)</small>
+      `;
+    }
+
     updateDefeatModal();
   }
 
@@ -128,20 +146,48 @@
   }
 
   function completeWave() {
-    if (GameState.currentWave < GameState.maxWavesPerCity) {
-      alert(`Wave ${GameState.currentWave} Cleared! +1 🧶 Yarn Bonus!`);
-      GameState.addYarn(1);
-      GameState.currentWave++;
-    } else {
-      alert(`City ${GameState.currentCity} Cleared! +5 🧶 Yarn Bonus!`);
+    isPaused = true;
+    const earnedSardines = GameState.convertCoinsToSardines(waveCoinsEarned);
+    let yarnBonus = 1;
+
+    if (GameState.currentWave >= GameState.maxWavesPerCity) {
+      yarnBonus = 5;
       GameState.addYarn(5);
       GameState.currentCity++;
       GameState.currentWave = 1;
+    } else {
+      GameState.addYarn(1);
+      GameState.currentWave++;
     }
+
     GameState.save();
+
+    const victoryModal = document.getElementById('victory-modal');
+    if (victoryModal) victoryModal.classList.add('active');
+
+    const vicSummary = document.getElementById('victory-summary');
+    if (vicSummary) {
+      vicSummary.innerHTML = `
+        <div class="conv-anim">
+          <span>🪙 ${waveCoinsEarned} Coins</span>
+          <span style="color:#00f5d4;">➔</span>
+          <span style="color:#00f5d4; font-weight:bold;">+${earnedSardines} 🐟 Sardines</span>
+        </div>
+        <div style="margin-top:8px; color:#ff007f; font-weight:bold;">
+          🎉 Bonus: +${yarnBonus} 🧶 Yarn Ball!
+        </div>
+      `;
+    }
+  }
+
+  window.nextWave = function () {
+    isPaused = false;
+    const victoryModal = document.getElementById('victory-modal');
+    if (victoryModal) victoryModal.classList.remove('active');
     setupWaveStats();
     updateHUD();
-  }
+    startCombatLoop();
+  };
 
   function updateDefeatModal() {
     const defSardines = document.getElementById('def-sardine-count');
@@ -165,7 +211,7 @@
       updateHUD();
       updateDefeatModal();
     } else {
-      alert("Not enough 🐟 Sardines! Try upgrading with 🧶 Yarn Balls!");
+      alert("Not enough 🐟 Sardines!");
     }
   };
 
@@ -183,7 +229,7 @@
       updateHUD();
       updateDefeatModal();
     } else {
-      alert("Not enough 🐟 Sardines! Try upgrading with 🧶 Yarn Balls!");
+      alert("Not enough 🐟 Sardines!");
     }
   };
 
@@ -198,11 +244,13 @@
 
   function updateHUD() {
     const stageDisp = document.getElementById('stage-display');
+    const coinDisp = document.getElementById('coin-display');
     const sardineDisp = document.getElementById('sardine-display');
     const yarnDisp = document.getElementById('yarn-display');
     const enemiesDisp = document.getElementById('enemies-left');
 
     if (stageDisp) stageDisp.textContent = `CITY ${GameState.currentCity}: WAVE ${GameState.currentWave}/${GameState.maxWavesPerCity}`;
+    if (coinDisp) coinDisp.textContent = `🪙 ${waveCoinsEarned}`;
     if (sardineDisp) sardineDisp.textContent = `🐟 ${GameState.sardines}`;
     if (yarnDisp) yarnDisp.textContent = `🧶 ${GameState.yarn}`;
     if (enemiesDisp) enemiesDisp.textContent = `ENEMIES: ${enemiesRemaining} / ${enemiesInWave}`;
