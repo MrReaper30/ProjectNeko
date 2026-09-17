@@ -12,7 +12,6 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Background Artwork Integration */
 body.home-page {
   background: linear-gradient(rgba(11, 14, 20, 0.65), rgba(11, 14, 20, 0.85)), 
               url('assets/images/ui/game_home_screen_1.jpg') center center / cover no-repeat fixed;
@@ -22,7 +21,6 @@ body.game-page {
   background: url('assets/images/ui/game_backgroud_city_1.jpg') center center / cover no-repeat fixed;
 }
 
-/* App Containers */
 .app-container {
   min-height: 100vh;
   max-width: 480px;
@@ -59,14 +57,13 @@ body.game-page {
   max-width: 480px;
   height: 100vh;
   margin: 0 auto;
-  padding: 14px;
+  padding: 10px 14px 16px 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: transparent !important;
 }
 
-/* HUD Header */
 .hud-top {
   display: flex;
   justify-content: space-between;
@@ -106,18 +103,17 @@ body.game-page {
   border-radius: 20px;
   font-size: 0.78rem;
   font-weight: bold;
-  margin-top: 6px;
+  margin-top: 4px;
   backdrop-filter: blur(6px);
 }
 
-/* Battle Stage Arena */
 .battle-stage {
   flex: 1;
   display: flex !important;
   flex-direction: row !important;
   justify-content: space-around !important;
   align-items: flex-end !important;
-  padding-bottom: 30px;
+  padding-bottom: 10px;
   background: transparent !important;
 }
 
@@ -144,7 +140,6 @@ body.game-page {
 .player-fill { background: #ff4757; }
 .enemy-fill { background: #2ed573; }
 
-/* Character Sprites */
 .character-sprite {
   width: 75px;
   height: 75px;
@@ -206,125 +201,51 @@ body.game-page {
 .slime-enemy::before { left: 18px; }
 .slime-enemy::after { right: 18px; }
 
-/* Slot Machine Animations */
-.slot-machine {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  background: rgba(10, 14, 24, 0.9);
-  padding: 15px;
-  border-radius: 16px;
-  border: 2px solid #ffb703;
-  margin-top: 10px;
-}
-
-.slot-reel {
-  width: 60px;
-  height: 65px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2rem;
-  border: 1px solid rgba(255,255,255,0.2);
-  transition: transform 0.2s;
-}
-
-@keyframes reelSpin {
-  0% { transform: translateY(-20px) scale(0.8); opacity: 0.5; }
-  50% { transform: translateY(20px) scale(1.1); opacity: 0.8; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-.slot-reel.spinning {
-  animation: reelSpin 0.15s infinite ease-in-out;
-}
-
-/* Conversion Animation Card */
-.conv-anim {
-  background: rgba(0, 245, 212, 0.1);
-  border: 1px solid #00f5d4;
-  padding: 10px 14px;
-  border-radius: 14px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  font-size: 0.9rem;
-  font-weight: bold;
-  animation: popIn 0.3s ease-out;
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* Skin Grid Store */
-.skin-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 15px;
-}
-
-.skin-card {
-  background: rgba(18, 24, 38, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.15s;
-}
-
-.skin-card:active { transform: scale(0.95); }
-
-.skin-preview {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  margin-bottom: 6px;
-  border: 2px solid #fff;
-}
-
-.skin-card span { font-size: 0.8rem; font-weight: bold; color: #fff; }
-
-/* Upgrade Action Buttons */
+/* Fixed Bottom Upgrades Panel Visibility */
 .upgrades-panel {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  z-index: 100;
 }
 
 .upgrade-btn {
   flex: 1;
-  background: rgba(18, 24, 38, 0.9);
+  background: rgba(18, 24, 38, 0.95);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid #ffb703;
   border-radius: 16px;
-  padding: 10px;
+  padding: 10px 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   color: #fff;
   cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   transition: transform 0.1s;
 }
 
 .upgrade-btn:active { transform: scale(0.95); }
 
-.upg-title { font-size: 0.82rem; font-weight: 800; color: #fff; }
+.upg-title { font-size: 0.85rem; font-weight: 800; color: #fff; }
 .upg-title span { color: #00f5d4; margin-left: 2px; }
 .upg-sub { font-size: 0.72rem; color: #a0aec0; }
-.upg-cost { margin-top: 4px; background: #ffb703; color: #000; padding: 4px 12px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; width: 100%; text-align: center; }
+.upg-cost {
+  margin-top: 4px;
+  background: #ffb703;
+  color: #000;
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-weight: 900;
+  font-size: 0.82rem;
+  width: 100%;
+  text-align: center;
+}
 
-/* Modals & Menu Buttons */
+/* Modals & Main Menu */
 .game-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; }
 .name-input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 0.95rem; text-align: center; margin-bottom: 10px; }
 .menu-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.88rem; margin-bottom: 8px; cursor: pointer; transition: transform 0.1s; }
@@ -339,7 +260,7 @@ body.game-page {
 .btn-legal { background: rgba(0,0,0,0.4); color: #a0aec0; }
 .btn-close { background: #00b4d8; color: #fff; width: 100%; margin-top: 10px; }
 
-.modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
+.modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
 .modal-overlay.active { display: flex; animation: popIn 0.25s ease-out; }
 .modal-card { background: rgba(24, 28, 40, 0.95); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 88%; max-width: 340px; text-align: center; }
 .modal-title { color: #00f5d4; font-size: 1.15rem; font-weight: 900; margin-bottom: 10px; }
@@ -361,7 +282,6 @@ body.game-page {
   transition: opacity 0.3s ease;
 }
 
-/* Skill Tree Styles */
 .skill-node {
   background: rgba(18, 24, 38, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -374,22 +294,9 @@ body.game-page {
   text-align: left;
 }
 
-.skill-info h3 {
-  font-size: 0.9rem;
-  color: #fff;
-  font-weight: bold;
-}
-
-.skill-info h3 small {
-  color: #00f5d4;
-  margin-left: 4px;
-}
-
-.skill-info p {
-  font-size: 0.72rem;
-  color: #a0aec0;
-  margin-top: 2px;
-}
+.skill-info h3 { font-size: 0.9rem; color: #fff; font-weight: bold; }
+.skill-info h3 small { color: #00f5d4; margin-left: 4px; }
+.skill-info p { font-size: 0.72rem; color: #a0aec0; margin-top: 2px; }
 
 .buy-btn {
   background: #ffb703;
@@ -402,5 +309,3 @@ body.game-page {
   cursor: pointer;
   white-space: nowrap;
 }
-
-.buy-btn:active { transform: scale(0.95); }
