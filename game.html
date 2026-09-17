@@ -2,97 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.0.5">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Combat - Project Neko</title>
+  <link rel="stylesheet" href="style.css?v=1.0.6">
 </head>
 <body class="game-page">
-
-<div class="app-container">
-  <header>
-    <div class="hud-title">LEVEL <span id="level-num">1</span></div>
-    <div class="hud-stats">
-      <span id="gold-display">🪙 0</span>
-      <button class="pause-btn" onclick="togglePause()">⚙️ PAUSE</button>
-    </div>
-  </header>
-
-  <div class="arena" id="arena-bg">
-    <div class="wave-tracker" id="enemy-counter">ENEMIES LEFT: 5 / 5</div>
+  <div class="combat-wrapper">
     
-    <svg class="mountain-back" viewBox="0 0 500 150" preserveAspectRatio="none">
-      <path d="M0,150 L0,80 L120,30 L250,90 L380,20 L500,100 L500,150 Z"/>
-    </svg>
-    <svg class="mountain-front" viewBox="0 0 500 100" preserveAspectRatio="none">
-      <path d="M0,100 L0,50 L80,20 L200,60 L320,10 L440,50 L500,30 L500,100 Z"/>
-    </svg>
+    <!-- Top HUD Panel -->
+    <header class="hud-top">
+      <div class="hud-pill"><span id="level-display">LEVEL 1</span></div>
+      <div class="hud-pill"><span id="gold-display">🪙 0</span></div>
+      <button class="hud-btn" onclick="togglePause()">⚙️ PAUSE</button>
+    </header>
 
-    <div class="battle-track" id="click-zone">
-      <!-- Cat Unit -->
-      <div class="unit-box cat-box">
-        <div class="hp-wrapper">
-          <div class="lives-text" id="lives-display">🐾 9 / 9 LIVES</div>
-          <div class="hp-bar-outer"><div class="hp-bar-inner cat-hp-inner" id="cat-hp-bar"></div></div>
+    <div class="enemies-badge">
+      ENEMIES LEFT: <span id="enemies-left">6 / 6</span>
+    </div>
+
+    <!-- Battle Stage -->
+    <main class="battle-stage">
+      <!-- Player Unit -->
+      <div class="unit-box player-box">
+        <div class="health-bar-container">
+          <span class="health-label">🐾 <span id="player-hp-text">9 / 9 LIVES</span></span>
+          <div class="health-bar-bg"><div id="player-hp-fill" class="hp-fill player-fill"></div></div>
         </div>
-        <svg class="cat-unit" id="cat-sprite" viewBox="0 0 100 110">
-          <polygon points="20,38 30,12 45,30" id="cat-ear-left" fill="#fb8500"/>
-          <polygon points="80,38 70,12 55,30" id="cat-ear-right" fill="#fb8500"/>
-          <ellipse cx="50" cy="75" rx="30" ry="25" id="cat-body" fill="#fb8500"/>
-          <circle cx="50" cy="48" r="30" id="cat-head" fill="#ffb703"/>
-          <circle cx="40" cy="45" r="3.5" fill="#023e8a"/>
-          <circle cx="60" cy="45" r="3.5" fill="#023e8a"/>
-          <ellipse cx="50" cy="52" rx="2.5" ry="1.5" fill="#e63946"/>
-          <rect x="32" y="68" width="36" height="4" rx="2" fill="#e63946"/>
-          <circle cx="50" cy="73" r="3.5" fill="#ffb703"/>
-        </svg>
+        <div id="player-sprite" class="character-sprite cat-hero">
+          <div class="cat-ears"></div>
+          <div class="cat-face">
+            <div class="cat-eyes"></div>
+            <div class="cat-nose"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Enemy Unit -->
-      <div class="unit-box enemy-box" id="enemy-box">
-        <div class="hp-wrapper">
-          <div class="hp-bar-outer"><div class="hp-bar-inner" id="hp-bar"></div></div>
+      <div class="unit-box enemy-box">
+        <div class="health-bar-container">
+          <div class="health-bar-bg"><div id="enemy-hp-fill" class="hp-fill enemy-fill"></div></div>
         </div>
-        <svg class="enemy-unit" id="enemy" viewBox="0 0 100 100"></svg>
+        <div id="enemy-sprite" class="character-sprite slime-enemy">
+          <div class="slime-eyes"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Upgrades Bottom Panel -->
+    <footer class="upgrades-panel">
+      <div class="upgrade-card" onclick="buyDamageBoost()">
+        <div class="upgrade-info">
+          <strong>Damage Boost</strong> <span class="lvl-badge" id="dmg-lvl">Lv.1</span>
+          <small id="dmg-stats">ATK: 10</small>
+        </div>
+        <button class="buy-btn" id="dmg-buy-btn">20 🪙</button>
+      </div>
+
+      <div class="upgrade-card" onclick="buySpeedBoost()">
+        <div class="upgrade-info">
+          <strong>Attack Speed</strong> <span class="lvl-badge" id="spd-lvl">Lv.1</span>
+          <small id="spd-stats">Delay: 1000ms</small>
+        </div>
+        <button class="buy-btn" id="spd-buy-btn">50 🪙</button>
+      </div>
+    </footer>
+
+    <!-- Pause Modal -->
+    <div id="pause-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="modal-title">GAME PAUSED</h2>
+        <button class="menu-btn btn-play" onclick="togglePause()">RESUME</button>
+        <button class="menu-btn btn-close" onclick="window.location.href='cities.html'">QUIT TO STAGES</button>
       </div>
     </div>
+
   </div>
 
-  <!-- Upgrade Drawer -->
-  <div class="controls">
-    <div class="upgrade-card">
-      <div>
-        <div class="card-title">Damage Boost <span id="dmg-lvl" style="color:#ffb703">Lv.1</span></div>
-        <div class="card-sub">ATK: <span id="dmg-val">10</span></div>
-      </div>
-      <button class="buy-btn" id="btn-dmg" onclick="buyDamage()">
-        <span id="dmg-cost">20</span> 🪙
-      </button>
-    </div>
-
-    <div class="upgrade-card">
-      <div>
-        <div class="card-title">Attack Speed <span id="spd-lvl" style="color:#2196F3">Lv.1</span></div>
-        <div class="card-sub">Delay: <span id="spd-val">1000</span>ms</div>
-      </div>
-      <button class="buy-btn" id="btn-spd" style="background:#2196F3; color:#fff" onclick="buySpeed()">
-        <span id="spd-cost">50</span> 🪙
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Pause Modal -->
-<div class="modal-overlay" id="pause-modal">
-  <div class="modal-card">
-    <h2 style="margin-bottom:15px; color:#ffb703;">GAME PAUSED</h2>
-    <button class="modal-btn" id="btn-audio" onclick="toggleAudio()">Audio: ON</button>
-    <button class="modal-btn" id="btn-vib" onclick="toggleVib()">Vibration: ON</button>
-    <button class="modal-btn" style="background:#e63946;" onclick="window.location.href='levels.html'">Exit to Roadmap</button>
-    <button class="modal-btn" style="background:#2ecc71;" onclick="togglePause()">Resume Game</button>
-  </div>
-</div>
-
-<script src="js/state.js"></script>
-<script src="js/game.js?v=1.0.1"></script>
+  <script src="js/state.js?v=1.0.6"></script>
+  <script src="js/game.js?v=1.0.6"></script>
+  <script>
+    function togglePause() {
+      const modal = document.getElementById('pause-modal');
+      modal.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>
