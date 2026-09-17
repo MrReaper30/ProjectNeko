@@ -156,3 +156,14 @@ body.game-page {
               url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center fixed;
   background-size: cover;
 }
+
+/* Custom Background Images */
+body.home-page {
+  background: linear-gradient(rgba(11, 14, 20, 0.75), rgba(11, 14, 20, 0.9)), 
+              url('assets/images/ui/game_home_screen_1.jpg') center center / cover no-repeat fixed !important;
+}
+
+body.game-page {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), 
+              url('assets/images/ui/game_backgroud_city_1.jpg') center center / cover no-repeat fixed !important;
+}
