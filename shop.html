@@ -4,136 +4,180 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mega Shop - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.6.0">
+  <link rel="stylesheet" href="style.css?v=2.7.0">
+  <style>
+    .shop-tab-btn {
+      flex: 1;
+      background: rgba(18, 24, 38, 0.95) !important;
+      color: #a0aec0 !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      padding: 10px 4px !important;
+      border-radius: 12px !important;
+      font-size: 0.5rem !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      font-family: 'Press Start 2P', monospace !important;
+      text-align: center !important;
+    }
+    .shop-tab-btn.active {
+      background: #00f5d4 !important;
+      color: #000000 !important;
+      border-color: #00f5d4 !important;
+      box-shadow: 0 0 12px rgba(0, 245, 212, 0.4) !important;
+    }
+    .spinning {
+      animation: reelSpin 0.15s linear infinite !important;
+    }
+    @keyframes reelSpin {
+      0% { transform: translateY(-10px) scale(0.9); opacity: 0.6; }
+      50% { transform: translateY(10px) scale(1.1); opacity: 1; }
+      100% { transform: translateY(-10px) scale(0.9); opacity: 0.6; }
+    }
+    .yarn-card {
+      background: rgba(24, 32, 48, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      border-radius: 16px !important;
+      padding: 14px !important;
+      margin-bottom: 12px !important;
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+    }
+  </style>
 </head>
 <body class="home-page">
   <div class="app-container" style="justify-content: flex-start; padding-top: 15px;">
     
     <header class="main-header" style="width:100%;">
-      <h1 class="game-title" style="font-size:1.4rem;">🛒 NEKO MEGA SHOP</h1>
+      <h1 class="game-title" style="font-size:0.9rem;">🛒 NEKO MEGA SHOP</h1>
       <div class="currency-bar">
         <span class="curr-pill">🐟 <span id="sardine-count">0</span></span>
         <span class="curr-pill">🧶 <span id="yarn-count">0</span></span>
       </div>
     </header>
 
-    <!-- Tabs -->
-    <nav class="shop-tabs" style="display:flex; gap:6px; width:100%; max-width:380px; margin: 12px 0;">
+    <!-- Animated Navigation Tabs -->
+    <nav style="display:flex; gap:6px; width:100%; max-width:360px; margin: 14px 0;">
       <button class="shop-tab-btn active" onclick="switchCategory('skins', this)">🎨 SKINS</button>
       <button class="shop-tab-btn" onclick="switchCategory('gacha', this)">🎰 GACHA</button>
-      <button class="shop-tab-btn" onclick="switchCategory('exchange', this)">💱 EXCHANGE</button>
-      <button class="shop-tab-btn" onclick="switchCategory('yarn', this)">🧶 YARN VAULT</button>
+      <button class="shop-tab-btn" onclick="switchCategory('exchange', this)">💱 TRADE</button>
+      <button class="shop-tab-btn" onclick="switchCategory('yarn', this)">🧶 YARN</button>
     </nav>
 
-    <!-- Main Content -->
-    <main class="menu-body" style="width:100%; max-width:380px; max-height: 60vh; overflow-y: auto;">
+    <!-- Main Content Panel -->
+    <main class="menu-body" style="width:100%; max-width:360px; max-height: 58vh; overflow-y: auto;">
       
-      <!-- Category 1: Skins Grid -->
+      <!-- Category 1: Skins -->
       <div id="cat-skins" class="shop-category" style="display:block;">
-        <div class="skin-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-          <div class="skin-card" onclick="handleSkinSelect('#ffb703', 'free', 0)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
-            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#ffb703; margin:0 auto 6px auto; border:2px solid #fff;"></div>
-            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Golden Neko</span>
-            <small id="skin-status-ffb703" style="color:#00f5d4; font-weight:bold;">Unlocked</small>
-          </div>
-
-          <div class="skin-card" onclick="handleSkinSelect('#ff4757', 'free', 0)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
-            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#ff4757; margin:0 auto 6px auto; border:2px solid #fff;"></div>
-            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Crimson Cat</span>
-            <small id="skin-status-ff4757" style="color:#00f5d4; font-weight:bold;">Unlocked</small>
-          </div>
-
-          <div class="skin-card" onclick="handleSkinSelect('#00f5d4', 'sardines', 50)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
-            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#00f5d4; margin:0 auto 6px auto; border:2px solid #fff;"></div>
-            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Neon Aqua</span>
-            <small id="skin-status-00f5d4" style="color:#ffb703; font-weight:bold;">50 🐟</small>
-          </div>
-
-          <div class="skin-card" onclick="handleSkinSelect('#7209b7', 'yarn', 5)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
-            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#7209b7; margin:0 auto 6px auto; border:2px solid #fff;"></div>
-            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Royal Shadow</span>
-            <small id="skin-status-7209b7" style="color:#ff007f; font-weight:bold;">5 🧶</small>
-          </div>
-
-          <div class="skin-card" onclick="handleSkinSelect('#9d4edd', 'sardines', 100)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
-            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#9d4edd; margin:0 auto 6px auto; border:2px solid #fff;"></div>
-            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Cyber Purple</span>
-            <small id="skin-status-9d4edd" style="color:#ffb703; font-weight:bold;">100 🐟</small>
-          </div>
-
-          <div class="skin-card" onclick="handleSkinSelect('#10b981', 'yarn', 10)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
-            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#10b981; margin:0 auto 6px auto; border:2px solid #fff;"></div>
-            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Emerald Beast</span>
-            <small id="skin-status-10b981" style="color:#ff007f; font-weight:bold;">10 🧶</small>
-          </div>
-        </div>
-      </div>
-
-      <!-- Category 2: Casino Gacha -->
-      <div id="cat-gacha" class="shop-category" style="display:none;">
-        <div style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
-          <h3 style="color:#ff007f; font-weight:bold; font-size:1.1rem;">🎰 NEKO CASINO SLOTS</h3>
-          <p style="color:#ffffff; font-size:0.8rem; margin:6px 0 12px 0;">Match ALL 3 symbols to win 🧶 Yarn Balls!</p>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
           
-          <div class="slot-machine" style="display:flex; justify-content:center; gap:12px; margin:12px 0;">
-            <div class="slot-reel" id="reel1" style="width:60px; height:65px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#fff; border:1px solid rgba(255,255,255,0.2);">🐟</div>
-            <div class="slot-reel" id="reel2" style="width:60px; height:65px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#fff; border:1px solid rgba(255,255,255,0.2);">🐟</div>
-            <div class="slot-reel" id="reel3" style="width:60px; height:65px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#fff; border:1px solid rgba(255,255,255,0.2);">🐟</div>
+          <div onclick="handleSkinSelect('#ffb703', 'free', 0)" style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center; cursor:pointer;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#ffb703; margin:0 auto 8px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-size:0.52rem; display:block; margin-bottom:6px;">Golden Neko</span>
+            <small id="skin-status-ffb703" style="color:#00f5d4; font-size:0.48rem; font-weight:bold;">Unlocked</small>
           </div>
 
-          <button class="menu-btn btn-play" id="spin-btn" onclick="spinSlots()" style="margin-top:10px; background:#ff007f; color:#fff;">SPIN (10 🐟)</button>
+          <div onclick="handleSkinSelect('#ff4757', 'free', 0)" style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center; cursor:pointer;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#ff4757; margin:0 auto 8px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-size:0.52rem; display:block; margin-bottom:6px;">Crimson Cat</span>
+            <small id="skin-status-ff4757" style="color:#00f5d4; font-size:0.48rem; font-weight:bold;">Unlocked</small>
+          </div>
+
+          <div onclick="handleSkinSelect('#00f5d4', 'sardines', 50)" style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center; cursor:pointer;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#00f5d4; margin:0 auto 8px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-size:0.52rem; display:block; margin-bottom:6px;">Neon Aqua</span>
+            <small id="skin-status-00f5d4" style="color:#ffb703; font-size:0.48rem; font-weight:bold;">50 🐟</small>
+          </div>
+
+          <div onclick="handleSkinSelect('#7209b7', 'yarn', 5)" style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center; cursor:pointer;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#7209b7; margin:0 auto 8px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-size:0.52rem; display:block; margin-bottom:6px;">Royal Shadow</span>
+            <small id="skin-status-7209b7" style="color:#ff007f; font-size:0.48rem; font-weight:bold;">5 🧶</small>
+          </div>
+
+          <div onclick="handleSkinSelect('#9d4edd', 'sardines', 100)" style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center; cursor:pointer;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#9d4edd; margin:0 auto 8px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-size:0.52rem; display:block; margin-bottom:6px;">Cyber Purple</span>
+            <small id="skin-status-9d4edd" style="color:#ffb703; font-size:0.48rem; font-weight:bold;">100 🐟</small>
+          </div>
+
+          <div onclick="handleSkinSelect('#10b981', 'yarn', 10)" style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center; cursor:pointer;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#10b981; margin:0 auto 8px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-size:0.52rem; display:block; margin-bottom:6px;">Emerald Beast</span>
+            <small id="skin-status-10b981" style="color:#ff007f; font-size:0.48rem; font-weight:bold;">10 🧶</small>
+          </div>
+
         </div>
       </div>
 
-      <!-- Category 3: Exchange -->
-      <div id="cat-exchange" class="shop-category" style="display:none;">
-        <div style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
-          <h3 style="color:#00f5d4; font-weight:bold; font-size:1.1rem; margin-bottom:8px;">💱 CURRENCY CONVERTER</h3>
-          <p style="color:#ffffff; font-size:0.8rem; margin-bottom:14px;">Trade rare Yarn Balls for Sardine funding:</p>
+      <!-- Category 2: Casino Slots -->
+      <div id="cat-gacha" class="shop-category" style="display:none;">
+        <div style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); border-radius:16px; padding:16px; text-align:center;">
+          <h3 style="color:#ff007f; font-size:0.75rem; margin-bottom:8px;">🎰 CASINO SLOTS</h3>
+          <p style="color:#ffffff; font-size:0.52rem; line-height:1.6; margin-bottom:14px;">Match 3 symbols to win Yarn!</p>
+          
+          <div style="display:flex; justify-content:center; gap:10px; margin:14px 0;">
+            <div id="reel1" style="width:55px; height:60px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:1.6rem; border:1px solid rgba(255,255,255,0.2);">🐱</div>
+            <div id="reel2" style="width:55px; height:60px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:1.6rem; border:1px solid rgba(255,255,255,0.2);">🐟</div>
+            <div id="reel3" style="width:55px; height:60px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:1.6rem; border:1px solid rgba(255,255,255,0.2);">🧶</div>
+          </div>
 
-          <div class="conv-anim" style="background:rgba(0,245,212,0.15); border:1px solid #00f5d4; padding:10px; border-radius:14px; color:#fff; font-weight:bold; margin-bottom:15px; display:flex; justify-content:space-around;">
-            <span>🧶 2 Yarn Balls</span>
+          <button id="spin-btn" onclick="spinSlots()" style="width:100%; padding:12px; background:#ff007f; color:#fff; border:none; border-radius:14px; font-size:0.58rem; cursor:pointer; font-family:'Press Start 2P', monospace;">SPIN (10 🐟)</button>
+        </div>
+      </div>
+
+      <!-- Category 3: Currency Exchange -->
+      <div id="cat-exchange" class="shop-category" style="display:none;">
+        <div style="background:rgba(24,32,48,0.95); border:1px solid rgba(255,255,255,0.2); border-radius:16px; padding:16px; text-align:center;">
+          <h3 style="color:#00f5d4; font-size:0.75rem; margin-bottom:8px;">💱 CURRENCY TRADE</h3>
+          <p style="color:#ffffff; font-size:0.52rem; line-height:1.6; margin-bottom:14px;">Convert rare Yarn Balls into Sardines:</p>
+
+          <div style="background:rgba(0,245,212,0.15); border:1px solid #00f5d4; padding:12px; border-radius:14px; color:#fff; font-size:0.55rem; margin-bottom:15px; display:flex; justify-content:space-around; align-items:center;">
+            <span>🧶 2 Yarn</span>
             <span style="color:#00f5d4;">➔</span>
             <span style="color:#00f5d4; font-weight:bold;">+10 🐟 Sardines</span>
           </div>
 
-          <button class="menu-btn btn-play" onclick="exchangeYarnForSardines()" style="background:#00f5d4; color:#000;">CONVERT (2 🧶 ➔ 10 🐟)</button>
+          <button onclick="exchangeYarnForSardines()" style="width:100%; padding:12px; background:#00f5d4; color:#000; border:none; border-radius:14px; font-size:0.55rem; cursor:pointer; font-family:'Press Start 2P', monospace;">CONVERT (2 🧶 ➔ 10 🐟)</button>
         </div>
       </div>
 
-      <!-- Category 4: Yarn Vault -->
+      <!-- Category 4: Yarn Vault Skill Tree -->
       <div id="cat-yarn" class="shop-category" style="display:none;">
-        <div class="skill-node">
-          <div class="skill-info">
-            <h3>💥 Critical Claw <small id="crit-lvl">Lv.0</small></h3>
-            <p>+5% Chance to deal 2x Damage</p>
+        
+        <div class="yarn-card">
+          <div style="text-align:left; flex:1; padding-right:8px;">
+            <h3 style="color:#ffffff; font-size:0.58rem; margin-bottom:4px;">💥 Critical Claw <small id="crit-lvl" style="color:#00f5d4;">Lv.0</small></h3>
+            <p style="color:#a0aec0; font-size:0.48rem; line-height:1.4;">+5% Chance to deal 2x Damage</p>
           </div>
-          <button class="buy-btn" id="crit-buy-btn" onclick="buyYarnSkill('crit')" style="background:#ff007f; color:#fff;">2 🧶</button>
+          <button id="crit-buy-btn" onclick="buyYarnSkill('crit')" style="background:#ff007f; color:#fff; border:none; padding:8px 10px; border-radius:10px; font-size:0.52rem; cursor:pointer; font-family:'Press Start 2P', monospace;">2 🧶</button>
         </div>
 
-        <div class="skill-node">
-          <div class="skill-info">
-            <h3>🐾 Nine Lives <small id="hp-lvl">Lv.0</small></h3>
-            <p>+2 Max HP Boost in combat</p>
+        <div class="yarn-card">
+          <div style="text-align:left; flex:1; padding-right:8px;">
+            <h3 style="color:#ffffff; font-size:0.58rem; margin-bottom:4px;">🐾 Nine Lives <small id="hp-lvl" style="color:#00f5d4;">Lv.0</small></h3>
+            <p style="color:#a0aec0; font-size:0.48rem; line-height:1.4;">+2 Max HP Boost in combat</p>
           </div>
-          <button class="buy-btn" id="hp-buy-btn" onclick="buyYarnSkill('hp')" style="background:#ff007f; color:#fff;">3 🧶</button>
+          <button id="hp-buy-btn" onclick="buyYarnSkill('hp')" style="background:#ff007f; color:#fff; border:none; padding:8px 10px; border-radius:10px; font-size:0.52rem; cursor:pointer; font-family:'Press Start 2P', monospace;">3 🧶</button>
         </div>
 
-        <div class="skill-node">
-          <div class="skill-info">
-            <h3>🧲 Fish Magnet <small id="mag-lvl">Lv.0</small></h3>
-            <p>+10% Bonus Coins earned</p>
+        <div class="yarn-card">
+          <div style="text-align:left; flex:1; padding-right:8px;">
+            <h3 style="color:#ffffff; font-size:0.58rem; margin-bottom:4px;">🧲 Fish Magnet <small id="mag-lvl" style="color:#00f5d4;">Lv.0</small></h3>
+            <p style="color:#a0aec0; font-size:0.48rem; line-height:1.4;">+10% Bonus Coins earned</p>
           </div>
-          <button class="buy-btn" id="mag-buy-btn" onclick="buyYarnSkill('mag')" style="background:#ff007f; color:#fff;">2 🧶</button>
+          <button id="mag-buy-btn" onclick="buyYarnSkill('mag')" style="background:#ff007f; color:#fff; border:none; padding:8px 10px; border-radius:10px; font-size:0.52rem; cursor:pointer; font-family:'Press Start 2P', monospace;">2 🧶</button>
         </div>
+
       </div>
 
     </main>
 
-    <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top:15px; width:100%; max-width:380px;">← MAIN MENU</button>
+    <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top:14px; width:100%; max-width:360px;">← MAIN MENU</button>
   </div>
 
-  <script src="js/state.js?v=2.6.0"></script>
+  <script src="js/state.js?v=2.7.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
@@ -193,7 +237,7 @@
           alert('🎉 Unlocked & Equipped Skin!');
           updateCurrencies();
         } else {
-          alert(`❌ Need ${costAmount} 🐟 Sardines! You have ${GameState.sardines} 🐟.`);
+          alert(`❌ Need ${costAmount} 🐟 Sardines!`);
         }
       } else if (costType === 'yarn') {
         if (GameState.unlockSkin(hex, 'yarn', costAmount)) {
@@ -202,14 +246,14 @@
           alert('🎉 Unlocked & Equipped Skin!');
           updateCurrencies();
         } else {
-          alert(`❌ Need ${costAmount} 🧶 Yarn Balls! You have ${GameState.yarn} 🧶.`);
+          alert(`❌ Need ${costAmount} 🧶 Yarn Balls!`);
         }
       }
     }
 
     function spinSlots() {
       if (GameState.sardines < 10) {
-        alert("Not enough 🐟 Sardines! Fight enemies to earn more.");
+        alert("Not enough 🐟 Sardines!");
         return;
       }
       GameState.sardines -= 10;
@@ -231,17 +275,17 @@
 
         if (r1 === r2 && r2 === r3) {
           if (r1 === '🐱' || r1 === '👑') {
-            alert("🎉 GRAND JACKPOT! You won +10 🧶 Yarn Balls!");
+            alert("🎉 JACKPOT! +10 🧶 Yarn Balls!");
             GameState.addYarn(10);
           } else {
-            alert("🎉 MATCH 3! You won +5 🧶 Yarn Balls!");
+            alert("🎉 MATCH 3! +5 🧶 Yarn Balls!");
             GameState.addYarn(5);
           }
         } else {
           alert("No match! Try again!");
         }
         updateCurrencies();
-      }, 400);
+      }, 500);
     }
 
     function exchangeYarnForSardines() {
@@ -249,10 +293,10 @@
         GameState.yarn -= 2;
         GameState.sardines += 10;
         GameState.save();
-        alert('🎉 Converted 2 🧶 Yarn Balls into +10 🐟 Sardines!');
+        alert('🎉 Converted 2 🧶 Yarn into +10 🐟 Sardines!');
         updateCurrencies();
       } else {
-        alert(`❌ Need 2 🧶 Yarn Balls! You have ${GameState.yarn} 🧶.`);
+        alert(`❌ Need 2 🧶 Yarn Balls!`);
       }
     }
 
@@ -275,7 +319,7 @@
           GameState.save();
           alert('💥 Critical Claw upgraded!');
         } else {
-          alert('❌ Not enough 🧶 Yarn Balls!');
+          alert('❌ Not enough 🧶 Yarn!');
         }
       } else if (type === 'hp') {
         const cost = 3 * (GameState.skills.hpLvl + 1);
@@ -285,7 +329,7 @@
           GameState.save();
           alert('🐾 Nine Lives upgraded!');
         } else {
-          alert('❌ Not enough 🧶 Yarn Balls!');
+          alert('❌ Not enough 🧶 Yarn!');
         }
       } else if (type === 'mag') {
         const cost = 2 * (GameState.skills.magLvl + 1);
@@ -295,7 +339,7 @@
           GameState.save();
           alert('🧲 Fish Magnet upgraded!');
         } else {
-          alert('❌ Not enough 🧶 Yarn Balls!');
+          alert('❌ Not enough 🧶 Yarn!');
         }
       }
       updateCurrencies();
