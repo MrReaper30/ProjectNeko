@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.0.6">
+  <link rel="stylesheet" href="style.css?v=1.0.7">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
     
-    <!-- Top HUD Panel -->
+    <!-- Top HUD Bar -->
     <header class="hud-top">
       <div class="hud-pill"><span id="level-display">LEVEL 1</span></div>
       <div class="hud-pill"><span id="gold-display">🪙 0</span></div>
@@ -20,39 +20,32 @@
       ENEMIES LEFT: <span id="enemies-left">6 / 6</span>
     </div>
 
-    <!-- Battle Stage -->
+    <!-- Battle Stage: Side-by-Side Arena -->
     <main class="battle-stage">
-      <!-- Player Unit -->
+      <!-- Player Hero (Left) -->
       <div class="unit-box player-box">
         <div class="health-bar-container">
           <span class="health-label">🐾 <span id="player-hp-text">9 / 9 LIVES</span></span>
           <div class="health-bar-bg"><div id="player-hp-fill" class="hp-fill player-fill"></div></div>
         </div>
-        <div id="player-sprite" class="character-sprite cat-hero">
-          <div class="cat-ears"></div>
-          <div class="cat-face">
-            <div class="cat-eyes"></div>
-            <div class="cat-nose"></div>
-          </div>
-        </div>
+        <div id="player-sprite" class="character-sprite cat-hero"></div>
       </div>
 
-      <!-- Enemy Unit -->
+      <!-- Enemy Slime (Right) -->
       <div class="unit-box enemy-box">
         <div class="health-bar-container">
+          <span class="health-label" style="color:#2ed573;">SLIME</span>
           <div class="health-bar-bg"><div id="enemy-hp-fill" class="hp-fill enemy-fill"></div></div>
         </div>
-        <div id="enemy-sprite" class="character-sprite slime-enemy">
-          <div class="slime-eyes"></div>
-        </div>
+        <div id="enemy-sprite" class="character-sprite slime-enemy"></div>
       </div>
     </main>
 
-    <!-- Upgrades Bottom Panel -->
+    <!-- Upgrades Horizontal Row -->
     <footer class="upgrades-panel">
       <div class="upgrade-card" onclick="buyDamageBoost()">
         <div class="upgrade-info">
-          <strong>Damage Boost</strong> <span class="lvl-badge" id="dmg-lvl">Lv.1</span>
+          <strong>Damage Boost <span class="lvl-badge" id="dmg-lvl">Lv.1</span></strong>
           <small id="dmg-stats">ATK: 10</small>
         </div>
         <button class="buy-btn" id="dmg-buy-btn">20 🪙</button>
@@ -60,8 +53,8 @@
 
       <div class="upgrade-card" onclick="buySpeedBoost()">
         <div class="upgrade-info">
-          <strong>Attack Speed</strong> <span class="lvl-badge" id="spd-lvl">Lv.1</span>
-          <small id="spd-stats">Delay: 1000ms</small>
+          <strong>Attack Speed <span class="lvl-badge" id="spd-lvl">Lv.1</span></strong>
+          <small id="spd-stats">1000ms</small>
         </div>
         <button class="buy-btn" id="spd-buy-btn">50 🪙</button>
       </div>
@@ -78,8 +71,8 @@
 
   </div>
 
-  <script src="js/state.js?v=1.0.6"></script>
-  <script src="js/game.js?v=1.0.6"></script>
+  <script src="js/state.js?v=1.0.7"></script>
+  <script src="js/game.js?v=1.0.7"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');
