@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.0.0">
+  <link rel="stylesheet" href="style.css?v=2.1.0">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <!-- Defeat Modal with Recommended Tips -->
+    <!-- Defeat Modal with Strategy Tips -->
     <div id="defeat-modal" class="modal-overlay">
       <div class="modal-card" style="max-width:350px;">
         <h2 class="modal-title" style="color:#ff4757; font-size:1.4rem;">💀 YOU DIED!</h2>
@@ -87,10 +87,9 @@
           <span class="curr-pill">🧶 <span id="def-yarn-count">0</span></span>
         </div>
 
-        <!-- Text Recommendation Card -->
-        <div class="recommendation-card" style="background:rgba(255,255,255,0.06); border:1px solid #ffb703; padding:12px; border-radius:14px; margin-bottom:14px; text-align:left;">
+        <div class="recommendation-card" style="background:rgba(255,255,255,0.08); border:1px solid #ffb703; padding:12px; border-radius:14px; margin-bottom:14px; text-align:left;">
           <h4 style="color:#ffb703; font-size:0.85rem; font-weight:bold; margin-bottom:4px;">💡 STRATEGY TIP</h4>
-          <p id="recommendation-text" style="color:#e2e8f0; font-size:0.78rem; line-height:1.4;">
+          <p id="recommendation-text" style="color:#ffffff; font-size:0.8rem; line-height:1.4;">
             Boost your Attack Speed in combat or visit the Skill Tree from the Main Menu to unlock Critical Claw!
           </p>
         </div>
@@ -102,8 +101,8 @@
 
   </div>
 
-  <script src="js/state.js?v=2.0.0"></script>
-  <script src="js/game.js?v=2.0.0"></script>
+  <script src="js/state.js?v=2.1.0"></script>
+  <script src="js/game.js?v=2.1.0"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');

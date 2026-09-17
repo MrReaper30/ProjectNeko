@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mega Shop - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.0.0">
+  <link rel="stylesheet" href="style.css?v=2.1.0">
 </head>
 <body class="home-page">
   <div class="app-container" style="justify-content: flex-start; padding-top: 15px;">
@@ -19,17 +19,17 @@
 
     <!-- Category Tabs -->
     <nav class="shop-tabs" style="display:flex; gap:6px; width:100%; max-width:380px; margin: 12px 0; overflow-x:auto;">
-      <button class="shop-tab-btn active" onclick="switchCategory('skins')">🎨 SKINS</button>
-      <button class="shop-tab-btn" onclick="switchCategory('gacha')">🎰 GACHA</button>
-      <button class="shop-tab-btn" onclick="switchCategory('exchange')">💱 EXCHANGE</button>
-      <button class="shop-tab-btn" onclick="switchCategory('yarn')">🧶 YARN VAULT</button>
+      <button class="shop-tab-btn active" onclick="switchCategory('skins', this)">🎨 SKINS</button>
+      <button class="shop-tab-btn" onclick="switchCategory('gacha', this)">🎰 GACHA</button>
+      <button class="shop-tab-btn" onclick="switchCategory('exchange', this)">💱 EXCHANGE</button>
+      <button class="shop-tab-btn" onclick="switchCategory('yarn', this)">🧶 YARN VAULT</button>
     </nav>
 
     <!-- Shop Content Section -->
     <main class="menu-body" style="width:100%; max-width:380px; max-height: 60vh; overflow-y: auto;">
       
       <!-- Category 1: Skins -->
-      <div id="cat-skins" class="shop-category active">
+      <div id="cat-skins" class="shop-category" style="display:block;">
         <div class="skin-grid">
           <div class="skin-card" onclick="handleSkinSelect('#ffb703', 'free', 0)">
             <div class="skin-preview" style="background:#ffb703;"></div>
@@ -66,9 +66,9 @@
 
       <!-- Category 2: Casino Gacha -->
       <div id="cat-gacha" class="shop-category" style="display:none;">
-        <div style="background:rgba(18,24,38,0.9); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
+        <div style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
           <h3 style="color:#ff007f; font-weight:bold; font-size:1.1rem;">🎰 NEKO CASINO SLOTS</h3>
-          <p style="color:#a0aec0; font-size:0.8rem; margin:6px 0 12px 0;">Match ALL 3 symbols to win 🧶 Yarn Balls!</p>
+          <p style="color:#e2e8f0; font-size:0.8rem; margin:6px 0 12px 0;">Match ALL 3 symbols to win 🧶 Yarn Balls!</p>
           
           <div class="slot-machine">
             <div class="slot-reel" id="reel1">🐟</div>
@@ -82,9 +82,9 @@
 
       <!-- Category 3: Exchange -->
       <div id="cat-exchange" class="shop-category" style="display:none;">
-        <div style="background:rgba(18,24,38,0.9); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
+        <div style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
           <h3 style="color:#00f5d4; font-weight:bold; font-size:1.1rem; margin-bottom:8px;">💱 CURRENCY CONVERTER</h3>
-          <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:14px;">Trade rare Yarn Balls for Sardine funding:</p>
+          <p style="color:#e2e8f0; font-size:0.8rem; margin-bottom:14px;">Trade rare Yarn Balls for Sardine funding:</p>
 
           <div class="conv-anim" style="margin-bottom:15px;">
             <span>🧶 2 Yarn Balls</span>
@@ -128,7 +128,7 @@
     <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top:15px; width:100%; max-width:380px;">← MAIN MENU</button>
   </div>
 
-  <script src="js/state.js?v=2.0.0"></script>
+  <script src="js/state.js?v=2.1.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
@@ -137,12 +137,13 @@
       updateYarnVaultUI();
     }
 
-    function switchCategory(catId) {
+    function switchCategory(catId, btnEl) {
       document.querySelectorAll('.shop-tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.shop-category').forEach(cat => cat.style.display = 'none');
 
-      event.target.classList.add('active');
-      document.getElementById(`cat-${catId}`).style.display = 'block';
+      if (btnEl) btnEl.classList.add('active');
+      const target = document.getElementById(`cat-${catId}`);
+      if (target) target.style.display = 'block';
     }
 
     function updateSkinStoreUI() {
