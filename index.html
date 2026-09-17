@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.2.0">
+  <link rel="stylesheet" href="style.css?v=2.6.0">
 </head>
 <body class="home-page">
   <div class="app-container">
@@ -17,19 +17,18 @@
       </div>
     </header>
 
-    <main class="menu-body">
+    <main class="menu-body" style="width:100%; max-width:340px;">
       <input type="text" id="player-name-input" class="name-input" placeholder="Enter Cat Hero Name">
 
       <button class="menu-btn btn-play" onclick="window.location.href='cities.html'">▶ PLAY GAME</button>
       <button class="menu-btn btn-shop" onclick="window.location.href='shop.html'">🛒 MEGA SHOP</button>
-      <button class="menu-btn btn-skills" onclick="window.location.href='skills.html'" style="background:#7209b7; color:#fff;">⚡ SKILL TREE</button>
       <button class="menu-btn btn-leaderboard" onclick="openModal('leaderboard-modal')">🏆 LEADERBOARD</button>
       <button class="menu-btn btn-devlog" onclick="window.location.href='changelog.html'">📜 DEV LOG & HISTORY</button>
       <button class="menu-btn btn-settings" onclick="openModal('settings-modal')">⚙️ SETTINGS</button>
       <button class="menu-btn btn-legal" onclick="openModal('legal-modal')">📜 LEGAL & TOS</button>
     </main>
 
-    <!-- Settings Modal -->
+    <!-- High Contrast Settings Modal -->
     <div id="settings-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">⚙️ SETTINGS</h2>
@@ -50,7 +49,7 @@
     <div id="leaderboard-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">🏆 TOP CAT HEROES</h2>
-        <p style="color:#a0aec0; margin-bottom:15px; font-size:0.85rem; line-height:1.6;">
+        <p style="color:#ffffff; margin-bottom:15px; font-size:0.55rem; line-height:1.8;">
           1. 👑 NekoMaster — City 5 (Wave 5)<br>
           2. 🐟 WhiskerKing — City 3 (Wave 2)<br>
           3. 🐾 You — City <span id="lb-city">1</span> (Wave <span id="lb-wave">1</span>)
@@ -63,14 +62,14 @@
     <div id="legal-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">TERMS & PRIVACY</h2>
-        <p style="color:#a0aec0; font-size:0.75rem; line-height:1.4; margin-bottom:15px;">Project Neko is developed by Nectune Studios. All save data is stored locally on your device.</p>
+        <p style="color:#e2e8f0; font-size:0.52rem; line-height:1.6; margin-bottom:15px;">Project Neko is developed by Nectune Studios. All save data is stored locally on your device.</p>
         <button class="menu-btn btn-close" onclick="closeModal('legal-modal')">CLOSE</button>
       </div>
     </div>
 
   </div>
 
-  <script src="js/state.js?v=2.2.0"></script>
+  <script src="js/state.js?v=2.6.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
