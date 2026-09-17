@@ -269,3 +269,34 @@ body.game-page {
 .modal-overlay.active { display: flex; }
 .modal-card { background: rgba(24, 28, 40, 0.9); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 85%; max-width: 320px; text-align: center; }
 .modal-title { color: #00f5d4; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; }
+
+/* Combat Animations v1.0.9 */
+@keyframes catLunge {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(45px) scale(1.15) rotate(10deg); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes slimeLunge {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(-45px) scale(1.15) rotate(-10deg); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes hitFlash {
+  0% { filter: brightness(1) drop-shadow(0 0 0 red); }
+  50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); }
+  100% { filter: brightness(1) drop-shadow(0 0 0 red); }
+}
+
+.attacking-cat {
+  animation: catLunge 0.2s ease-in-out !important;
+}
+
+.attacking-slime {
+  animation: slimeLunge 0.2s ease-in-out !important;
+}
+
+.hit-cat, .hit-slime {
+  animation: hitFlash 0.25s ease-in-out !important;
+}
