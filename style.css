@@ -360,3 +360,47 @@ body.game-page {
   animation: popIn 0.25s ease-out;
   transition: opacity 0.3s ease;
 }
+
+/* Skill Tree Styles */
+.skill-node {
+  background: rgba(18, 24, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+}
+
+.skill-info h3 {
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: bold;
+}
+
+.skill-info h3 small {
+  color: #00f5d4;
+  margin-left: 4px;
+}
+
+.skill-info p {
+  font-size: 0.72rem;
+  color: #a0aec0;
+  margin-top: 2px;
+}
+
+.buy-btn {
+  background: #ffb703;
+  color: #000;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.78rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.buy-btn:active { transform: scale(0.95); }

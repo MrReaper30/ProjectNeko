@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Skill Tree - Project Neko</title>
+  <link rel="stylesheet" href="style.css?v=1.8.0">
+</head>
+<body class="home-page">
+  <div class="app-container">
+    <header class="main-header">
+      <h1 class="game-title" style="font-size:1.4rem;">⚡ NEKO SKILL TREE</h1>
+      <div class="currency-bar">
+        <span class="curr-pill">🐟 <span id="sardine-count">0</span></span>
+        <span class="curr-pill">🧶 <span id="yarn-count">0</span></span>
+      </div>
+    </header>
+
+    <main class="menu-body" style="width:100%; max-width:360px;">
+      
+      <!-- Critical Strike Node -->
+      <div class="skill-node">
+        <div class="skill-info">
+          <h3>💥 Critical Claw <small id="crit-lvl">Lv.0</small></h3>
+          <p>+5% Chance to deal 2x Damage</p>
+        </div>
+        <button class="buy-btn" id="crit-buy-btn" onclick="buySkill('crit')">100 🐟</button>
+      </div>
+
+      <!-- Nine Lives Node -->
+      <div class="skill-node">
+        <div class="skill-info">
+          <h3>🐾 Nine Lives <small id="hp-lvl">Lv.0</small></h3>
+          <p>+2 Max HP Boost in combat</p>
+        </div>
+        <button class="buy-btn" id="hp-buy-btn" onclick="buySkill('hp')">150 🐟</button>
+      </div>
+
+      <!-- Fish Magnet Node -->
+      <div class="skill-node">
+        <div class="skill-info">
+          <h3>🧲 Fish Magnet <small id="mag-lvl">Lv.0</small></h3>
+          <p>+10% Bonus Coins earned from enemies</p>
+        </div>
+        <button class="buy-btn" id="mag-buy-btn" onclick="buySkill('mag')" style="background:#ff007f; color:#fff;">2 🧶</button>
+      </div>
+
+    </main>
+
+    <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top:15px;">← MAIN MENU</button>
+  </div>
+
+  <script src="js/state.js?v=1.8.0"></script>
+  <script>
+    function updateSkillUI() {
+      document.getElementById('sardine-count').textContent = GameState.sardines;
+      document.getElementById('yarn-count').textContent = GameState.yarn;
+
+      document.getElementById('crit-lvl').textContent = `Lv.${GameState.skills.critLvl}`;
+      document.getElementById('hp-lvl').textContent = `Lv.${GameState.skills.hpLvl}`;
+      document.getElementById('mag-lvl').textContent = `Lv.${GameState.skills.magLvl}`;
+
+      document.getElementById('crit-buy-btn').textContent = `${100 * (GameState.skills.critLvl + 1)} 🐟`;
+      document.getElementById('hp-buy-btn').textContent = `${150 * (GameState.skills.hpLvl + 1)} 🐟`;
+      document.getElementById('mag-buy-btn').textContent = `${2 * (GameState.skills.magLvl + 1)} 🧶`;
+    }
+
+    function buySkill(type) {
+      if (type === 'crit') {
+        const cost = 100 * (GameState.skills.critLvl + 1);
+        if (GameState.sardines >= cost) {
+          GameState.sardines -= cost;
+          GameState.skills.critLvl++;
+          GameState.save();
+          alert('💥 Critical Claw upgraded!');
+        } else {
+          alert('❌ Not enough 🐟 Sardines!');
+        }
+      } else if (type === 'hp') {
+        const cost = 150 * (GameState.skills.hpLvl + 1);
+        if (GameState.sardines >= cost) {
+          GameState.sardines -= cost;
+          GameState.skills.hpLvl++;
+          GameState.save();
+          alert('🐾 Nine Lives upgraded!');
+        } else {
+          alert('❌ Not enough 🐟 Sardines!');
+        }
+      } else if (type === 'mag') {
+        const cost = 2 * (GameState.skills.magLvl + 1);
+        if (GameState.yarn >= cost) {
+          GameState.yarn -= cost;
+          GameState.skills.magLvl++;
+          GameState.save();
+          alert('🧲 Fish Magnet upgraded!');
+        } else {
+          alert('❌ Not enough 🧶 Yarn Balls!');
+        }
+      }
+      updateSkillUI();
+    }
+
+    document.addEventListener('DOMContentLoaded', updateSkillUI);
+  </script>
+</body>
+</html>

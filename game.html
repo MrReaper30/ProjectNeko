@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.7.0">
+  <link rel="stylesheet" href="style.css?v=1.8.0">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
     
-    <!-- Top HUD Bar -->
+    <!-- Top HUD Bar: Coins Only -->
     <header class="hud-top">
       <div class="hud-pill"><span id="stage-display">CITY 1: WAVE 1/5</span></div>
-      <div class="hud-pill"><span id="coin-display">🪙 0</span> <span id="sardine-display" style="margin-left:4px;">🐟 0</span> <span id="yarn-display" style="margin-left:4px;">🧶 0</span></div>
+      <div class="hud-pill"><span id="coin-display">🪙 0</span></div>
       <button class="hud-btn" onclick="togglePause()">⚙️ PAUSE</button>
     </header>
 
@@ -66,12 +66,12 @@
       </div>
     </div>
 
-    <!-- Victory Modal -->
+    <!-- City Complete Victory Modal -->
     <div id="victory-modal" class="modal-overlay">
       <div class="modal-card">
-        <h2 class="modal-title" style="color:#00f5d4; font-size:1.4rem;">🎉 WAVE CLEARED!</h2>
+        <h2 class="modal-title" style="color:#00f5d4; font-size:1.4rem;">🎉 CITY CLEARED!</h2>
         <div id="victory-summary" style="margin:12px 0;"></div>
-        <button class="menu-btn btn-play" onclick="nextWave()">NEXT WAVE ▶</button>
+        <button class="menu-btn btn-play" onclick="nextWave()">NEXT CITY ▶</button>
       </div>
     </div>
 
@@ -112,8 +112,8 @@
 
   </div>
 
-  <script src="js/state.js?v=1.7.0"></script>
-  <script src="js/game.js?v=1.7.0"></script>
+  <script src="js/state.js?v=1.8.0"></script>
+  <script src="js/game.js?v=1.8.0"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');

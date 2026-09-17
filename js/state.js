@@ -1,4 +1,4 @@
-// Project Neko - Persistent State Manager v1.7.0
+// Project Neko - Persistent State Manager v1.8.0
 window.GameState = {
   playerName: localStorage.getItem('neko_player_name') || 'CatHero',
   sardines: parseInt(localStorage.getItem('neko_sardines')) || 100,
@@ -11,7 +11,6 @@ window.GameState = {
   soundEnabled: localStorage.getItem('neko_sound') !== 'false',
   vibrationEnabled: localStorage.getItem('neko_vibe') !== 'false',
 
-  // Skin Ownership Array (hex values)
   unlockedSkins: JSON.parse(localStorage.getItem('neko_unlocked_skins')) || ['#ffb703', '#ff4757'],
 
   upgrades: {
@@ -19,6 +18,12 @@ window.GameState = {
     damage: parseInt(localStorage.getItem('neko_dmg_val')) || 10,
     speedLvl: parseInt(localStorage.getItem('neko_spd_lvl')) || 1,
     attackSpeed: parseInt(localStorage.getItem('neko_spd_val')) || 1000
+  },
+
+  skills: {
+    critLvl: parseInt(localStorage.getItem('neko_skill_crit')) || 0,
+    hpLvl: parseInt(localStorage.getItem('neko_skill_hp')) || 0,
+    magLvl: parseInt(localStorage.getItem('neko_skill_mag')) || 0
   },
 
   isSkinUnlocked: function(hex) {
@@ -141,6 +146,9 @@ window.GameState = {
     localStorage.setItem('neko_dmg_val', this.upgrades.damage);
     localStorage.setItem('neko_spd_lvl', this.upgrades.speedLvl);
     localStorage.setItem('neko_spd_val', this.upgrades.attackSpeed);
+    localStorage.setItem('neko_skill_crit', this.skills.critLvl);
+    localStorage.setItem('neko_skill_hp', this.skills.hpLvl);
+    localStorage.setItem('neko_skill_mag', this.skills.magLvl);
   }
 };
 

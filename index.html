@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.7.0">
+  <link rel="stylesheet" href="style.css?v=1.8.0">
 </head>
 <body class="home-page">
   <div class="app-container">
@@ -21,6 +21,7 @@
       <input type="text" id="player-name-input" class="name-input" placeholder="Enter Cat Hero Name">
 
       <button class="menu-btn btn-play" onclick="window.location.href='cities.html'">▶ PLAY GAME</button>
+      <button class="menu-btn btn-skills" onclick="window.location.href='skills.html'" style="background:#7209b7; color:#fff;">⚡ SKILL TREE</button>
       <button class="menu-btn btn-gacha" onclick="openModal('gacha-modal')">🎰 CASINO GACHA</button>
       <button class="menu-btn btn-shop" onclick="openModal('shop-modal')">🛍️ CAT SKIN STORE</button>
       <button class="menu-btn btn-leaderboard" onclick="openModal('leaderboard-modal')">🏆 LEADERBOARD</button>
@@ -53,28 +54,24 @@
         <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:12px;">Select or unlock custom hero skins:</p>
 
         <div class="skin-grid">
-          <!-- Golden Neko -->
           <div class="skin-card" onclick="handleSkinSelect('#ffb703', 'free', 0)">
             <div class="skin-preview" style="background:#ffb703;"></div>
             <span>Golden Neko</span>
             <small id="skin-status-ffb703" style="color:#00f5d4;">Unlocked</small>
           </div>
 
-          <!-- Crimson Cat -->
           <div class="skin-card" onclick="handleSkinSelect('#ff4757', 'free', 0)">
             <div class="skin-preview" style="background:#ff4757;"></div>
             <span>Crimson Cat</span>
             <small id="skin-status-ff4757" style="color:#00f5d4;">Unlocked</small>
           </div>
 
-          <!-- Neon Aqua -->
           <div class="skin-card" onclick="handleSkinSelect('#00f5d4', 'sardines', 50)">
             <div class="skin-preview" style="background:#00f5d4;"></div>
             <span>Neon Aqua</span>
             <small id="skin-status-00f5d4" style="color:#ffb703;">50 🐟</small>
           </div>
 
-          <!-- Royal Shadow -->
           <div class="skin-card" onclick="handleSkinSelect('#7209b7', 'yarn', 5)">
             <div class="skin-preview" style="background:#7209b7;"></div>
             <span>Royal Shadow</span>
@@ -127,7 +124,7 @@
 
   </div>
 
-  <script src="js/state.js?v=1.7.0"></script>
+  <script src="js/state.js?v=1.8.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
@@ -170,7 +167,6 @@
         return;
       }
 
-      // Purchase flow
       if (costType === 'sardines') {
         if (GameState.unlockSkin(hex, 'sardines', costAmount)) {
           GameState.catColor = hex;
