@@ -1,4 +1,4 @@
-// Project Neko - Combat Engine v1.9.0
+// Project Neko - Combat Engine v2.2.0 (With Particle & Attack FX)
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
@@ -53,6 +53,45 @@
     }, GameState.upgrades.attackSpeed);
   }
 
+  // Particle Emitter Helper
+  function spawnParticles(targetEl, count, symbolArray) {
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.textContent = symbolArray[Math.floor(Math.random() * symbolArray.length)];
+      
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 30 + Math.random() * 45;
+      const dx = `${Math.cos(angle) * distance}px`;
+      const dy = `${Math.sin(angle) * distance}px`;
+      
+      p.style.setProperty('--dx', dx);
+      p.style.setProperty('--dy', dy);
+      p.style.left = `${centerX}px`;
+      p.style.top = `${centerY}px`;
+
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 600);
+    }
+  }
+
+  function spawnCoinPop(targetEl, text) {
+    if (!targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    const p = document.createElement('div');
+    p.className = 'coin-particle';
+    p.textContent = text;
+    p.style.left = `${rect.left + rect.width / 2 - 15}px`;
+    p.style.top = `${rect.top}px`;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 800);
+  }
+
   function playerAttack() {
     if (enemyHp <= 0 || enemiesRemaining <= 0 || isPaused) return;
 
@@ -69,9 +108,14 @@
 
     let dmg = GameState.upgrades.damage;
     const critChance = GameState.skills.critLvl * 0.05;
-    if (Math.random() < critChance) {
+    const isCrit = Math.random() < critChance;
+
+    if (isCrit) {
       dmg *= 2;
+      spawnParticles(slime, 8, ['🔥', '⚡', '💥']);
       alert("💥 CRITICAL HIT!");
+    } else {
+      spawnParticles(slime, 5, ['✨', '⚔️', '💛']);
     }
 
     enemyHp -= dmg;
@@ -83,6 +127,8 @@
       const bonusMult = 1 + (GameState.skills.magLvl * 0.10);
       const coinsDropped = Math.floor(baseCoins * bonusMult);
       waveCoinsEarned += coinsDropped;
+
+      spawnCoinPop(slime, `+${coinsDropped} 🪙`);
 
       if (enemiesRemaining > 0) {
         setTimeout(spawnNextEnemy, 400);
@@ -104,6 +150,8 @@
 
     if (slime) slime.classList.add('attacking-slime');
     if (cat) cat.classList.add('hit-cat');
+
+    spawnParticles(cat, 5, ['🩸', '🐾', '💢']);
 
     setTimeout(() => {
       if (slime) slime.classList.remove('attacking-slime');
@@ -138,7 +186,6 @@
       `;
     }
 
-    // Dynamic Recommendation Logic
     const recText = document.getElementById('recommendation-text');
     if (recText) {
       if (GameState.sardines >= GameState.getDmgCost()) {

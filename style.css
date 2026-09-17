@@ -421,3 +421,90 @@ body.game-page {
   0% { transform: scale(0.85); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
+
+/* Combat Particle System & Slash FX */
+.particle-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.particle {
+  position: absolute;
+  font-size: 1.1rem;
+  pointer-events: none;
+  animation: particleFloat 0.6s ease-out forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(1.4);
+  }
+}
+
+/* Attack Impact Visual FX */
+.attacking-cat {
+  animation: catAttackAnim 0.18s ease-in-out;
+}
+
+@keyframes catAttackAnim {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(25px) scale(1.15) rotate(10deg); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.attacking-slime {
+  animation: slimeAttackAnim 0.18s ease-in-out;
+}
+
+@keyframes slimeAttackAnim {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(-25px) scale(1.15) rotate(-10deg); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+.hit-slime {
+  animation: slimeHitAnim 0.2s ease-in-out;
+  filter: drop-shadow(0 0 12px #ff4757) brightness(1.3) !important;
+}
+
+@keyframes slimeHitAnim {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.85) rotate(-8deg); }
+  100% { transform: scale(1); }
+}
+
+.hit-cat {
+  animation: catHitAnim 0.2s ease-in-out;
+  filter: drop-shadow(0 0 12px #ff007f) brightness(1.4) !important;
+}
+
+@keyframes catHitAnim {
+  0% { transform: scale(1); }
+  30% { transform: scale(0.85) rotate(8deg); }
+  100% { transform: scale(1); }
+}
+
+.coin-particle {
+  position: absolute;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #ffb703;
+  pointer-events: none;
+  animation: coinPop 0.8s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+@keyframes coinPop {
+  0% { opacity: 1; transform: translateY(0) scale(0.7); }
+  50% { opacity: 1; transform: translateY(-40px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-70px) scale(1); }
+}
