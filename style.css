@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 /* Reset & Fullscreen Native Layout */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -9,7 +11,7 @@ html, body {
   overscroll-behavior-y: none;
   user-select: none;
   -webkit-user-select: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Press Start 2P', monospace, sans-serif;
 }
 
 body.home-page {
@@ -49,7 +51,7 @@ body.game-page {
   border-radius: 20px;
   color: #fff;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.65rem;
 }
 
 /* Combat Screen Wrapper & HUD */
@@ -75,11 +77,11 @@ body.game-page {
 .hud-pill {
   background: rgba(18, 24, 38, 0.85);
   backdrop-filter: blur(10px);
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 20px;
   color: #ffb703;
   font-weight: 800;
-  font-size: 0.82rem;
+  font-size: 0.6rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -88,11 +90,11 @@ body.game-page {
   backdrop-filter: blur(10px);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 8px 14px;
+  padding: 8px 12px;
   border-radius: 20px;
-  font-weight: bold;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .enemies-badge {
@@ -100,10 +102,9 @@ body.game-page {
   background: rgba(0, 245, 212, 0.25);
   color: #00f5d4;
   border: 1px solid #00f5d4;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: bold;
+  font-size: 0.58rem;
   margin-top: 4px;
   backdrop-filter: blur(6px);
 }
@@ -126,16 +127,16 @@ body.game-page {
 }
 
 .health-bar-container {
-  width: 100px;
+  width: 105px;
   text-align: center;
   background: rgba(18, 24, 38, 0.8);
-  padding: 5px 8px;
+  padding: 5px 6px;
   border-radius: 12px;
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.2);
 }
 
-.health-label { font-size: 0.7rem; font-weight: 800; display: block; margin-bottom: 3px; color: #fff; }
+.health-label { font-size: 0.52rem; display: block; margin-bottom: 3px; color: #fff; }
 .health-bar-bg { width: 100%; height: 8px; background: rgba(0,0,0,0.6); border-radius: 10px; overflow: hidden; }
 .hp-fill { height: 100%; width: 100%; transition: width 0.2s ease; }
 .player-fill { background: #ff4757; }
@@ -206,9 +207,9 @@ body.game-page {
 .upgrades-panel {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   z-index: 100;
 }
 
@@ -218,64 +219,63 @@ body.game-page {
   backdrop-filter: blur(12px);
   border: 2px solid #ffb703;
   border-radius: 16px;
-  padding: 8px 6px;
+  padding: 8px 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   color: #fff;
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   transition: transform 0.1s;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .upgrade-btn:active { transform: scale(0.95); }
 
-.upg-title { font-size: 0.85rem; font-weight: 800; color: #fff; }
+.upg-title { font-size: 0.62rem; color: #fff; }
 .upg-title span { color: #00f5d4; margin-left: 2px; }
-.upg-sub { font-size: 0.72rem; color: #a0aec0; }
+.upg-sub { font-size: 0.5rem; color: #a0aec0; }
 .upg-cost {
   margin-top: 4px;
   background: #ffb703;
   color: #000;
-  padding: 4px 10px;
+  padding: 6px 8px;
   border-radius: 10px;
-  font-weight: 900;
-  font-size: 0.82rem;
+  font-size: 0.6rem;
   width: 100%;
   text-align: center;
 }
 
-/* Settings Modal Clean Layout Fix */
+/* Settings Modal Clean Layout */
 .setting-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  padding: 10px 14px;
+  padding: 10px 12px;
   border-radius: 14px;
   margin-bottom: 10px;
   color: #ffffff;
-  font-weight: bold;
-  font-size: 0.88rem;
+  font-size: 0.65rem;
 }
 
 .setting-toggle {
   background: #00f5d4;
   color: #000;
   border: none;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 12px;
-  font-weight: 900;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
   cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
 }
 
 /* Modals & Main Menu */
-.game-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; }
-.name-input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 0.95rem; text-align: center; margin-bottom: 10px; }
-.menu-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.88rem; margin-bottom: 8px; cursor: pointer; transition: transform 0.1s; }
+.game-title { color: #ffb703; font-size: 1.1rem; line-height: 1.4; }
+.name-input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 0.7rem; text-align: center; margin-bottom: 10px; font-family: 'Press Start 2P', monospace; }
+.menu-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-size: 0.65rem; margin-bottom: 8px; cursor: pointer; transition: transform 0.1s; font-family: 'Press Start 2P', monospace; }
 .menu-btn:active { transform: scale(0.96); }
 
 .btn-play { background: #ffb703; color: #000; }
@@ -290,7 +290,7 @@ body.game-page {
 .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
 .modal-overlay.active { display: flex; animation: popIn 0.25s ease-out; }
 .modal-card { background: rgba(24, 28, 40, 0.95); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 88%; max-width: 340px; text-align: center; }
-.modal-title { color: #00f5d4; font-size: 1.15rem; font-weight: 900; margin-bottom: 12px; }
+.modal-title { color: #00f5d4; font-size: 0.85rem; margin-bottom: 12px; }
 
 .toast-popup {
   position: fixed;
@@ -299,14 +299,14 @@ body.game-page {
   transform: translateX(-50%);
   background: #00f5d4;
   color: #000;
-  padding: 10px 20px;
+  padding: 10px 16px;
   border-radius: 20px;
-  font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   z-index: 9999;
   box-shadow: 0 4px 15px rgba(0,0,0,0.5);
   animation: popIn 0.25s ease-out;
   transition: opacity 0.3s ease;
+  font-family: 'Press Start 2P', monospace;
 }
 
 @keyframes popIn {
