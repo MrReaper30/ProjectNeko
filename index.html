@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.4.0">
+  <link rel="stylesheet" href="style.css?v=1.5.0">
 </head>
 <body class="home-page">
   <div class="app-container">
@@ -20,7 +20,7 @@
     <main class="menu-body">
       <input type="text" id="player-name-input" class="name-input" placeholder="Enter Cat Hero Name">
 
-      <button class="menu-btn btn-play" onclick="startGame()">▶ PLAY GAME</button>
+      <button class="menu-btn btn-play" onclick="window.location.href='cities.html'">▶ PLAY GAME</button>
       <button class="menu-btn btn-gacha" onclick="openModal('gacha-modal')">🎰 CASINO GACHA</button>
       <button class="menu-btn btn-shop" onclick="openModal('shop-modal')">🛍️ CAT SKIN STORE</button>
       <button class="menu-btn btn-leaderboard" onclick="openModal('leaderboard-modal')">🏆 LEADERBOARD</button>
@@ -120,7 +120,7 @@
 
   </div>
 
-  <script src="js/state.js?v=1.3.0"></script>
+  <script src="js/state.js?v=1.5.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
@@ -138,7 +138,6 @@
       });
     }
 
-    function startGame() { window.location.href = 'game.html'; }
     function openModal(id) { document.getElementById(id).classList.add('active'); updateCurrencies(); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
@@ -149,7 +148,6 @@
       closeModal('shop-modal');
     }
 
-    // Casino Slot Machine Logic
     function spinSlots() {
       if (GameState.sardines < 10) {
         alert("Not enough 🐟 Sardines! Fight enemies to earn more.");

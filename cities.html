@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Select City Region - Project Neko</title>
+  <link rel="stylesheet" href="style.css?v=1.5.0">
+</head>
+<body class="home-page">
+  <div class="app-container">
+    <header class="main-header">
+      <h1 class="game-title" style="font-size: 1.5rem;">🏙️ SELECT CITY REGION</h1>
+    </header>
+
+    <main class="menu-body" style="width: 100%; max-width: 340px;">
+      <div class="city-card" onclick="selectCity(1)" style="background: linear-gradient(135deg, #10b981, #059669); margin-bottom: 12px; padding: 18px; border-radius: 16px; cursor: pointer; border: 2px solid #34d399; box-shadow: 0 6px 15px rgba(0,0,0,0.4);">
+        <h3 style="color:#fff; font-size:1.1rem; font-weight:900;">🌲 1. Whispering Woods</h3>
+        <p style="color:#e2e8f0; font-size:0.8rem; margin-top:4px;">Waves 1 to 5 • Normal Difficulty</p>
+      </div>
+
+      <div class="city-card" onclick="selectCity(2)" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); margin-bottom: 12px; padding: 18px; border-radius: 16px; cursor: pointer; border: 2px solid #60a5fa; box-shadow: 0 6px 15px rgba(0,0,0,0.4);">
+        <h3 style="color:#fff; font-size:1.1rem; font-weight:900;">🏙️ 2. Neon Metropolis</h3>
+        <p style="color:#e2e8f0; font-size:0.8rem; margin-top:4px;">Waves 1 to 5 • Advanced Enemies</p>
+      </div>
+
+      <div class="city-card" onclick="selectCity(3)" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9); margin-bottom: 12px; padding: 18px; border-radius: 16px; cursor: pointer; border: 2px solid #a78bfa; box-shadow: 0 6px 15px rgba(0,0,0,0.4);">
+        <h3 style="color:#fff; font-size:1.1rem; font-weight:900;">🌋 3. Volcanic Peaks</h3>
+        <p style="color:#e2e8f0; font-size:0.8rem; margin-top:4px;">Waves 1 to 5 • Elite Boss Wave</p>
+      </div>
+    </main>
+
+    <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top: 15px;">← MAIN MENU</button>
+  </div>
+
+  <script src="js/state.js?v=1.5.0"></script>
+  <script>
+    function selectCity(cityId) {
+      GameState.currentCity = cityId;
+      GameState.currentWave = 1;
+      GameState.save();
+      window.location.href = 'game.html';
+    }
+  </script>
+</body>
+</html>
