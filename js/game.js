@@ -1,4 +1,4 @@
-// Project Neko - Combat Engine v2.2.0 (With Particle & Attack FX)
+// Project Neko - Combat Engine v2.3.0
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
@@ -53,7 +53,6 @@
     }, GameState.upgrades.attackSpeed);
   }
 
-  // Particle Emitter Helper
   function spawnParticles(targetEl, count, symbolArray) {
     if (!targetEl) return;
     const rect = targetEl.getBoundingClientRect();
@@ -171,6 +170,10 @@
     isPaused = true;
     const earnedSardines = GameState.convertCoinsToSardines(waveCoinsEarned);
     
+    // Reset Wave progress to 1/5 upon death
+    GameState.currentWave = 1;
+    GameState.save();
+
     const defeatModal = document.getElementById('defeat-modal');
     if (defeatModal) defeatModal.classList.add('active');
 
@@ -182,19 +185,13 @@
           <span style="color:#00f5d4;">➔</span>
           <span style="color:#00f5d4; font-weight:bold;">+${earnedSardines} 🐟 Sardines</span>
         </div>
-        <small style="color:#a0aec0; display:block; margin-top:4px;">(Conversion Rate: 5 🪙 = 1 🐟)</small>
+        <small style="color:#e2e8f0; display:block; margin-top:4px;">(Defeat Reset: Waves restart at 1/5)</small>
       `;
     }
 
     const recText = document.getElementById('recommendation-text');
     if (recText) {
-      if (GameState.sardines >= GameState.getDmgCost()) {
-        recText.textContent = `You have enough Sardines! Upgrade Damage to Lv.${GameState.upgrades.damageLvl + 1} for +5 ATK in your next attempt!`;
-      } else if (GameState.sardines >= GameState.getSpdCost()) {
-        recText.textContent = `You have enough Sardines! Upgrade Speed to strike faster (-100ms)!`;
-      } else {
-        recText.textContent = `Revisit earlier waves or spend Yarn in the Skill Tree for Nine Lives (+2 Max HP) & Critical Claw!`;
-      }
+      recText.textContent = `You lost your 9 HP lives! Re-arm yourself in the Mega Shop or Skill Tree, then restart from Wave 1/5!`;
     }
 
     const defSardines = document.getElementById('def-sardine-count');
@@ -206,6 +203,8 @@
   window.retryWave = function () {
     isPaused = false;
     waveCoinsEarned = 0;
+    GameState.currentWave = 1; // Strict restart from Wave 1
+    GameState.save();
     const defeatModal = document.getElementById('defeat-modal');
     if (defeatModal) defeatModal.classList.remove('active');
     setupWaveStats();
@@ -225,6 +224,11 @@
       isPaused = true;
       const earnedSardines = GameState.convertCoinsToSardines(waveCoinsEarned);
       GameState.addYarn(5);
+      
+      // Unlock next city
+      if (GameState.currentCity >= GameState.unlockedCityMax) {
+        GameState.unlockedCityMax = GameState.currentCity + 1;
+      }
       GameState.currentCity++;
       GameState.currentWave = 1;
       GameState.save();
@@ -241,7 +245,7 @@
             <span style="color:#00f5d4; font-weight:bold;">+${earnedSardines} 🐟 Sardines</span>
           </div>
           <div style="margin-top:8px; color:#ff007f; font-weight:bold;">
-            🎉 City Cleared! +5 🧶 Yarn Bonus!
+            🎉 CITY DEFEATED! Unlocked Next City & +5 🧶 Yarn!
           </div>
         `;
       }
@@ -286,7 +290,7 @@
 
     if (dmgLvl) dmgLvl.textContent = `Lv.${GameState.upgrades.damageLvl}`;
     if (dmgStats) dmgStats.textContent = `ATK: ${GameState.upgrades.damage}`;
-    if (dmgBtn) dmgBtn.textContent = `${GameState.getDmgCost()} 🐟`;
+    if (dmgBtn) dmgBtn.textContent = `${GameState.getDmgCoinCost()} 🪙`;
 
     const spdLvl = document.getElementById('spd-lvl');
     const spdStats = document.getElementById('spd-stats');
@@ -294,23 +298,36 @@
 
     if (spdLvl) spdLvl.textContent = `Lv.${GameState.upgrades.speedLvl}`;
     if (spdStats) spdStats.textContent = `${GameState.upgrades.attackSpeed}ms`;
-    if (spdBtn) spdBtn.textContent = `${GameState.getSpdCost()} 🐟`;
+    if (spdBtn) spdBtn.textContent = `${GameState.getSpdCoinCost()} 🪙`;
   }
 
+  // Combat Boosts Now Deduct Coins
   window.buyDamageBoost = function () {
-    if (GameState.buyDamageUpgrade()) {
+    const cost = GameState.getDmgCoinCost();
+    if (waveCoinsEarned >= cost) {
+      waveCoinsEarned -= cost;
+      GameState.upgrades.damageLvl++;
+      GameState.upgrades.damage += 5;
+      GameState.save();
       updateHUD();
+      alert("💥 Damage Upgraded!");
     } else {
-      alert("Not enough 🐟 Sardines!");
+      alert(`❌ Need ${cost} 🪙 Coins! Defeat enemies to earn coins.`);
     }
   };
 
   window.buySpeedBoost = function () {
-    if (GameState.buySpeedUpgrade()) {
+    const cost = GameState.getSpdCoinCost();
+    if (waveCoinsEarned >= cost && GameState.upgrades.attackSpeed > 200) {
+      waveCoinsEarned -= cost;
+      GameState.upgrades.speedLvl++;
+      GameState.upgrades.attackSpeed = Math.max(200, GameState.upgrades.attackSpeed - 100);
+      GameState.save();
       startCombatLoop();
       updateHUD();
+      alert("⚡ Speed Upgraded!");
     } else {
-      alert("Not enough 🐟 Sardines!");
+      alert(`❌ Need ${cost} 🪙 Coins! Defeat enemies to earn coins.`);
     }
   };
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Mega Shop - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.2.0">
+  <link rel="stylesheet" href="style.css?v=2.3.0">
 </head>
 <body class="home-page">
   <div class="app-container" style="justify-content: flex-start; padding-top: 15px;">
@@ -17,49 +17,54 @@
       </div>
     </header>
 
-    <!-- Category Tabs -->
-    <nav class="shop-tabs" style="display:flex; gap:6px; width:100%; max-width:380px; margin: 12px 0; overflow-x:auto;">
+    <!-- Tabs -->
+    <nav class="shop-tabs" style="display:flex; gap:6px; width:100%; max-width:380px; margin: 12px 0;">
       <button class="shop-tab-btn active" onclick="switchCategory('skins', this)">🎨 SKINS</button>
       <button class="shop-tab-btn" onclick="switchCategory('gacha', this)">🎰 GACHA</button>
       <button class="shop-tab-btn" onclick="switchCategory('exchange', this)">💱 EXCHANGE</button>
       <button class="shop-tab-btn" onclick="switchCategory('yarn', this)">🧶 YARN VAULT</button>
     </nav>
 
-    <!-- Shop Content Section -->
+    <!-- Main Content -->
     <main class="menu-body" style="width:100%; max-width:380px; max-height: 60vh; overflow-y: auto;">
       
-      <!-- Category 1: Skins -->
+      <!-- Category 1: Skins Grid -->
       <div id="cat-skins" class="shop-category" style="display:block;">
-        <div class="skin-grid">
-          <div class="skin-card" onclick="handleSkinSelect('#ffb703', 'free', 0)">
-            <div class="skin-preview" style="background:#ffb703;"></div>
-            <span>Golden Neko</span>
-            <small id="skin-status-ffb703" style="color:#00f5d4;">Unlocked</small>
+        <div class="skin-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div class="skin-card" onclick="handleSkinSelect('#ffb703', 'free', 0)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
+            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#ffb703; margin:0 auto 6px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Golden Neko</span>
+            <small id="skin-status-ffb703" style="color:#00f5d4; font-weight:bold;">Unlocked</small>
           </div>
-          <div class="skin-card" onclick="handleSkinSelect('#ff4757', 'free', 0)">
-            <div class="skin-preview" style="background:#ff4757;"></div>
-            <span>Crimson Cat</span>
-            <small id="skin-status-ff4757" style="color:#00f5d4;">Unlocked</small>
+
+          <div class="skin-card" onclick="handleSkinSelect('#ff4757', 'free', 0)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
+            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#ff4757; margin:0 auto 6px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Crimson Cat</span>
+            <small id="skin-status-ff4757" style="color:#00f5d4; font-weight:bold;">Unlocked</small>
           </div>
-          <div class="skin-card" onclick="handleSkinSelect('#00f5d4', 'sardines', 50)">
-            <div class="skin-preview" style="background:#00f5d4;"></div>
-            <span>Neon Aqua</span>
-            <small id="skin-status-00f5d4" style="color:#ffb703;">50 🐟</small>
+
+          <div class="skin-card" onclick="handleSkinSelect('#00f5d4', 'sardines', 50)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
+            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#00f5d4; margin:0 auto 6px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Neon Aqua</span>
+            <small id="skin-status-00f5d4" style="color:#ffb703; font-weight:bold;">50 🐟</small>
           </div>
-          <div class="skin-card" onclick="handleSkinSelect('#7209b7', 'yarn', 5)">
-            <div class="skin-preview" style="background:#7209b7;"></div>
-            <span>Royal Shadow</span>
-            <small id="skin-status-7209b7" style="color:#ff007f;">5 🧶</small>
+
+          <div class="skin-card" onclick="handleSkinSelect('#7209b7', 'yarn', 5)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
+            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#7209b7; margin:0 auto 6px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Royal Shadow</span>
+            <small id="skin-status-7209b7" style="color:#ff007f; font-weight:bold;">5 🧶</small>
           </div>
-          <div class="skin-card" onclick="handleSkinSelect('#9d4edd', 'sardines', 100)">
-            <div class="skin-preview" style="background:#9d4edd;"></div>
-            <span>Cyber Purple</span>
-            <small id="skin-status-9d4edd" style="color:#ffb703;">100 🐟</small>
+
+          <div class="skin-card" onclick="handleSkinSelect('#9d4edd', 'sardines', 100)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
+            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#9d4edd; margin:0 auto 6px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Cyber Purple</span>
+            <small id="skin-status-9d4edd" style="color:#ffb703; font-weight:bold;">100 🐟</small>
           </div>
-          <div class="skin-card" onclick="handleSkinSelect('#10b981', 'yarn', 10)">
-            <div class="skin-preview" style="background:#10b981;"></div>
-            <span>Emerald Beast</span>
-            <small id="skin-status-10b981" style="color:#ff007f;">10 🧶</small>
+
+          <div class="skin-card" onclick="handleSkinSelect('#10b981', 'yarn', 10)" style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.2); padding:12px; border-radius:14px; text-align:center;">
+            <div class="skin-preview" style="width:40px; height:40px; border-radius:50%; background:#10b981; margin:0 auto 6px auto; border:2px solid #fff;"></div>
+            <span style="color:#ffffff; font-weight:bold; font-size:0.85rem; display:block;">Emerald Beast</span>
+            <small id="skin-status-10b981" style="color:#ff007f; font-weight:bold;">10 🧶</small>
           </div>
         </div>
       </div>
@@ -68,15 +73,15 @@
       <div id="cat-gacha" class="shop-category" style="display:none;">
         <div style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
           <h3 style="color:#ff007f; font-weight:bold; font-size:1.1rem;">🎰 NEKO CASINO SLOTS</h3>
-          <p style="color:#e2e8f0; font-size:0.8rem; margin:6px 0 12px 0;">Match ALL 3 symbols to win 🧶 Yarn Balls!</p>
+          <p style="color:#ffffff; font-size:0.8rem; margin:6px 0 12px 0;">Match ALL 3 symbols to win 🧶 Yarn Balls!</p>
           
-          <div class="slot-machine">
-            <div class="slot-reel" id="reel1">🐟</div>
-            <div class="slot-reel" id="reel2">🐟</div>
-            <div class="slot-reel" id="reel3">🐟</div>
+          <div class="slot-machine" style="display:flex; justify-content:center; gap:12px; margin:12px 0;">
+            <div class="slot-reel" id="reel1" style="width:60px; height:65px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#fff; border:1px solid rgba(255,255,255,0.2);">🐟</div>
+            <div class="slot-reel" id="reel2" style="width:60px; height:65px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#fff; border:1px solid rgba(255,255,255,0.2);">🐟</div>
+            <div class="slot-reel" id="reel3" style="width:60px; height:65px; background:rgba(255,255,255,0.1); border-radius:12px; display:flex; justify-content:center; align-items:center; font-size:2rem; color:#fff; border:1px solid rgba(255,255,255,0.2);">🐟</div>
           </div>
 
-          <button class="menu-btn btn-play" id="spin-btn" onclick="spinSlots()" style="margin-top:15px; background:#ff007f; color:#fff;">SPIN (10 🐟)</button>
+          <button class="menu-btn btn-play" id="spin-btn" onclick="spinSlots()" style="margin-top:10px; background:#ff007f; color:#fff;">SPIN (10 🐟)</button>
         </div>
       </div>
 
@@ -84,9 +89,9 @@
       <div id="cat-exchange" class="shop-category" style="display:none;">
         <div style="background:rgba(18,24,38,0.95); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:16px; text-align:center;">
           <h3 style="color:#00f5d4; font-weight:bold; font-size:1.1rem; margin-bottom:8px;">💱 CURRENCY CONVERTER</h3>
-          <p style="color:#e2e8f0; font-size:0.8rem; margin-bottom:14px;">Trade rare Yarn Balls for Sardine funding:</p>
+          <p style="color:#ffffff; font-size:0.8rem; margin-bottom:14px;">Trade rare Yarn Balls for Sardine funding:</p>
 
-          <div class="conv-anim" style="margin-bottom:15px;">
+          <div class="conv-anim" style="background:rgba(0,245,212,0.15); border:1px solid #00f5d4; padding:10px; border-radius:14px; color:#fff; font-weight:bold; margin-bottom:15px; display:flex; justify-content:space-around;">
             <span>🧶 2 Yarn Balls</span>
             <span style="color:#00f5d4;">➔</span>
             <span style="color:#00f5d4; font-weight:bold;">+10 🐟 Sardines</span>
@@ -128,7 +133,7 @@
     <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top:15px; width:100%; max-width:380px;">← MAIN MENU</button>
   </div>
 
-  <script src="js/state.js?v=2.2.0"></script>
+  <script src="js/state.js?v=2.3.0"></script>
   <script>
     function updateCurrencies() {
       document.getElementById('sardine-count').textContent = GameState.sardines;
@@ -164,7 +169,7 @@
             el.style.color = '#00f5d4';
           } else if (GameState.isSkinUnlocked(s.hex)) {
             el.textContent = 'Unlocked';
-            el.style.color = '#a0aec0';
+            el.style.color = '#e2e8f0';
           } else {
             el.textContent = s.costText;
           }
