@@ -4,56 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.2.1">
+  <link rel="stylesheet" href="style.css?v=1.3.0">
 </head>
 <body class="home-page">
   <div class="app-container">
     
     <header class="main-header">
       <h1 class="game-title">🐱 A.I CREATOR:<br>PROJECT NEKO</h1>
+      <div class="currency-bar">
+        <span class="curr-pill">🐟 <span id="sardine-count">0</span></span>
+        <span class="curr-pill">🧶 <span id="yarn-count">0</span></span>
+      </div>
     </header>
 
     <main class="menu-body">
-      <input type="text" id="player-name-input" class="name-input" placeholder="Enter Cat Hero Name" value="CatHero">
+      <input type="text" id="player-name-input" class="name-input" placeholder="Enter Cat Hero Name">
 
       <button class="menu-btn btn-play" onclick="startGame()">▶ PLAY GAME</button>
-      <button class="menu-btn btn-shop" onclick="openModal('shop-modal')">🛍️ CAT COLOR SHOP</button>
+      <button class="menu-btn btn-gacha" onclick="openModal('gacha-modal')">🎰 CASINO GACHA</button>
+      <button class="menu-btn btn-shop" onclick="openModal('shop-modal')">🛍️ CAT SKIN STORE</button>
       <button class="menu-btn btn-leaderboard" onclick="openModal('leaderboard-modal')">🏆 LEADERBOARD</button>
       <button class="menu-btn btn-devlog" onclick="window.location.href='changelog.html'">📜 DEV LOG & HISTORY</button>
       <button class="menu-btn btn-settings" onclick="openModal('settings-modal')">⚙️ SETTINGS</button>
       <button class="menu-btn btn-legal" onclick="openModal('legal-modal')">📜 LEGAL & TOS</button>
     </main>
 
-    <!-- Modals -->
-    <div id="shop-modal" class="modal-overlay">
+    <!-- Casino Gacha Modal -->
+    <div id="gacha-modal" class="modal-overlay">
       <div class="modal-card">
-        <h2 class="modal-title">CAT COLOR SHOP</h2>
-        <div class="color-swatches">
-          <div class="circle-swatch" style="background:#ffb703;" onclick="selectColor('#ffb703')"></div>
-          <div class="circle-swatch" style="background:#ff4757;" onclick="selectColor('#ff4757')"></div>
-          <div class="circle-swatch" style="background:#00f5d4;" onclick="selectColor('#00f5d4')"></div>
-          <div class="circle-swatch" style="background:#7209b7;" onclick="selectColor('#7209b7')"></div>
+        <h2 class="modal-title">🎰 NEKO CASINO SLOTS</h2>
+        <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:10px;">Match 3 symbols to win 🧶 Yarn Balls!</p>
+        
+        <div class="slot-machine">
+          <div class="slot-reel" id="reel1">🐟</div>
+          <div class="slot-reel" id="reel2">🐟</div>
+          <div class="slot-reel" id="reel3">🐟</div>
         </div>
+
+        <button class="menu-btn btn-play" id="spin-btn" onclick="spinSlots()" style="margin-top:15px;">SPIN (10 🐟)</button>
+        <button class="menu-btn btn-close" onclick="closeModal('gacha-modal')">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- Cat Skin Store Modal -->
+    <div id="shop-modal" class="modal-overlay">
+      <div class="modal-card" style="max-width:360px;">
+        <h2 class="modal-title">🛍️ CAT SKIN STORE</h2>
+        <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:12px;">Select or unlock custom hero skins:</p>
+
+        <div class="skin-grid">
+          <div class="skin-card" onclick="selectColor('#ffb703')">
+            <div class="skin-preview" style="background:#ffb703;"></div>
+            <span>Golden Neko</span>
+            <small style="color:#00f5d4;">Unlocked</small>
+          </div>
+          <div class="skin-card" onclick="selectColor('#ff4757')">
+            <div class="skin-preview" style="background:#ff4757;"></div>
+            <span>Crimson Cat</span>
+            <small style="color:#00f5d4;">Unlocked</small>
+          </div>
+          <div class="skin-card" onclick="selectColor('#00f5d4')">
+            <div class="skin-preview" style="background:#00f5d4;"></div>
+            <span>Neon Aqua</span>
+            <small style="color:#ffb703;">50 🐟</small>
+          </div>
+          <div class="skin-card" onclick="selectColor('#7209b7')">
+            <div class="skin-preview" style="background:#7209b7;"></div>
+            <span>Royal Shadow</span>
+            <small style="color:#ffb703;">5 🧶</small>
+          </div>
+        </div>
+
         <button class="menu-btn btn-close" onclick="closeModal('shop-modal')">CLOSE</button>
       </div>
     </div>
 
-    <div id="leaderboard-modal" class="modal-overlay">
-      <div class="modal-card">
-        <h2 class="modal-title">TOP CAT HEROES</h2>
-        <p style="color:#a0aec0; margin-bottom:15px; font-size:0.9rem;">1. NekoMaster - City 5 (Wave 5)<br>2. WhiskerKing - City 3 (Wave 2)<br>3. You - City 1 (Wave 1)</p>
-        <button class="menu-btn btn-close" onclick="closeModal('leaderboard-modal')">CLOSE</button>
-      </div>
-    </div>
-
+    <!-- Settings Modal -->
     <div id="settings-modal" class="modal-overlay">
       <div class="modal-card">
-        <h2 class="modal-title">SETTINGS</h2>
-        <button class="menu-btn btn-play" onclick="resetProgress()" style="background:#ff4757; color:#fff;">RESET SAVE DATA</button>
+        <h2 class="modal-title">⚙️ SETTINGS</h2>
+        <div class="setting-row">
+          <span>🔊 Sound Effects</span>
+          <button class="setting-toggle" id="sound-toggle-btn" onclick="toggleSound()">ON</button>
+        </div>
+        <div class="setting-row">
+          <span>📳 Haptic Vibration</span>
+          <button class="setting-toggle" id="vibe-toggle-btn" onclick="toggleVibe()">ON</button>
+        </div>
+        <button class="menu-btn btn-play" onclick="resetProgress()" style="background:#ff4757; color:#fff; margin-top:15px;">RESET SAVE DATA</button>
         <button class="menu-btn btn-close" onclick="closeModal('settings-modal')">CLOSE</button>
       </div>
     </div>
 
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="modal-title">🏆 TOP CAT HEROES</h2>
+        <p style="color:#a0aec0; margin-bottom:15px; font-size:0.85rem; line-height:1.6;">
+          1. 👑 NekoMaster — City 5 (Wave 5)<br>
+          2. 🐟 WhiskerKing — City 3 (Wave 2)<br>
+          3. 🐾 You — City <span id="lb-city">1</span> (Wave <span id="lb-wave">1</span>)
+        </p>
+        <button class="menu-btn btn-close" onclick="closeModal('leaderboard-modal')">CLOSE</button>
+      </div>
+    </div>
+
+    <!-- Legal Modal -->
     <div id="legal-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">TERMS & PRIVACY</h2>
@@ -64,8 +120,15 @@
 
   </div>
 
-  <script src="js/state.js?v=1.2.1"></script>
+  <script src="js/state.js?v=1.3.0"></script>
   <script>
+    function updateCurrencies() {
+      document.getElementById('sardine-count').textContent = GameState.sardines;
+      document.getElementById('yarn-count').textContent = GameState.yarn;
+      document.getElementById('lb-city').textContent = GameState.currentCity;
+      document.getElementById('lb-wave').textContent = GameState.currentWave;
+    }
+
     const nameInput = document.getElementById('player-name-input');
     if (nameInput) {
       nameInput.value = GameState.playerName;
@@ -75,23 +138,74 @@
       });
     }
 
-    function startGame() {
-      window.location.href = 'game.html';
-    }
-
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function startGame() { window.location.href = 'game.html'; }
+    function openModal(id) { document.getElementById(id).classList.add('active'); updateCurrencies(); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
     function selectColor(hex) {
-      localStorage.setItem('neko_cat_color', hex);
-      alert('Cat skin updated!');
+      GameState.catColor = hex;
+      GameState.save();
+      alert('Cat skin equipped!');
       closeModal('shop-modal');
     }
+
+    // Casino Slot Machine Logic
+    function spinSlots() {
+      if (GameState.sardines < 10) {
+        alert("Not enough 🐟 Sardines! Fight enemies to earn more.");
+        return;
+      }
+      GameState.sardines -= 10;
+      updateCurrencies();
+
+      const symbols = ['🐟', '🧶', '🐱', '👑'];
+      const r1 = symbols[Math.floor(Math.random() * symbols.length)];
+      const r2 = symbols[Math.floor(Math.random() * symbols.length)];
+      const r3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+      document.getElementById('reel1').textContent = r1;
+      document.getElementById('reel2').textContent = r2;
+      document.getElementById('reel3').textContent = r3;
+
+      if (r1 === r2 && r2 === r3) {
+        if (r1 === '🧶' || r1 === '👑') {
+          alert("🎉 JACKPOT! You won +10 🧶 Yarn Balls!");
+          GameState.addYarn(10);
+        } else {
+          alert("🎉 MATCH 3! You won +5 🧶 Yarn Balls!");
+          GameState.addYarn(5);
+        }
+      } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+        alert("Nice! Pair matched: +15 🐟 Sardines refund!");
+        GameState.addSardines(15);
+      }
+      updateCurrencies();
+    }
+
+    function toggleSound() {
+      GameState.soundEnabled = !GameState.soundEnabled;
+      GameState.save();
+      document.getElementById('sound-toggle-btn').textContent = GameState.soundEnabled ? 'ON' : 'OFF';
+    }
+
+    function toggleVibe() {
+      GameState.vibrationEnabled = !GameState.vibrationEnabled;
+      GameState.save();
+      document.getElementById('vibe-toggle-btn').textContent = GameState.vibrationEnabled ? 'ON' : 'OFF';
+    }
+
     function resetProgress() {
-      if (confirm('Reset all gold, upgrades, and city wave progress?')) {
+      if (confirm('Reset all progress, currencies, and skins?')) {
         localStorage.clear();
         location.reload();
       }
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCurrencies();
+      document.getElementById('sound-toggle-btn').textContent = GameState.soundEnabled ? 'ON' : 'OFF';
+      document.getElementById('vibe-toggle-btn').textContent = GameState.vibrationEnabled ? 'ON' : 'OFF';
+    });
   </script>
 </body>
 </html>

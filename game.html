@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.2.1">
+  <link rel="stylesheet" href="style.css?v=1.3.0">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
@@ -12,7 +12,7 @@
     <!-- Top HUD Bar -->
     <header class="hud-top">
       <div class="hud-pill"><span id="stage-display">CITY 1: WAVE 1/5</span></div>
-      <div class="hud-pill"><span id="gold-display">🪙 0</span></div>
+      <div class="hud-pill"><span id="sardine-display">🐟 0</span> <span id="yarn-display" style="margin-left:6px;">🧶 0</span></div>
       <button class="hud-btn" onclick="togglePause()">⚙️ PAUSE</button>
     </header>
 
@@ -22,7 +22,6 @@
 
     <!-- Battle Stage -->
     <main class="battle-stage">
-      <!-- Player Unit -->
       <div class="unit-box player-box">
         <div class="health-bar-container">
           <span class="health-label">🐾 <span id="player-hp-text">9/9 HP</span></span>
@@ -34,7 +33,6 @@
         </div>
       </div>
 
-      <!-- Enemy Unit -->
       <div class="unit-box enemy-box">
         <div class="health-bar-container">
           <span class="health-label" style="color:#2ed573;">SLIME</span>
@@ -49,13 +47,13 @@
       <button class="upgrade-btn" onclick="buyDamageBoost()">
         <span class="upg-title">Damage <span id="dmg-lvl">Lv.1</span></span>
         <span class="upg-sub" id="dmg-stats">ATK: 10</span>
-        <span class="upg-cost" id="dmg-buy-btn">20 🪙</span>
+        <span class="upg-cost" id="dmg-buy-btn">20 🐟</span>
       </button>
 
       <button class="upgrade-btn" onclick="buySpeedBoost()">
         <span class="upg-title">Speed <span id="spd-lvl">Lv.1</span></span>
         <span class="upg-sub" id="spd-stats">1000ms</span>
-        <span class="upg-cost" id="spd-buy-btn">50 🪙</span>
+        <span class="upg-cost" id="spd-buy-btn">50 🐟</span>
       </button>
     </footer>
 
@@ -70,8 +68,8 @@
 
   </div>
 
-  <script src="js/state.js?v=1.2.1"></script>
-  <script src="js/game.js?v=1.2.1"></script>
+  <script src="js/state.js?v=1.3.0"></script>
+  <script src="js/game.js?v=1.3.0"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');

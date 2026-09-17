@@ -22,12 +22,12 @@ body.game-page {
   background: url('assets/images/ui/game_backgroud_city_1.jpg') center center / cover no-repeat fixed;
 }
 
-/* App Main Containers */
+/* App Containers */
 .app-container {
   min-height: 100vh;
   max-width: 480px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,6 +35,23 @@ body.game-page {
   text-align: center;
   background: rgba(15, 20, 32, 0.5);
   backdrop-filter: blur(8px);
+}
+
+.currency-bar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.curr-pill {
+  background: rgba(18, 24, 38, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.85rem;
 }
 
 .combat-wrapper {
@@ -49,7 +66,7 @@ body.game-page {
   background: transparent !important;
 }
 
-/* HUD Top Header */
+/* HUD Header */
 .hud-top {
   display: flex;
   justify-content: space-between;
@@ -66,7 +83,6 @@ body.game-page {
   font-weight: 800;
   font-size: 0.82rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
 .hud-btn {
@@ -92,10 +108,9 @@ body.game-page {
   font-weight: bold;
   margin-top: 6px;
   backdrop-filter: blur(6px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
-/* Battle Stage Arena (Anchored on Grass) */
+/* Battle Stage Arena */
 .battle-stage {
   flex: 1;
   display: flex !important;
@@ -113,7 +128,6 @@ body.game-page {
   gap: 8px;
 }
 
-/* Health Bars */
 .health-bar-container {
   width: 100px;
   text-align: center;
@@ -124,22 +138,8 @@ body.game-page {
   border: 1px solid rgba(255,255,255,0.2);
 }
 
-.health-label {
-  font-size: 0.7rem;
-  font-weight: 800;
-  display: block;
-  margin-bottom: 3px;
-  color: #fff;
-}
-
-.health-bar-bg {
-  width: 100%;
-  height: 8px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 10px;
-  overflow: hidden;
-}
-
+.health-label { font-size: 0.7rem; font-weight: 800; display: block; margin-bottom: 3px; color: #fff; }
+.health-bar-bg { width: 100%; height: 8px; background: rgba(0,0,0,0.6); border-radius: 10px; overflow: hidden; }
 .hp-fill { height: 100%; width: 100%; transition: width 0.2s ease; }
 .player-fill { background: #ff4757; }
 .enemy-fill { background: #2ed573; }
@@ -166,7 +166,7 @@ body.game-page {
   height: 0;
   border-left: 12px solid transparent;
   border-right: 12px solid transparent;
-  border-bottom: 18px solid #ffb703;
+  border-bottom: 18px solid inherit;
 }
 .cat-hero::before { left: 2px; transform: rotate(-12deg); }
 .cat-hero::after { right: 2px; transform: rotate(12deg); }
@@ -206,7 +206,81 @@ body.game-page {
 .slime-enemy::before { left: 18px; }
 .slime-enemy::after { right: 18px; }
 
-/* Upgrade Action Buttons Panel */
+/* Slot Machine Gacha Styles */
+.slot-machine {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(10, 14, 24, 0.9);
+  padding: 15px;
+  border-radius: 16px;
+  border: 2px solid #ffb703;
+  margin-top: 10px;
+}
+
+.slot-reel {
+  width: 60px;
+  height: 65px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Skin Grid Store */
+.skin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.skin-card {
+  background: rgba(18, 24, 38, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.skin-preview {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+  border: 2px solid #fff;
+}
+
+.skin-card span { font-size: 0.8rem; font-weight: bold; color: #fff; }
+
+/* Settings Row */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  font-weight: bold;
+}
+
+.setting-toggle {
+  background: #00f5d4;
+  color: #000;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+/* Upgrade Buttons Bottom Layout */
 .upgrades-panel {
   display: flex;
   flex-direction: row;
@@ -225,77 +299,22 @@ body.game-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 4px;
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-  transition: transform 0.1s;
 }
 
-.upgrade-btn:active {
-  transform: scale(0.96);
-}
+.upg-title { font-size: 0.82rem; font-weight: 800; color: #fff; }
+.upg-title span { color: #00f5d4; margin-left: 2px; }
+.upg-sub { font-size: 0.72rem; color: #a0aec0; }
+.upg-cost { margin-top: 4px; background: #ffb703; color: #000; padding: 4px 12px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; width: 100%; text-align: center; }
 
-.upg-title {
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: #fff;
-}
-
-.upg-title span {
-  color: #00f5d4;
-  margin-left: 2px;
-}
-
-.upg-sub {
-  font-size: 0.72rem;
-  color: #a0aec0;
-}
-
-.upg-cost {
-  margin-top: 4px;
-  background: #ffb703;
-  color: #000;
-  padding: 4px 12px;
-  border-radius: 10px;
-  font-weight: 900;
-  font-size: 0.8rem;
-  width: 100%;
-  text-align: center;
-}
-
-/* Combat Keyframe Animations */
-@keyframes catLunge {
-  0% { transform: translateX(0) scale(1); }
-  50% { transform: translateX(45px) scale(1.15) rotate(10deg); }
-  100% { transform: translateX(0) scale(1); }
-}
-
-@keyframes slimeLunge {
-  0% { transform: translateX(0) scale(1); }
-  50% { transform: translateX(-45px) scale(1.15) rotate(-10deg); }
-  100% { transform: translateX(0) scale(1); }
-}
-
-@keyframes hitFlash {
-  0% { filter: brightness(1); }
-  50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); }
-  100% { filter: brightness(1); }
-}
-
-.attacking-cat { animation: catLunge 0.18s ease-in-out !important; }
-.attacking-slime { animation: slimeLunge 0.18s ease-in-out !important; }
-.hit-cat, .hit-slime { animation: hitFlash 0.22s ease-in-out !important; }
-
-/* Hide leftover hill elements */
-.hills, .dark-hills, .ground, .arena-bg { display: none !important; }
-
-/* Modals & Main Menu */
-.menu-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; }
-.name-input { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 1rem; text-align: center; margin-bottom: 12px; }
-.menu-btn { width: 100%; padding: 14px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer; }
+/* Modals & Menu Buttons */
+.game-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; }
+.name-input { width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 0.95rem; text-align: center; margin-bottom: 10px; }
+.menu-btn { width: 100%; padding: 13px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.88rem; margin-bottom: 8px; cursor: pointer; }
 .btn-play { background: #ffb703; color: #000; }
+.btn-gacha { background: #ff007f; color: #fff; }
 .btn-shop { background: #00f5d4; color: #000; }
 .btn-leaderboard { background: #7209b7; color: #fff; }
 .btn-devlog { background: #00f5d4; color: #000; }
@@ -305,5 +324,5 @@ body.game-page {
 
 .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; }
 .modal-overlay.active { display: flex; }
-.modal-card { background: rgba(24, 28, 40, 0.9); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 85%; max-width: 320px; text-align: center; }
-.modal-title { color: #00f5d4; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; }
+.modal-card { background: rgba(24, 28, 40, 0.95); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 88%; max-width: 340px; text-align: center; }
+.modal-title { color: #00f5d4; font-size: 1.15rem; font-weight: 900; margin-bottom: 10px; }

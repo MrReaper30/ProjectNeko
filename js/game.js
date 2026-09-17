@@ -1,4 +1,4 @@
-// Project Neko - Wave Combat Engine v1.2.0
+// Project Neko - Combat Engine v1.3.0
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
@@ -12,6 +12,7 @@
 
   function initGame() {
     setupWaveStats();
+    applyPlayerSkin();
     updateHUD();
     startCombatLoop();
 
@@ -20,6 +21,13 @@
 
     if (slime) slime.addEventListener('click', playerAttack);
     if (cat) cat.addEventListener('click', playerAttack);
+  }
+
+  function applyPlayerSkin() {
+    const cat = document.getElementById('player-sprite');
+    if (cat && GameState.catColor) {
+      cat.style.backgroundColor = GameState.catColor;
+    }
   }
 
   function setupWaveStats() {
@@ -61,7 +69,7 @@
     if (enemyHp <= 0) {
       enemyHp = 0;
       enemiesRemaining--;
-      GameState.addGold(10 + GameState.currentWave * 4);
+      GameState.addSardines(10 + GameState.currentWave * 4);
 
       if (enemiesRemaining > 0) {
         setTimeout(spawnNextEnemy, 400);
@@ -92,7 +100,7 @@
     playerHp -= 1;
     if (playerHp <= 0) {
       playerHp = 0;
-      alert("Defeat! Wave failed. Retrying wave...");
+      alert("Defeat! Retrying wave...");
       playerHp = maxPlayerHp;
       enemiesRemaining = enemiesInWave;
       enemyHp = maxEnemyHp;
@@ -108,10 +116,12 @@
 
   function completeWave() {
     if (GameState.currentWave < GameState.maxWavesPerCity) {
-      alert(`Wave ${GameState.currentWave} Cleared! Next Wave coming!`);
+      alert(`Wave ${GameState.currentWave} Cleared! +1 🧶 Yarn Bonus!`);
+      GameState.addYarn(1);
       GameState.currentWave++;
     } else {
-      alert(`City ${GameState.currentCity} Cleared! Unlocking Next City!`);
+      alert(`City ${GameState.currentCity} Cleared! +5 🧶 Yarn Bonus!`);
+      GameState.addYarn(5);
       GameState.currentCity++;
       GameState.currentWave = 1;
     }
@@ -122,11 +132,13 @@
 
   function updateHUD() {
     const stageDisp = document.getElementById('stage-display');
-    const goldDisp = document.getElementById('gold-display');
+    const sardineDisp = document.getElementById('sardine-display');
+    const yarnDisp = document.getElementById('yarn-display');
     const enemiesDisp = document.getElementById('enemies-left');
 
     if (stageDisp) stageDisp.textContent = `CITY ${GameState.currentCity}: WAVE ${GameState.currentWave}/${GameState.maxWavesPerCity}`;
-    if (goldDisp) goldDisp.textContent = `🪙 ${GameState.gold}`;
+    if (sardineDisp) sardineDisp.textContent = `🐟 ${GameState.sardines}`;
+    if (yarnDisp) yarnDisp.textContent = `🧶 ${GameState.yarn}`;
     if (enemiesDisp) enemiesDisp.textContent = `ENEMIES: ${enemiesRemaining} / ${enemiesInWave}`;
 
     const pHpText = document.getElementById('player-hp-text');
@@ -143,7 +155,7 @@
 
     if (dmgLvl) dmgLvl.textContent = `Lv.${GameState.upgrades.damageLvl}`;
     if (dmgStats) dmgStats.textContent = `ATK: ${GameState.upgrades.damage}`;
-    if (dmgBtn) dmgBtn.textContent = `${GameState.getDmgCost()} 🪙`;
+    if (dmgBtn) dmgBtn.textContent = `${GameState.getDmgCost()} 🐟`;
 
     const spdLvl = document.getElementById('spd-lvl');
     const spdStats = document.getElementById('spd-stats');
@@ -151,7 +163,7 @@
 
     if (spdLvl) spdLvl.textContent = `Lv.${GameState.upgrades.speedLvl}`;
     if (spdStats) spdStats.textContent = `${GameState.upgrades.attackSpeed}ms`;
-    if (spdBtn) spdBtn.textContent = `${GameState.getSpdCost()} 🪙`;
+    if (spdBtn) spdBtn.textContent = `${GameState.getSpdCost()} 🐟`;
   }
 
   window.buyDamageBoost = function () {
