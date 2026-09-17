@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.3.0">
+  <link rel="stylesheet" href="style.css?v=1.4.0">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
@@ -42,7 +42,7 @@
       </div>
     </main>
 
-    <!-- Upgrades Compact Bottom Panel -->
+    <!-- Upgrades Bottom Panel -->
     <footer class="upgrades-panel">
       <button class="upgrade-btn" onclick="buyDamageBoost()">
         <span class="upg-title">Damage <span id="dmg-lvl">Lv.1</span></span>
@@ -66,10 +66,46 @@
       </div>
     </div>
 
+    <!-- Defeat Modal -->
+    <div id="defeat-modal" class="modal-overlay">
+      <div class="modal-card" style="max-width:350px;">
+        <h2 class="modal-title" style="color:#ff4757; font-size:1.4rem;">💀 YOU DIED!</h2>
+        <p style="color:#a0aec0; font-size:0.8rem; margin-bottom:12px;">Upgrade your stats before retrying!</p>
+        
+        <div class="currency-bar" style="margin-bottom:12px;">
+          <span class="curr-pill">🐟 <span id="def-sardine-count">0</span></span>
+          <span class="curr-pill">🧶 <span id="def-yarn-count">0</span></span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:14px;">
+          <!-- Damage Upgrades -->
+          <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:12px;">
+            <span style="color:#fff; font-size:0.8rem; font-weight:bold; display:block; margin-bottom:4px;">Damage Upgrade</span>
+            <div style="display:flex; gap:6px;">
+              <button class="buy-btn" id="def-dmg-fish-btn" onclick="buyDefeatUpgradeDmgFish()" style="flex:1; font-size:0.75rem; padding:6px 0;">+5 ATK (🐟)</button>
+              <button class="buy-btn" id="def-dmg-yarn-btn" onclick="buyDefeatUpgradeDmgYarn()" style="flex:1; font-size:0.75rem; padding:6px 0; background:#ff007f; color:#fff;">+5 ATK (🧶)</button>
+            </div>
+          </div>
+
+          <!-- Speed Upgrades -->
+          <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:12px;">
+            <span style="color:#fff; font-size:0.8rem; font-weight:bold; display:block; margin-bottom:4px;">Speed Upgrade</span>
+            <div style="display:flex; gap:6px;">
+              <button class="buy-btn" id="def-spd-fish-btn" onclick="buyDefeatUpgradeSpdFish()" style="flex:1; font-size:0.75rem; padding:6px 0;">-100ms (🐟)</button>
+              <button class="buy-btn" id="def-spd-yarn-btn" onclick="buyDefeatUpgradeSpdYarn()" style="flex:1; font-size:0.75rem; padding:6px 0; background:#ff007f; color:#fff;">-100ms (🧶)</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="menu-btn btn-play" onclick="retryWave()">🔄 RETRY WAVE</button>
+        <button class="menu-btn btn-close" onclick="window.location.href='index.html'">🏠 QUIT TO MENU</button>
+      </div>
+    </div>
+
   </div>
 
-  <script src="js/state.js?v=1.3.0"></script>
-  <script src="js/game.js?v=1.3.0"></script>
+  <script src="js/state.js?v=1.4.0"></script>
+  <script src="js/game.js?v=1.4.0"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');

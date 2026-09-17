@@ -1,4 +1,4 @@
-// Project Neko - Combat Engine v1.3.0
+// Project Neko - Combat Engine v1.4.0
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
@@ -51,7 +51,7 @@
   }
 
   function playerAttack() {
-    if (enemyHp <= 0 || enemiesRemaining <= 0) return;
+    if (enemyHp <= 0 || enemiesRemaining <= 0 || isPaused) return;
 
     const cat = document.getElementById('player-sprite');
     const slime = document.getElementById('enemy-sprite');
@@ -100,14 +100,27 @@
     playerHp -= 1;
     if (playerHp <= 0) {
       playerHp = 0;
-      alert("Defeat! Retrying wave...");
-      playerHp = maxPlayerHp;
-      enemiesRemaining = enemiesInWave;
-      enemyHp = maxEnemyHp;
+      triggerDefeat();
     }
 
     updateHUD();
   }
+
+  function triggerDefeat() {
+    isPaused = true;
+    const defeatModal = document.getElementById('defeat-modal');
+    if (defeatModal) defeatModal.classList.add('active');
+    updateDefeatModal();
+  }
+
+  window.retryWave = function () {
+    isPaused = false;
+    const defeatModal = document.getElementById('defeat-modal');
+    if (defeatModal) defeatModal.classList.remove('active');
+    setupWaveStats();
+    updateHUD();
+    startCombatLoop();
+  };
 
   function spawnNextEnemy() {
     enemyHp = maxEnemyHp;
@@ -129,6 +142,59 @@
     setupWaveStats();
     updateHUD();
   }
+
+  function updateDefeatModal() {
+    const defSardines = document.getElementById('def-sardine-count');
+    const defYarn = document.getElementById('def-yarn-count');
+    if (defSardines) defSardines.textContent = GameState.sardines;
+    if (defYarn) defYarn.textContent = GameState.yarn;
+
+    const defDmgFishBtn = document.getElementById('def-dmg-fish-btn');
+    const defDmgYarnBtn = document.getElementById('def-dmg-yarn-btn');
+    const defSpdFishBtn = document.getElementById('def-spd-fish-btn');
+    const defSpdYarnBtn = document.getElementById('def-spd-yarn-btn');
+
+    if (defDmgFishBtn) defDmgFishBtn.textContent = `+5 ATK (${GameState.getDmgCost()} 🐟)`;
+    if (defDmgYarnBtn) defDmgYarnBtn.textContent = `+5 ATK (${GameState.getDmgYarnCost()} 🧶)`;
+    if (defSpdFishBtn) defSpdFishBtn.textContent = `-100ms (${GameState.getSpdCost()} 🐟)`;
+    if (defSpdYarnBtn) defSpdYarnBtn.textContent = `-100ms (${GameState.getSpdYarnCost()} 🧶)`;
+  }
+
+  window.buyDefeatUpgradeDmgFish = function () {
+    if (GameState.buyDamageUpgrade()) {
+      updateHUD();
+      updateDefeatModal();
+    } else {
+      alert("Not enough 🐟 Sardines! Try upgrading with 🧶 Yarn Balls!");
+    }
+  };
+
+  window.buyDefeatUpgradeDmgYarn = function () {
+    if (GameState.buyDamageUpgradeYarn()) {
+      updateHUD();
+      updateDefeatModal();
+    } else {
+      alert("Not enough 🧶 Yarn Balls!");
+    }
+  };
+
+  window.buyDefeatUpgradeSpdFish = function () {
+    if (GameState.buySpeedUpgrade()) {
+      updateHUD();
+      updateDefeatModal();
+    } else {
+      alert("Not enough 🐟 Sardines! Try upgrading with 🧶 Yarn Balls!");
+    }
+  };
+
+  window.buyDefeatUpgradeSpdYarn = function () {
+    if (GameState.buySpeedUpgradeYarn()) {
+      updateHUD();
+      updateDefeatModal();
+    } else {
+      alert("Not enough 🧶 Yarn Balls!");
+    }
+  };
 
   function updateHUD() {
     const stageDisp = document.getElementById('stage-display');

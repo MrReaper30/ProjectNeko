@@ -1,4 +1,4 @@
-// Project Neko - Persistent State Manager v1.3.0
+// Project Neko - Persistent State Manager v1.4.0
 window.GameState = {
   playerName: localStorage.getItem('neko_player_name') || 'CatHero',
   sardines: parseInt(localStorage.getItem('neko_sardines')) || 100,
@@ -26,6 +26,14 @@ window.GameState = {
     return Math.floor(50 * Math.pow(1.5, this.upgrades.speedLvl - 1));
   },
 
+  getDmgYarnCost: function() {
+    return Math.max(1, Math.ceil(this.getDmgCost() / 40));
+  },
+
+  getSpdYarnCost: function() {
+    return Math.max(1, Math.ceil(this.getSpdCost() / 40));
+  },
+
   addSardines: function(amount) {
     this.sardines += amount;
     this.save();
@@ -48,10 +56,34 @@ window.GameState = {
     return false;
   },
 
+  buyDamageUpgradeYarn: function() {
+    const yarnCost = this.getDmgYarnCost();
+    if (this.yarn >= yarnCost) {
+      this.yarn -= yarnCost;
+      this.upgrades.damageLvl++;
+      this.upgrades.damage += 5;
+      this.save();
+      return true;
+    }
+    return false;
+  },
+
   buySpeedUpgrade: function() {
     const cost = this.getSpdCost();
     if (this.sardines >= cost && this.upgrades.attackSpeed > 200) {
       this.sardines -= cost;
+      this.upgrades.speedLvl++;
+      this.upgrades.attackSpeed = Math.max(200, this.upgrades.attackSpeed - 100);
+      this.save();
+      return true;
+    }
+    return false;
+  },
+
+  buySpeedUpgradeYarn: function() {
+    const yarnCost = this.getSpdYarnCost();
+    if (this.yarn >= yarnCost && this.upgrades.attackSpeed > 200) {
+      this.yarn -= yarnCost;
       this.upgrades.speedLvl++;
       this.upgrades.attackSpeed = Math.max(200, this.upgrades.attackSpeed - 100);
       this.save();
