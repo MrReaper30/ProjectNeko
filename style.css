@@ -309,3 +309,23 @@ body.game-page {
   cursor: pointer;
   white-space: nowrap;
 }
+
+/* Shop Category Tabs */
+.shop-tab-btn {
+  flex: 1;
+  background: rgba(18, 24, 38, 0.85);
+  color: #a0aec0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 10px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.shop-tab-btn.active {
+  background: #00f5d4;
+  color: #000;
+  border-color: #00f5d4;
+}
