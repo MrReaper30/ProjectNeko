@@ -4,89 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A.I Creator: Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.0.5">
+  <link rel="stylesheet" href="style.css?v=1.2.1">
 </head>
 <body class="home-page">
   <div class="app-container">
+    
     <header class="main-header">
       <h1 class="game-title">🐱 A.I CREATOR:<br>PROJECT NEKO</h1>
     </header>
 
     <main class="menu-body">
-      <input type="text" id="player-name-input" class="name-input" placeholder="Enter Name..." value="CatHero">
+      <input type="text" id="player-name-input" class="name-input" placeholder="Enter Cat Hero Name" value="CatHero">
 
-      <button class="menu-btn btn-play" onclick="saveNameAndPlay()">► PLAY GAME</button>
-      <button class="menu-btn btn-shop" onclick="openShopModal()">🛍️ CAT COLOR SHOP</button>
-      <button class="menu-btn btn-leaderboard" onclick="showToast('Leaderboard coming soon!')">🏆 LEADERBOARD</button>
+      <button class="menu-btn btn-play" onclick="startGame()">▶ PLAY GAME</button>
+      <button class="menu-btn btn-shop" onclick="openModal('shop-modal')">🛍️ CAT COLOR SHOP</button>
+      <button class="menu-btn btn-leaderboard" onclick="openModal('leaderboard-modal')">🏆 LEADERBOARD</button>
       <button class="menu-btn btn-devlog" onclick="window.location.href='changelog.html'">📜 DEV LOG & HISTORY</button>
-      <button class="menu-btn btn-settings" onclick="openSettingsModal()">⚙️ SETTINGS</button>
-      <button class="menu-btn btn-legal" onclick="openLegalModal()">📜 LEGAL & TOS</button>
+      <button class="menu-btn btn-settings" onclick="openModal('settings-modal')">⚙️ SETTINGS</button>
+      <button class="menu-btn btn-legal" onclick="openModal('legal-modal')">📜 LEGAL & TOS</button>
     </main>
 
-    <!-- Color Shop Modal -->
+    <!-- Modals -->
     <div id="shop-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">CAT COLOR SHOP</h2>
         <div class="color-swatches">
-          <button class="circle-swatch" style="background:#ffb703;" onclick="buySkin('#ffb703')"></button>
-          <button class="circle-swatch" style="background:#2a9d8f;" onclick="buySkin('#2a9d8f')"></button>
-          <button class="circle-swatch" style="background:#7209b7;" onclick="buySkin('#7209b7')"></button>
-          <button class="circle-swatch" style="background:#4cc9f0;" onclick="buySkin('#4cc9f0')"></button>
+          <div class="circle-swatch" style="background:#ffb703;" onclick="selectColor('#ffb703')"></div>
+          <div class="circle-swatch" style="background:#ff4757;" onclick="selectColor('#ff4757')"></div>
+          <div class="circle-swatch" style="background:#00f5d4;" onclick="selectColor('#00f5d4')"></div>
+          <div class="circle-swatch" style="background:#7209b7;" onclick="selectColor('#7209b7')"></div>
         </div>
-        <button class="menu-btn btn-close" onclick="closeShopModal()">CLOSE</button>
+        <button class="menu-btn btn-close" onclick="closeModal('shop-modal')">CLOSE</button>
       </div>
     </div>
 
-    <!-- Settings Modal -->
+    <div id="leaderboard-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h2 class="modal-title">TOP CAT HEROES</h2>
+        <p style="color:#a0aec0; margin-bottom:15px; font-size:0.9rem;">1. NekoMaster - City 5 (Wave 5)<br>2. WhiskerKing - City 3 (Wave 2)<br>3. You - City 1 (Wave 1)</p>
+        <button class="menu-btn btn-close" onclick="closeModal('leaderboard-modal')">CLOSE</button>
+      </div>
+    </div>
+
     <div id="settings-modal" class="modal-overlay">
       <div class="modal-card">
         <h2 class="modal-title">SETTINGS</h2>
-        <p style="margin:15px 0; color:#a0aec0; font-size:0.9rem;">Audio and vibration settings are accessible inside the combat view pause menu.</p>
-        <button class="menu-btn btn-close" onclick="closeSettingsModal()">CLOSE</button>
+        <button class="menu-btn btn-play" onclick="resetProgress()" style="background:#ff4757; color:#fff;">RESET SAVE DATA</button>
+        <button class="menu-btn btn-close" onclick="closeModal('settings-modal')">CLOSE</button>
       </div>
     </div>
 
-    <!-- Legal Modal -->
     <div id="legal-modal" class="modal-overlay">
       <div class="modal-card">
-        <h2 class="modal-title">LEGAL & TOS</h2>
-        <div style="font-size:0.8rem; text-align:left; color:#cbd5e0; margin:15px 0; line-height:1.5;">
-          <p><strong>Terms of Service:</strong> Project Neko is provided as-is. Progress saves locally.</p>
-          <p><strong>Privacy Policy:</strong> No tracking metrics or personal data are collected.</p>
-          <p><strong>Virtual Purchases:</strong> In-game cosmetics hold no monetary value and are non-refundable.</p>
-        </div>
-        <button class="menu-btn btn-close" onclick="closeLegalModal()">CLOSE</button>
+        <h2 class="modal-title">TERMS & PRIVACY</h2>
+        <p style="color:#a0aec0; font-size:0.75rem; line-height:1.4; margin-bottom:15px;">Project Neko is developed by Nectune Studios. All save data is stored locally on your device.</p>
+        <button class="menu-btn btn-close" onclick="closeModal('legal-modal')">CLOSE</button>
       </div>
     </div>
+
   </div>
 
-  <script src="js/state.js?v=1.0.2"></script>
-  <script src="js/shop.js?v=1.0.2"></script>
+  <script src="js/state.js?v=1.2.1"></script>
   <script>
-    function saveNameAndPlay() {
-      const input = document.getElementById('player-name-input');
-      if (input && typeof GameState !== 'undefined') {
-        GameState.playerName = input.value || 'CatHero';
+    const nameInput = document.getElementById('player-name-input');
+    if (nameInput) {
+      nameInput.value = GameState.playerName;
+      nameInput.addEventListener('change', (e) => {
+        GameState.playerName = e.target.value || 'CatHero';
         GameState.save();
-      }
-      window.location.href = 'cities.html';
+      });
     }
 
-    function openShopModal() { document.getElementById('shop-modal').classList.add('active'); }
-    function closeShopModal() { document.getElementById('shop-modal').classList.remove('active'); }
+    function startGame() {
+      window.location.href = 'game.html';
+    }
 
-    function openSettingsModal() { document.getElementById('settings-modal').classList.add('active'); }
-    function closeSettingsModal() { document.getElementById('settings-modal').classList.remove('active'); }
-
-    function openLegalModal() { document.getElementById('legal-modal').classList.add('active'); }
-    function closeLegalModal() { document.getElementById('legal-modal').classList.remove('active'); }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('player-name-input');
-      if (input && typeof GameState !== 'undefined' && GameState.playerName) {
-        input.value = GameState.playerName;
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function selectColor(hex) {
+      localStorage.setItem('neko_cat_color', hex);
+      alert('Cat skin updated!');
+      closeModal('shop-modal');
+    }
+    function resetProgress() {
+      if (confirm('Reset all gold, upgrades, and city wave progress?')) {
+        localStorage.clear();
+        location.reload();
       }
-    });
+    }
   </script>
 </body>
 </html>
