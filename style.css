@@ -1,4 +1,4 @@
-/* Reset & Fullscreen Layout */
+/* Reset & Fullscreen Native Layout */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -22,7 +22,7 @@ body.game-page {
   background: url('assets/images/ui/game_backgroud_city_1.jpg') center center / cover no-repeat fixed;
 }
 
-/* Main Container Overrides */
+/* App Main Containers */
 .app-container {
   min-height: 100vh;
   max-width: 480px;
@@ -42,7 +42,7 @@ body.game-page {
   max-width: 480px;
   height: 100vh;
   margin: 0 auto;
-  padding: 12px 12px 20px 12px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -64,9 +64,9 @@ body.game-page {
   border-radius: 20px;
   color: #ffb703;
   font-weight: 800;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
 .hud-btn {
@@ -92,17 +92,17 @@ body.game-page {
   font-weight: bold;
   margin-top: 6px;
   backdrop-filter: blur(6px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
-/* Side-by-Side Combat Arena */
+/* Battle Stage Arena (Anchored on Grass) */
 .battle-stage {
   flex: 1;
   display: flex !important;
   flex-direction: row !important;
   justify-content: space-around !important;
   align-items: flex-end !important;
-  padding-bottom: 25px;
+  padding-bottom: 30px;
   background: transparent !important;
 }
 
@@ -113,22 +113,22 @@ body.game-page {
   gap: 8px;
 }
 
-/* Health Bars & Badges */
+/* Health Bars */
 .health-bar-container {
-  width: 110px;
+  width: 100px;
   text-align: center;
-  background: rgba(18, 24, 38, 0.7);
-  padding: 6px;
+  background: rgba(18, 24, 38, 0.8);
+  padding: 5px 8px;
   border-radius: 12px;
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
 .health-label {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   color: #fff;
 }
 
@@ -144,16 +144,15 @@ body.game-page {
 .player-fill { background: #ff4757; }
 .enemy-fill { background: #2ed573; }
 
-/* Character Sprites (Detailed CSS Vector Graphics) */
+/* Character Sprites */
 .character-sprite {
-  width: 80px;
-  height: 80px;
+  width: 75px;
+  height: 75px;
   position: relative;
   transition: transform 0.1s;
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
 }
 
-/* Cat Hero Sprite */
 .cat-hero {
   background: #ffb703;
   border-radius: 50% 50% 40% 40%;
@@ -162,64 +161,63 @@ body.game-page {
 .cat-hero::before, .cat-hero::after {
   content: '';
   position: absolute;
-  top: -12px;
+  top: -10px;
   width: 0;
   height: 0;
-  border-left: 14px solid transparent;
-  border-right: 14px solid transparent;
-  border-bottom: 20px solid #ffb703;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 18px solid #ffb703;
 }
-.cat-hero::before { left: 4px; transform: rotate(-12deg); }
-.cat-hero::after { right: 4px; transform: rotate(12deg); }
+.cat-hero::before { left: 2px; transform: rotate(-12deg); }
+.cat-hero::after { right: 2px; transform: rotate(12deg); }
 
-/* Cat Face Details */
 .cat-hero .cat-eyes {
   position: absolute;
-  top: 28px;
+  top: 26px;
   left: 50%;
   transform: translateX(-50%);
-  width: 44px;
+  width: 38px;
   display: flex;
   justify-content: space-between;
 }
 .cat-hero .cat-eyes::before, .cat-hero .cat-eyes::after {
   content: '';
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   background: #000;
   border-radius: 50%;
 }
 
-/* Slime Enemy Sprite */
 .slime-enemy {
   background: #2ed573;
   border-radius: 50% 50% 35% 35%;
-  height: 65px;
+  height: 60px;
 }
 
 .slime-enemy::before, .slime-enemy::after {
   content: '';
   position: absolute;
-  top: 20px;
-  width: 10px;
-  height: 10px;
+  top: 18px;
+  width: 9px;
+  height: 9px;
   background: #000;
   border-radius: 50%;
 }
-.slime-enemy::before { left: 22px; }
-.slime-enemy::after { right: 22px; }
+.slime-enemy::before { left: 18px; }
+.slime-enemy::after { right: 18px; }
 
-/* Upgrade Cards Bottom Layout */
+/* Upgrade Action Buttons Panel */
 .upgrades-panel {
   display: flex;
   flex-direction: row;
   gap: 10px;
   width: 100%;
+  margin-bottom: 10px;
 }
 
-.upgrade-card {
+.upgrade-btn {
   flex: 1;
-  background: rgba(18, 24, 38, 0.85);
+  background: rgba(18, 24, 38, 0.9);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
@@ -227,33 +225,73 @@ body.game-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  text-align: center;
+  justify-content: center;
+  gap: 4px;
+  color: #fff;
+  cursor: pointer;
   box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  transition: transform 0.1s;
 }
 
-.upgrade-info strong { color: #fff; font-size: 0.8rem; display: block; }
-.upgrade-info small { color: #a0aec0; font-size: 0.72rem; }
-.lvl-badge { color: #00f5d4; font-size: 0.78rem; margin-left: 2px; }
+.upgrade-btn:active {
+  transform: scale(0.96);
+}
 
-.buy-btn {
-  width: 100%;
+.upg-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.upg-title span {
+  color: #00f5d4;
+  margin-left: 2px;
+}
+
+.upg-sub {
+  font-size: 0.72rem;
+  color: #a0aec0;
+}
+
+.upg-cost {
+  margin-top: 4px;
   background: #ffb703;
   color: #000;
-  border: none;
-  padding: 8px 0;
+  padding: 4px 12px;
   border-radius: 10px;
-  font-weight: 800;
-  font-size: 0.85rem;
-  cursor: pointer;
+  font-weight: 900;
+  font-size: 0.8rem;
+  width: 100%;
+  text-align: center;
 }
+
+/* Combat Keyframe Animations */
+@keyframes catLunge {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(45px) scale(1.15) rotate(10deg); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes slimeLunge {
+  0% { transform: translateX(0) scale(1); }
+  50% { transform: translateX(-45px) scale(1.15) rotate(-10deg); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+@keyframes hitFlash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); }
+  100% { filter: brightness(1); }
+}
+
+.attacking-cat { animation: catLunge 0.18s ease-in-out !important; }
+.attacking-slime { animation: slimeLunge 0.18s ease-in-out !important; }
+.hit-cat, .hit-slime { animation: hitFlash 0.22s ease-in-out !important; }
 
 /* Hide leftover hill elements */
-.hills, .dark-hills, .ground, .arena-bg {
-  display: none !important;
-}
+.hills, .dark-hills, .ground, .arena-bg { display: none !important; }
 
-/* Modals & Home Screen Styles */
+/* Modals & Main Menu */
 .menu-title { color: #ffb703; font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; }
 .name-input { width: 100%; padding: 14px; border-radius: 14px; border: 2px solid #ffb703; background: rgba(20,26,40,0.8); color: #fff; font-size: 1rem; text-align: center; margin-bottom: 12px; }
 .menu-btn { width: 100%; padding: 14px; border: none; border-radius: 14px; font-weight: 800; font-size: 0.9rem; margin-bottom: 10px; cursor: pointer; }
@@ -269,34 +307,3 @@ body.game-page {
 .modal-overlay.active { display: flex; }
 .modal-card { background: rgba(24, 28, 40, 0.9); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 20px; width: 85%; max-width: 320px; text-align: center; }
 .modal-title { color: #00f5d4; font-size: 1.2rem; font-weight: 900; margin-bottom: 15px; }
-
-/* Combat Animations v1.0.9 */
-@keyframes catLunge {
-  0% { transform: translateX(0) scale(1); }
-  50% { transform: translateX(45px) scale(1.15) rotate(10deg); }
-  100% { transform: translateX(0) scale(1); }
-}
-
-@keyframes slimeLunge {
-  0% { transform: translateX(0) scale(1); }
-  50% { transform: translateX(-45px) scale(1.15) rotate(-10deg); }
-  100% { transform: translateX(0) scale(1); }
-}
-
-@keyframes hitFlash {
-  0% { filter: brightness(1) drop-shadow(0 0 0 red); }
-  50% { filter: brightness(2) sepia(1) hue-rotate(-50deg) saturate(5); }
-  100% { filter: brightness(1) drop-shadow(0 0 0 red); }
-}
-
-.attacking-cat {
-  animation: catLunge 0.2s ease-in-out !important;
-}
-
-.attacking-slime {
-  animation: slimeLunge 0.2s ease-in-out !important;
-}
-
-.hit-cat, .hit-slime {
-  animation: hitFlash 0.25s ease-in-out !important;
-}

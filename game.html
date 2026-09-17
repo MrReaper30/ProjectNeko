@@ -4,20 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.0.9">
+  <link rel="stylesheet" href="style.css?v=1.2.0">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
     
     <!-- Top HUD Bar -->
     <header class="hud-top">
-      <div class="hud-pill"><span id="level-display">LEVEL 1</span></div>
+      <div class="hud-pill"><span id="stage-display">CITY 1: WAVE 1/5</span></div>
       <div class="hud-pill"><span id="gold-display">🪙 0</span></div>
       <button class="hud-btn" onclick="togglePause()">⚙️ PAUSE</button>
     </header>
 
-    <div class="enemies-badge">
-      ENEMIES LEFT: <span id="enemies-left">6 / 6</span>
+    <div class="enemies-badge" id="enemies-left">
+      ENEMIES: 4 / 4
     </div>
 
     <!-- Battle Stage -->
@@ -25,10 +25,11 @@
       <!-- Player Unit -->
       <div class="unit-box player-box">
         <div class="health-bar-container">
-          <span class="health-label">🐾 <span id="player-hp-text">9 / 9 LIVES</span></span>
+          <span class="health-label">🐾 <span id="player-hp-text">9/9 HP</span></span>
           <div class="health-bar-bg"><div id="player-hp-fill" class="hp-fill player-fill"></div></div>
         </div>
         <div id="player-sprite" class="character-sprite cat-hero">
+          <div class="cat-ears"></div>
           <div class="cat-eyes"></div>
         </div>
       </div>
@@ -43,23 +44,19 @@
       </div>
     </main>
 
-    <!-- Upgrades Row -->
+    <!-- Upgrades Compact Bottom Panel -->
     <footer class="upgrades-panel">
-      <div class="upgrade-card" onclick="buyDamageBoost()">
-        <div class="upgrade-info">
-          <strong>Damage Boost <span class="lvl-badge" id="dmg-lvl">Lv.1</span></strong>
-          <small id="dmg-stats">ATK: 10</small>
-        </div>
-        <button class="buy-btn" id="dmg-buy-btn">20 🪙</button>
-      </div>
+      <button class="upgrade-btn" onclick="buyDamageBoost()">
+        <span class="upg-title">Damage <span id="dmg-lvl">Lv.1</span></span>
+        <span class="upg-sub" id="dmg-stats">ATK: 10</span>
+        <span class="upg-cost" id="dmg-buy-btn">20 🪙</span>
+      </button>
 
-      <div class="upgrade-card" onclick="buySpeedBoost()">
-        <div class="upgrade-info">
-          <strong>Attack Speed <span class="lvl-badge" id="spd-lvl">Lv.1</span></strong>
-          <small id="spd-stats">1000ms</small>
-        </div>
-        <button class="buy-btn" id="spd-buy-btn">50 🪙</button>
-      </div>
+      <button class="upgrade-btn" onclick="buySpeedBoost()">
+        <span class="upg-title">Speed <span id="spd-lvl">Lv.1</span></span>
+        <span class="upg-sub" id="spd-stats">1000ms</span>
+        <span class="upg-cost" id="spd-buy-btn">50 🪙</span>
+      </button>
     </footer>
 
     <!-- Pause Modal -->
@@ -67,14 +64,14 @@
       <div class="modal-card">
         <h2 class="modal-title">GAME PAUSED</h2>
         <button class="menu-btn btn-play" onclick="togglePause()">RESUME</button>
-        <button class="menu-btn btn-close" onclick="window.location.href='cities.html'">QUIT TO STAGES</button>
+        <button class="menu-btn btn-close" onclick="window.location.href='index.html'">QUIT TO MENU</button>
       </div>
     </div>
 
   </div>
 
-  <script src="js/state.js?v=1.1.0"></script>
-  <script src="js/game.js?v=1.0.9"></script>
+  <script src="js/state.js?v=1.2.0"></script>
+  <script src="js/game.js?v=1.2.0"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');

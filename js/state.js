@@ -1,8 +1,10 @@
-// Project Neko - Persistent State Manager v1.1.0
+// Project Neko - Persistent State Manager v1.2.0
 window.GameState = {
   playerName: localStorage.getItem('neko_player_name') || 'CatHero',
   gold: parseInt(localStorage.getItem('neko_gold')) || 0,
-  currentLevel: parseInt(localStorage.getItem('neko_level')) || 1,
+  currentCity: parseInt(localStorage.getItem('neko_city')) || 1,
+  currentWave: parseInt(localStorage.getItem('neko_wave')) || 1,
+  maxWavesPerCity: 5,
   
   upgrades: {
     damageLvl: parseInt(localStorage.getItem('neko_dmg_lvl')) || 1,
@@ -12,11 +14,11 @@ window.GameState = {
   },
 
   getDmgCost: function() {
-    return Math.floor(20 * Math.pow(1.5, this.upgrades.damageLvl - 1));
+    return Math.floor(20 * Math.pow(1.4, this.upgrades.damageLvl - 1));
   },
 
   getSpdCost: function() {
-    return Math.floor(50 * Math.pow(1.6, this.upgrades.speedLvl - 1));
+    return Math.floor(50 * Math.pow(1.5, this.upgrades.speedLvl - 1));
   },
 
   addGold: function(amount) {
@@ -51,7 +53,8 @@ window.GameState = {
   save: function() {
     localStorage.setItem('neko_player_name', this.playerName);
     localStorage.setItem('neko_gold', this.gold);
-    localStorage.setItem('neko_level', this.currentLevel);
+    localStorage.setItem('neko_city', this.currentCity);
+    localStorage.setItem('neko_wave', this.currentWave);
     localStorage.setItem('neko_dmg_lvl', this.upgrades.damageLvl);
     localStorage.setItem('neko_dmg_val', this.upgrades.damage);
     localStorage.setItem('neko_spd_lvl', this.upgrades.speedLvl);
@@ -59,7 +62,6 @@ window.GameState = {
   }
 };
 
-// Global Alert Suppressor (Replaces native blocking alerts with Toast)
 window.alert = function(msg) {
   let toast = document.createElement('div');
   toast.style.cssText = `
@@ -67,14 +69,14 @@ window.alert = function(msg) {
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 245, 212, 0.95);
+    background: #00f5d4;
     color: #000;
-    padding: 12px 24px;
+    padding: 10px 20px;
     border-radius: 20px;
     font-weight: 800;
     font-size: 0.85rem;
     z-index: 9999;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     transition: opacity 0.3s ease;
   `;
   toast.textContent = msg;

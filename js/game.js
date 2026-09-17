@@ -1,29 +1,36 @@
-// Project Neko - Combat Engine v1.0.9
+// Project Neko - Wave Combat Engine v1.2.0
 (function () {
   let playerHp = 9;
   let maxPlayerHp = 9;
   let enemyHp = 30;
   let maxEnemyHp = 30;
-  let enemiesRemaining = 6;
-  const totalEnemies = 6;
+  let enemiesInWave = 4;
+  let enemiesRemaining = 4;
 
   let attackTimer = null;
   let isPaused = false;
 
   function initGame() {
+    setupWaveStats();
     updateHUD();
     startCombatLoop();
 
-    // Tap sprite to trigger instant player attack
-    const playerSprite = document.getElementById('player-sprite');
-    const enemySprite = document.getElementById('enemy-sprite');
+    const cat = document.getElementById('player-sprite');
+    const slime = document.getElementById('enemy-sprite');
 
-    if (enemySprite) {
-      enemySprite.addEventListener('click', playerAttack);
-    }
-    if (playerSprite) {
-      playerSprite.addEventListener('click', playerAttack);
-    }
+    if (slime) slime.addEventListener('click', playerAttack);
+    if (cat) cat.addEventListener('click', playerAttack);
+  }
+
+  function setupWaveStats() {
+    const cityMultiplier = GameState.currentCity;
+    const waveMultiplier = GameState.currentWave;
+    
+    enemiesInWave = 3 + waveMultiplier;
+    enemiesRemaining = enemiesInWave;
+    maxEnemyHp = Math.floor(25 + (cityMultiplier * 15) + (waveMultiplier * 8));
+    enemyHp = maxEnemyHp;
+    playerHp = maxPlayerHp;
   }
 
   function startCombatLoop() {
@@ -38,7 +45,6 @@
   function playerAttack() {
     if (enemyHp <= 0 || enemiesRemaining <= 0) return;
 
-    // Visual animation
     const cat = document.getElementById('player-sprite');
     const slime = document.getElementById('enemy-sprite');
 
@@ -48,23 +54,22 @@
     setTimeout(() => {
       if (cat) cat.classList.remove('attacking-cat');
       if (slime) slime.classList.remove('hit-slime');
-    }, 200);
+    }, 180);
 
-    // Deal damage
     enemyHp -= GameState.upgrades.damage;
+
     if (enemyHp <= 0) {
       enemyHp = 0;
       enemiesRemaining--;
-      GameState.addGold(15 + GameState.currentLevel * 5);
+      GameState.addGold(10 + GameState.currentWave * 4);
 
       if (enemiesRemaining > 0) {
-        setTimeout(spawnNextEnemy, 500);
+        setTimeout(spawnNextEnemy, 400);
       } else {
-        setTimeout(victoryLevel, 600);
+        setTimeout(completeWave, 500);
       }
     } else {
-      // Enemy counter-attacks
-      setTimeout(enemyAttack, 300);
+      setTimeout(enemyAttack, 250);
     }
 
     updateHUD();
@@ -82,52 +87,56 @@
     setTimeout(() => {
       if (slime) slime.classList.remove('attacking-slime');
       if (cat) cat.classList.remove('hit-cat');
-    }, 200);
+    }, 180);
 
     playerHp -= 1;
     if (playerHp <= 0) {
       playerHp = 0;
-      alert("Defeat! Returning to city stages...");
-      window.location.href = "cities.html";
+      alert("Defeat! Wave failed. Retrying wave...");
+      playerHp = maxPlayerHp;
+      enemiesRemaining = enemiesInWave;
+      enemyHp = maxEnemyHp;
     }
 
     updateHUD();
   }
 
   function spawnNextEnemy() {
-    maxEnemyHp = Math.floor(30 + GameState.currentLevel * 12);
     enemyHp = maxEnemyHp;
     updateHUD();
   }
 
-  function victoryLevel() {
-    alert("Level Cleared! +50 Gold Bonus!");
-    GameState.addGold(50);
-    GameState.currentLevel++;
-    window.location.href = "cities.html";
+  function completeWave() {
+    if (GameState.currentWave < GameState.maxWavesPerCity) {
+      alert(`Wave ${GameState.currentWave} Cleared! Next Wave coming!`);
+      GameState.currentWave++;
+    } else {
+      alert(`City ${GameState.currentCity} Cleared! Unlocking Next City!`);
+      GameState.currentCity++;
+      GameState.currentWave = 1;
+    }
+    GameState.save();
+    setupWaveStats();
+    updateHUD();
   }
 
   function updateHUD() {
-    // Top HUD
-    const lvlDisp = document.getElementById('level-display');
+    const stageDisp = document.getElementById('stage-display');
     const goldDisp = document.getElementById('gold-display');
     const enemiesDisp = document.getElementById('enemies-left');
 
-    if (lvlDisp) lvlDisp.textContent = `LEVEL ${GameState.currentLevel}`;
+    if (stageDisp) stageDisp.textContent = `CITY ${GameState.currentCity}: WAVE ${GameState.currentWave}/${GameState.maxWavesPerCity}`;
     if (goldDisp) goldDisp.textContent = `🪙 ${GameState.gold}`;
-    if (enemiesDisp) enemiesDisp.textContent = `${enemiesRemaining} / ${totalEnemies}`;
+    if (enemiesDisp) enemiesDisp.textContent = `ENEMIES: ${enemiesRemaining} / ${enemiesInWave}`;
 
-    // Player HP
     const pHpText = document.getElementById('player-hp-text');
     const pHpFill = document.getElementById('player-hp-fill');
-    if (pHpText) pHpText.textContent = `${playerHp} / ${maxPlayerHp} LIVES`;
+    if (pHpText) pHpText.textContent = `${playerHp}/${maxPlayerHp} HP`;
     if (pHpFill) pHpFill.style.width = `${(playerHp / maxPlayerHp) * 100}%`;
 
-    // Enemy HP
     const eHpFill = document.getElementById('enemy-hp-fill');
     if (eHpFill) eHpFill.style.width = `${(enemyHp / maxEnemyHp) * 100}%`;
 
-    // Upgrade buttons
     const dmgLvl = document.getElementById('dmg-lvl');
     const dmgStats = document.getElementById('dmg-stats');
     const dmgBtn = document.getElementById('dmg-buy-btn');
@@ -145,7 +154,6 @@
     if (spdBtn) spdBtn.textContent = `${GameState.getSpdCost()} 🪙`;
   }
 
-  // Global Upgrades
   window.buyDamageBoost = function () {
     if (GameState.buyDamageUpgrade()) {
       updateHUD();
