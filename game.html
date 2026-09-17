@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=1.0.7">
+  <link rel="stylesheet" href="style.css?v=1.0.8">
 </head>
 <body class="game-page">
   <div class="combat-wrapper">
@@ -20,18 +20,20 @@
       ENEMIES LEFT: <span id="enemies-left">6 / 6</span>
     </div>
 
-    <!-- Battle Stage: Side-by-Side Arena -->
+    <!-- Battle Stage -->
     <main class="battle-stage">
-      <!-- Player Hero (Left) -->
+      <!-- Player Unit -->
       <div class="unit-box player-box">
         <div class="health-bar-container">
           <span class="health-label">🐾 <span id="player-hp-text">9 / 9 LIVES</span></span>
           <div class="health-bar-bg"><div id="player-hp-fill" class="hp-fill player-fill"></div></div>
         </div>
-        <div id="player-sprite" class="character-sprite cat-hero"></div>
+        <div id="player-sprite" class="character-sprite cat-hero">
+          <div class="cat-eyes"></div>
+        </div>
       </div>
 
-      <!-- Enemy Slime (Right) -->
+      <!-- Enemy Unit -->
       <div class="unit-box enemy-box">
         <div class="health-bar-container">
           <span class="health-label" style="color:#2ed573;">SLIME</span>
@@ -41,7 +43,7 @@
       </div>
     </main>
 
-    <!-- Upgrades Horizontal Row -->
+    <!-- Upgrades Row -->
     <footer class="upgrades-panel">
       <div class="upgrade-card" onclick="buyDamageBoost()">
         <div class="upgrade-info">
@@ -71,8 +73,8 @@
 
   </div>
 
-  <script src="js/state.js?v=1.0.7"></script>
-  <script src="js/game.js?v=1.0.7"></script>
+  <script src="js/state.js?v=1.0.8"></script>
+  <script src="js/game.js?v=1.0.8"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById('pause-modal');
