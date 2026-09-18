@@ -17,8 +17,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const enemyImg = new Image();
   enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
 
-  // Wave & Enemy State
-  let enemiesPerWave = 5;
   let enemiesRemaining = 5;
   let waveKills = 0;
   let waveEarnedCoins = 0;
@@ -42,9 +40,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const waveHud = document.getElementById("city-wave-hud");
     const enemyLeft = document.getElementById("enemy-left-count");
 
+    // Fallback checks to prevent NaN
+    let atkLvl = GAME_STATE.stats.attackLevel || 1;
+    let spdLvl = GAME_STATE.stats.speedLevel || 1;
+
     if (coins) coins.innerText = GAME_STATE.coins;
-    if (dmg) dmg.innerText = (GAME_STATE.stats.attackLevel * 20) + " 🪙";
-    if (spd) spd.innerText = (GAME_STATE.stats.speedLevel * 50) + " 🪙";
+    if (dmg) dmg.innerText = (atkLvl * 20) + " 🪙";
+    if (spd) spd.innerText = (spdLvl * 50) + " 🪙";
     if (waveHud) waveHud.innerText = `CITY ${GAME_STATE.currentCity + 1} | WAVE ${GAME_STATE.currentWave}/5`;
     if (enemyLeft) enemyLeft.innerText = enemiesRemaining;
   }
@@ -127,22 +129,24 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   window.upgradeDamage = function() {
-    let cost = GAME_STATE.stats.attackLevel * 20;
+    let atkLvl = GAME_STATE.stats.attackLevel || 1;
+    let cost = atkLvl * 20;
     if (GAME_STATE.coins >= cost) {
       GAME_STATE.coins -= cost;
       GAME_STATE.stats.attack += 5;
-      GAME_STATE.stats.attackLevel += 1;
+      GAME_STATE.stats.attackLevel = atkLvl + 1;
       saveGameState();
       updateHUD();
     }
   };
 
   window.upgradeSpeed = function() {
-    let cost = GAME_STATE.stats.speedLevel * 50;
+    let spdLvl = GAME_STATE.stats.speedLevel || 1;
+    let cost = spdLvl * 50;
     if (GAME_STATE.coins >= cost) {
       GAME_STATE.coins -= cost;
       GAME_STATE.stats.speed = Math.max(600, GAME_STATE.stats.speed - 150);
-      GAME_STATE.stats.speedLevel += 1;
+      GAME_STATE.stats.speedLevel = spdLvl + 1;
       saveGameState();
       updateHUD();
     }

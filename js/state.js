@@ -47,7 +47,13 @@ function saveGameState() {
 function loadGameState() {
   const saved = localStorage.getItem('neko_state');
   if (saved) {
-    try { Object.assign(GAME_STATE, JSON.parse(saved)); } catch(e){}
+    try {
+      const parsed = JSON.parse(saved);
+      Object.assign(GAME_STATE, parsed);
+      // Ensure missing levels from old saves default to 1
+      if (!GAME_STATE.stats.attackLevel) GAME_STATE.stats.attackLevel = 1;
+      if (!GAME_STATE.stats.speedLevel) GAME_STATE.stats.speedLevel = 1;
+    } catch(e){}
   }
 }
 
