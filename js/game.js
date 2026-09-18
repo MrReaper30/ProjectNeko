@@ -17,6 +17,15 @@ window.addEventListener("DOMContentLoaded", () => {
   const enemyImg = new Image();
   enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
 
+  // Cat 9 HP Logic
+  let catHp = 9;
+  let maxCatHp = 9;
+
+  // Slime Movement & Position
+  let playerX = 30;
+  let enemyX = canvas.width - 110;
+  let enemySpeed = 0.8;
+
   let enemiesRemaining = 5;
   let waveKills = 0;
   let waveEarnedCoins = 0;
@@ -31,6 +40,7 @@ window.addEventListener("DOMContentLoaded", () => {
   let playerLungeX = 0;
   let enemyShakeX = 0;
   let enemyHurtTimer = 0;
+  let catHurtTimer = 0;
   let lastAutoAttack = Date.now();
 
   function updateHUD() {
@@ -38,9 +48,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const dmg = document.getElementById("dmg-cost");
     const spd = document.getElementById("speed-cost");
     const waveHud = document.getElementById("city-wave-hud");
-    const enemyLeft = document.getElementById("enemy-left-count");
+    const catHpHud = document.getElementById("cat-hp-hud");
 
-    // Fallback checks to prevent NaN
     let atkLvl = GAME_STATE.stats.attackLevel || 1;
     let spdLvl = GAME_STATE.stats.speedLevel || 1;
 
@@ -48,55 +57,32 @@ window.addEventListener("DOMContentLoaded", () => {
     if (dmg) dmg.innerText = (atkLvl * 20) + " 🪙";
     if (spd) spd.innerText = (spdLvl * 50) + " 🪙";
     if (waveHud) waveHud.innerText = `CITY ${GAME_STATE.currentCity + 1} | WAVE ${GAME_STATE.currentWave}/5`;
-    if (enemyLeft) enemyLeft.innerText = enemiesRemaining;
+    if (catHpHud) catHpHud.innerText = `${catHp}/${maxCatHp}`;
   }
 
-  function triggerHitFX(x, y, damage) {
-    playerLungeX = 25;
-    enemyShakeX = 10;
-    enemyHurtTimer = 8;
-
-    const particlesEnabled = document.getElementById("particles-toggle")?.checked ?? true;
-    if (particlesEnabled) {
-      for (let i = 0; i < 10; i++) {
-        particles.push({
-          x: x,
-          y: y,
-          vx: (Math.random() - 0.5) * 8,
-          vy: (Math.random() - 0.5) * 8,
-          color: ['#00ffcc', '#ffd700', '#ff0055'][Math.floor(Math.random() * 3)],
-          size: Math.random() * 5 + 2,
-          life: 1.0
-        });
-      }
-    }
-
-    slashEffects.push({ x: x, y: y, life: 1.0 });
-    floatingTexts.push({
-      x: x + (Math.random() - 0.5) * 15,
-      y: y - 10,
-      text: "-" + damage,
-      life: 1.0
-    });
+  function respawnSlime() {
+    enemyHp = maxEnemyHp;
+    enemyX = canvas.width - 110;
   }
 
   function attackEnemy() {
-    let targetX = canvas.width - 110;
-    let targetY = canvas.height / 2;
-
     enemyHp -= GAME_STATE.stats.attack;
-    triggerHitFX(targetX, targetY, GAME_STATE.stats.attack);
+    playerLungeX = 20;
+    enemyShakeX = 10;
+    enemyHurtTimer = 8;
+
+    slashEffects.push({ x: enemyX + 40, y: canvas.height / 2, life: 1.0 });
+    floatingTexts.push({ x: enemyX + 20, y: canvas.height / 2 - 20, text: "-" + GAME_STATE.stats.attack, life: 1.0 });
 
     if (enemyHp <= 0) {
-      enemyHp = maxEnemyHp;
       GAME_STATE.coins += 15;
       waveEarnedCoins += 15;
       waveKills++;
       enemiesRemaining--;
 
-      if (enemiesRemaining <= 0) {
-        showWaveSummary();
-      }
+      if (enemiesRemaining <= 0) showWaveSummary();
+      else respawnSlime();
+
       saveGameState();
     }
     updateHUD();
@@ -119,10 +105,33 @@ window.addEventListener("DOMContentLoaded", () => {
 
   window.nextWave = function() {
     document.getElementById("wave-summary-modal").style.display = "none";
-    GAME_STATE.currentWave = (GAME_STATE.currentWave % 5) + 1;
+    
+    // Check if Entire City Completed (5 Waves)
+    if (GAME_STATE.currentWave >= 5) {
+      GAME_STATE.currentWave = 1;
+      catHp = 9; // Reset HP only on full city clear
+      alert("CITY CLEARED! HEALED TO 9 HP!");
+    } else {
+      GAME_STATE.currentWave += 1;
+    }
+
     enemiesRemaining = 5 + (GAME_STATE.currentWave * 2);
     waveKills = 0;
     waveEarnedCoins = 0;
+    respawnSlime();
+    saveGameState();
+    window.isPaused = false;
+    updateHUD();
+  };
+
+  window.restartCity = function() {
+    document.getElementById("gameover-modal").style.display = "none";
+    GAME_STATE.currentWave = 1;
+    catHp = 9;
+    enemiesRemaining = 5;
+    waveKills = 0;
+    waveEarnedCoins = 0;
+    respawnSlime();
     saveGameState();
     window.isPaused = false;
     updateHUD();
@@ -157,13 +166,29 @@ window.addEventListener("DOMContentLoaded", () => {
       animTime += 0.05;
 
       if (playerLungeX > 0) playerLungeX -= 2;
-      if (playerLungeX < 0) playerLungeX = 0;
-
       if (enemyShakeX > 0) enemyShakeX = -enemyShakeX * 0.6;
       else enemyShakeX = Math.abs(enemyShakeX) - 1;
 
       if (enemyHurtTimer > 0) enemyHurtTimer--;
+      if (catHurtTimer > 0) catHurtTimer--;
 
+      // Move Slime Forward
+      enemyX -= enemySpeed;
+
+      // Proximity Attack Check (Distance <= 90px)
+      if (enemyX - playerX <= 90) {
+        catHp -= 1;
+        catHurtTimer = 10;
+        respawnSlime(); // Knock back slime after dealing hit
+        updateHUD();
+
+        if (catHp <= 0) {
+          window.isPaused = true;
+          document.getElementById("gameover-modal").style.display = "flex";
+        }
+      }
+
+      // Auto Attack Trigger
       let attackInterval = Math.max(600, GAME_STATE.stats.speed);
       if (Date.now() - lastAutoAttack > attackInterval) {
         attackEnemy();
@@ -175,34 +200,42 @@ window.addEventListener("DOMContentLoaded", () => {
     const centerY = canvas.height / 2 - 40;
 
     let playerIdleY = Math.sin(animTime) * 3;
-    let playerBaseX = 30 + playerLungeX;
+    let playerBaseX = playerX + playerLungeX;
 
+    // Render Cat
     if (playerImg.complete) {
-      ctx.drawImage(playerImg, playerBaseX, centerY + playerIdleY, 80, 80);
-    }
-
-    let enemyIdleY = Math.cos(animTime) * 2;
-    let enemyBaseX = canvas.width - 110 + enemyShakeX;
-
-    if (enemyImg.complete) {
       ctx.save();
-      ctx.drawImage(enemyImg, enemyBaseX, centerY + enemyIdleY, 80, 80);
-
-      if (enemyHurtTimer > 0) {
+      ctx.drawImage(playerImg, playerBaseX, centerY + playerIdleY, 80, 80);
+      if (catHurtTimer > 0) {
         ctx.globalCompositeOperation = 'source-atop';
-        ctx.fillStyle = 'rgba(255, 0, 85, 0.6)';
-        ctx.fillRect(enemyBaseX, centerY + enemyIdleY, 80, 80);
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.7)';
+        ctx.fillRect(playerBaseX, centerY + playerIdleY, 80, 80);
       }
       ctx.restore();
     }
 
-    ctx.fillStyle = "#222";
-    ctx.fillRect(canvas.width - 120, centerY - 20, 100, 10);
-    ctx.fillStyle = "#ff0055";
-    ctx.fillRect(canvas.width - 120, centerY - 20, Math.max(0, (enemyHp / maxEnemyHp) * 100), 10);
-    ctx.strokeStyle = "#fff";
-    ctx.strokeRect(canvas.width - 120, centerY - 20, 100, 10);
+    // Render Moving Slime
+    let enemyIdleY = Math.cos(animTime) * 2;
+    if (enemyImg.complete) {
+      ctx.save();
+      ctx.drawImage(enemyImg, enemyX + enemyShakeX, centerY + enemyIdleY, 80, 80);
+      if (enemyHurtTimer > 0) {
+        ctx.globalCompositeOperation = 'source-atop';
+        ctx.fillStyle = 'rgba(255, 0, 85, 0.6)';
+        ctx.fillRect(enemyX + enemyShakeX, centerY + enemyIdleY, 80, 80);
+      }
+      ctx.restore();
+    }
 
+    // Slime HP Bar
+    ctx.fillStyle = "#222";
+    ctx.fillRect(enemyX, centerY - 20, 80, 8);
+    ctx.fillStyle = "#ff0055";
+    ctx.fillRect(enemyX, centerY - 20, Math.max(0, (enemyHp / maxEnemyHp) * 80), 8);
+    ctx.strokeStyle = "#fff";
+    ctx.strokeRect(enemyX, centerY - 20, 80, 8);
+
+    // Render Slash Effects
     for (let i = slashEffects.length - 1; i >= 0; i--) {
       let s = slashEffects[i];
       ctx.strokeStyle = "#ffffff";
@@ -215,17 +248,7 @@ window.addEventListener("DOMContentLoaded", () => {
       if (s.life <= 0) slashEffects.splice(i, 1);
     }
 
-    for (let i = particles.length - 1; i >= 0; i--) {
-      let p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life -= 0.05;
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = Math.max(0, p.life);
-      ctx.fillRect(p.x, p.y, p.size, p.size);
-      if (p.life <= 0) particles.splice(i, 1);
-    }
-
+    // Render Floating Text
     ctx.font = "12px 'Press Start 2P'";
     for (let i = floatingTexts.length - 1; i >= 0; i--) {
       let ft = floatingTexts[i];
