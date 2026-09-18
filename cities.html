@@ -2,67 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Select City Region - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=3.0.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Neko - Select City</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
-<body class="home-page">
-  <div class="app-container">
-    <header class="main-header">
-      <h1 class="game-title" style="font-size: 1.5rem;">🏙️ SELECT CITY REGION</h1>
-    </header>
+<body style="background: #111; color: #fff; font-family: 'Press Start 2P', monospace; text-align: center; padding: 20px;">
+  <h1>SELECT CITY REGION</h1>
+  <br>
+  <div id="city-list" style="display: flex; flex-direction: column; gap: 15px; max-width: 400px; margin: 0 auto;"></div>
+  <br><br>
+  <a href="index.html" style="color: #00ffcc; text-decoration: none; font-size: 10px;">← MAIN MENU</a>
 
-    <main class="menu-body" style="width: 100%; max-width: 340px;" id="city-list">
-    </main>
-
-    <button class="menu-btn btn-close" onclick="window.location.href='index.html'" style="margin-top: 15px;">← MAIN MENU</button>
-  </div>
-
-  <script src="js/state.js?v=3.0.0"></script>
+  <script src="js/state.js"></script>
   <script>
-    function renderCities() {
-      const container = document.getElementById('city-list');
-      const maxUnlocked = GameState.unlockedCityMax || 1;
-
-      const cities = [
-        { id: 1, name: '🌲 1. Whispering Woods', desc: 'Waves 1 to 5 • Normal Difficulty', bg: 'linear-gradient(135deg, #10b981, #059669)', border: '#34d399' },
-        { id: 2, name: '🏙️ 2. Neon Metropolis', desc: 'Waves 1 to 5 • Advanced Enemies', bg: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', border: '#60a5fa' },
-        { id: 3, name: '🌋 3. Volcanic Peaks', desc: 'Waves 1 to 5 • Elite Boss Wave', bg: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', border: '#a78bfa' }
-      ];
-
-      container.innerHTML = cities.map(c => {
-        const isUnlocked = c.id <= maxUnlocked;
-        if (isUnlocked) {
-          return `
-            <div class="city-card" onclick="selectCity(${c.id})" style="background: ${c.bg}; margin-bottom: 12px; padding: 18px; border-radius: 16px; cursor: pointer; border: 2px solid ${c.border}; box-shadow: 0 6px 15px rgba(0,0,0,0.4);">
-              <h3 style="color:#fff; font-size:1.1rem; font-weight:900;">${c.name}</h3>
-              <p style="color:#e2e8f0; font-size:0.8rem; margin-top:4px;">${c.desc}</p>
-              <small style="color:#00f5d4; font-weight:bold; display:block; margin-top:6px;">✨ UNLOCKED & READY</small>
-            </div>
-          `;
-        } else {
-          return `
-            <div class="city-card" onclick="alert('🔒 Complete City ${c.id - 1} (All 5 Waves) to Unlock!')" style="background: rgba(30, 40, 60, 0.75); margin-bottom: 12px; padding: 18px; border-radius: 16px; border: 2px dashed #64748b; cursor: not-allowed;">
-              <h3 style="color:#94a3b8; font-size:1.1rem; font-weight:900;">🔒 ${c.name.split('. ')[1]}</h3>
-              <p style="color:#94a3b8; font-size:0.8rem; margin-top:4px;">Defeat City ${c.id - 1} (All 5 Waves) to Unlock</p>
-            </div>
-          `;
-        }
-      }).join('');
-    }
-
-    function selectCity(cityId) {
-      if (cityId > GameState.unlockedCityMax) {
-        alert("🔒 Complete previous cities first!");
-        return;
+    window.addEventListener("DOMContentLoaded", () => {
+      const container = document.getElementById("city-list");
+      if (container && typeof CITIES !== "undefined") {
+        container.innerHTML = CITIES.map((city, index) => {
+          var isUnlocked = index <= GAME_STATE.currentCity;
+          return '<div style="border: 2px solid ' + (isUnlocked ? '#00ffcc' : '#555') + '; padding: 15px; background: #222;">' +
+                   '<h3 style="font-size: 12px; margin-bottom: 8px;">' + city.name + '</h3>' +
+                   '<p style="font-size: 8px; margin-bottom: 10px; color: ' + (isUnlocked ? '#fff' : '#888') + ';">' + (isUnlocked ? 'Unlocked' : 'Locked') + '</p>' +
+                   (isUnlocked ? '<button style="font-family: \'Press Start 2P\'; font-size: 8px; padding: 6px 12px;" onclick="selectCity(' + index + ')">Deploy</button>' : '') +
+                 '</div>';
+        }).join("");
       }
-      GameState.currentCity = cityId;
-      GameState.currentWave = 1;
-      GameState.save();
-      window.location.href = 'game.html';
-    }
+    });
 
-    document.addEventListener('DOMContentLoaded', renderCities);
+    function selectCity(index) {
+      GAME_STATE.currentCity = index;
+      saveGameState();
+      window.location.href = "index.html";
+    }
   </script>
 </body>
 </html>
