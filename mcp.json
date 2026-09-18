@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "pixellab": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "pixellab-mcp",
+        "--secret=eb2891e0-6281-4274-8ddd-e9d701356ee7"
+      ]
+    }
+  }
+}
