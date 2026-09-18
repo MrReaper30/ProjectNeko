@@ -3,61 +3,78 @@ window.addEventListener("DOMContentLoaded", () => {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  // Canvas scaling
-  canvas.width = 800;
-  canvas.height = 400;
-
-  // Player state
+  // Load active player sprite and enemy sprite
   let activeSkin = GAME_ASSETS.skins.find(s => s.id === GAME_STATE.selectedSkin) || GAME_ASSETS.skins[0];
   const playerImg = new Image();
   playerImg.src = activeSkin.sprite;
 
-  // Enemy state
   const enemyImg = new Image();
   enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
 
-  let player = { x: 100, y: 180, speed: 5 };
-  let enemy = { x: 650, y: 180, hp: 50 };
+  // DOM HUD Elements
+  const coinDisplay = document.getElementById("coin-count") || document.querySelector(".coins-count");
+  const dmgCostEl = document.getElementById("dmg-cost");
+  const speedCostEl = document.getElementById("speed-cost");
 
-  // Tap/Click interaction to attack
-  canvas.addEventListener("click", () => {
-    enemy.hp -= GAME_STATE.stats.attack;
-    if (enemy.hp <= 0) {
-      enemy.hp = 50;
-      GAME_STATE.yarn += 10;
-      saveGameState();
-    }
-  });
-
-  function gameLoop() {
-    ctx.fillStyle = "#1a1a24";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Render Player Sprite
-    if (playerImg.complete) {
-      ctx.drawImage(playerImg, player.x, player.y, 64, 64);
-    } else {
-      ctx.fillStyle = "#00ffcc";
-      ctx.fillRect(player.x, player.y, 64, 64);
-    }
-
-    // Render Enemy Sprite
-    if (enemyImg.complete) {
-      ctx.drawImage(enemyImg, enemy.x, enemy.y, 64, 64);
-    } else {
-      ctx.fillStyle = "#ff0055";
-      ctx.fillRect(enemy.x, enemy.y, 64, 64);
-    }
-
-    // Render HUD
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "12px 'Press Start 2P', monospace";
-    ctx.fillText("YARN: " + GAME_STATE.yarn, 20, 30);
-    ctx.fillText("ENEMY HP: " + enemy.hp, 600, 30);
-    ctx.fillText("TAP TO ATTACK", 320, 380);
-
-    requestAnimationFrame(gameLoop);
+  function updateHUD() {
+    if (coinDisplay) coinDisplay.innerText = GAME_STATE.coins;
+    if (dmgCostEl) dmgCostEl.innerText = (GAME_STATE.stats.attackLevel * 20) + " 🪙";
+    if (speedCostEl) speedCostEl.innerText = (GAME_STATE.stats.speedLevel * 50) + " 🪙";
   }
 
-  gameLoop();
+  // Upgrades using coins
+  window.upgradeDamage = function() {
+    let cost = GAME_STATE.stats.attackLevel * 20;
+    if (GAME_STATE.coins >= cost) {
+      GAME_STATE.coins -= cost;
+      GAME_STATE.stats.attack += 5;
+      GAME_STATE.stats.attackLevel += 1;
+      saveGameState();
+      updateHUD();
+    } else {
+      alert("Not enough coins!");
+    }
+  };
+
+  window.upgradeSpeed = function() {
+    let cost = GAME_STATE.stats.speedLevel * 50;
+    if (GAME_STATE.coins >= cost) {
+      GAME_STATE.coins -= cost;
+      GAME_STATE.stats.speed = Math.max(200, GAME_STATE.stats.speed - 100);
+      GAME_STATE.stats.speedLevel += 1;
+      saveGameState();
+      updateHUD();
+    } else {
+      alert("Not enough coins!");
+    }
+  };
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Render PixelLab Cat Sprite
+    if (playerImg.complete && playerImg.naturalWidth !== 0) {
+      ctx.drawImage(playerImg, 60, canvas.height / 2 - 40, 80, 80);
+    } else {
+      ctx.fillStyle = "#ffa500";
+      ctx.beginPath();
+      ctx.arc(100, canvas.height / 2, 40, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Render PixelLab Enemy Sprite
+    if (enemyImg.complete && enemyImg.naturalWidth !== 0) {
+      ctx.drawImage(enemyImg, canvas.width - 140, canvas.height / 2 - 40, 80, 80);
+    } else {
+      ctx.fillStyle = "#00ffcc";
+      ctx.beginPath();
+      ctx.arc(canvas.width - 100, canvas.height / 2, 40, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(render);
+  }
+
+  updateHUD();
+  render();
 });

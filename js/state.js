@@ -1,11 +1,19 @@
 const GAME_STATE = {
-  yarn: 100,
-  sardines: 50,
+  coins: 100,
+  yarn: 50,
+  sardines: 25,
   currentCity: 0,
   currentWave: 1,
   selectedSkin: 'cat_hero_v2',
   unlockedSkins: ['cat_hero_v2'],
-  stats: { hp: 100, maxHp: 100, attack: 15, speed: 5 }
+  stats: {
+    hp: 100,
+    maxHp: 100,
+    attack: 10,
+    attackLevel: 1,
+    speed: 1000,
+    speedLevel: 1
+  }
 };
 
 const CITIES = [
@@ -32,14 +40,14 @@ const GAME_ASSETS = {
   }
 };
 
-function saveGameState() { 
-  localStorage.setItem('neko_state', JSON.stringify(GAME_STATE)); 
+function saveGameState() {
+  localStorage.setItem('neko_state', JSON.stringify(GAME_STATE));
 }
 
 function loadGameState() {
   const saved = localStorage.getItem('neko_state');
-  if (saved) { 
-    try { Object.assign(GAME_STATE, JSON.parse(saved)); } catch(e){} 
+  if (saved) {
+    try { Object.assign(GAME_STATE, JSON.parse(saved)); } catch(e){}
   }
 }
 
