@@ -20,12 +20,27 @@ const GAME_ASSETS = {
     { id: 'shadow_cat', name: 'Shadow Neko', sprite: 'assets/images/cats/shadow_cat.png', cost: 10, unlocked: false },
     { id: 'cyber_cat', name: 'Cyberpunk Neko', sprite: 'assets/images/cats/cyber_cat.png', cost: 20, unlocked: false },
     { id: 'emperor_cat', name: 'Golden Emperor', sprite: 'assets/images/cats/emperor_cat.png', cost: 50, unlocked: false }
-  ]
+  ],
+  enemies: {
+    toxic_slime: 'assets/images/enemies/toxic_slime.png',
+    lava_slime: 'assets/images/enemies/lava_slime.png',
+    king_slime: 'assets/images/enemies/king_slime.png'
+  },
+  ui: {
+    yarn_ball: 'assets/images/ui/yarn_ball.png',
+    golden_sardine: 'assets/images/ui/golden_sardine.png'
+  }
 };
 
-function saveGameState() { localStorage.setItem('neko_state', JSON.stringify(GAME_STATE)); }
+function saveGameState() { 
+  localStorage.setItem('neko_state', JSON.stringify(GAME_STATE)); 
+}
+
 function loadGameState() {
   const saved = localStorage.getItem('neko_state');
-  if (saved) { try { Object.assign(GAME_STATE, JSON.parse(saved)); } catch(e){} }
+  if (saved) { 
+    try { Object.assign(GAME_STATE, JSON.parse(saved)); } catch(e){} 
+  }
 }
+
 loadGameState();
