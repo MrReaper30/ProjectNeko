@@ -2,72 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Project Neko - Battle Engine</title>
-  <link rel="stylesheet" href="css/style.css?v=2.8.1">
+  <link rel="stylesheet" href="css/style.css?v=2.8.2">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
-    body {
+    * { box-sizing: border-box; }
+    body, html {
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
       background: #000;
       color: #fff;
       font-family: 'Press Start 2P', monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       overflow: hidden;
     }
     #game-container {
       position: relative;
       width: 100vw;
-      max-width: 480px;
       height: 100vh;
-      max-height: 800px;
+      max-width: 480px;
+      margin: 0 auto;
       background: url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
     .hud-top {
+      height: 60px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.6);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      border-bottom: 2px solid #00ffcc;
+      z-index: 10;
     }
     .hud-pill {
       background: #111;
       border: 2px solid #00ffcc;
-      padding: 6px 10px;
+      padding: 6px 8px;
       border-radius: 6px;
       font-size: 8px;
     }
     canvas {
+      flex: 1;
       width: 100%;
-      height: 60%;
       display: block;
+      touch-action: manipulation;
     }
     .upgrade-bar {
+      height: 90px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.85);
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.9);
+      border-top: 2px solid #ffd700;
+      z-index: 10;
     }
     .btn-upgrade {
       background: linear-gradient(180deg, #ffd700, #ff8c00);
       border: 2px solid #fff;
       border-radius: 8px;
-      padding: 10px;
       color: #000;
       font-family: 'Press Start 2P', monospace;
       font-size: 8px;
       font-weight: bold;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
+    .btn-upgrade:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
@@ -75,7 +83,7 @@
   <div id="game-container">
     <div class="hud-top">
       <div class="hud-pill" id="city-wave-hud">CITY 1: WAVE 1/5</div>
-      <div class="hud-pill" style="color: #ffd700;">🪙 <span id="coin-count">0</span></div>
+      <div class="hud-pill" style="color: #ffd700;">🪙 <span id="coin-count">100</span></div>
       <a href="index.html" class="hud-pill" style="color: #ff0055; text-decoration: none;">PAUSE</a>
     </div>
 
@@ -83,17 +91,17 @@
 
     <div class="upgrade-bar">
       <button class="btn-upgrade" onclick="upgradeDamage()">
-        ATK UP<br><br>
-        <span id="dmg-cost">20 🪙</span>
+        <span>ATK UP</span>
+        <span id="dmg-cost" style="margin-top: 4px; color: #111;">20 🪙</span>
       </button>
       <button class="btn-upgrade" onclick="upgradeSpeed()">
-        SPEED UP<br><br>
-        <span id="speed-cost">50 🪙</span>
+        <span>SPEED UP</span>
+        <span id="speed-cost" style="margin-top: 4px; color: #111;">50 🪙</span>
       </button>
     </div>
   </div>
 
-  <script src="js/state.js?v=2.8.1"></script>
-  <script src="js/game.js?v=2.8.1"></script>
+  <script src="js/state.js?v=2.8.2"></script>
+  <script src="js/game.js?v=2.8.2"></script>
 </body>
 </html>
