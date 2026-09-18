@@ -4,78 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Project Neko - Battle Engine</title>
-  <link rel="stylesheet" href="css/style.css?v=2.8.2">
+  <link rel="stylesheet" href="css/style.css?v=2.8.3">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      color: #fff;
-      font-family: 'Press Start 2P', monospace;
-      overflow: hidden;
-    }
-    #game-container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      max-width: 480px;
-      margin: 0 auto;
-      background: url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover;
-      display: flex;
-      flex-direction: column;
-    }
-    .hud-top {
-      height: 60px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.7);
-      border-bottom: 2px solid #00ffcc;
-      z-index: 10;
-    }
-    .hud-pill {
-      background: #111;
-      border: 2px solid #00ffcc;
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 8px;
-    }
-    canvas {
-      flex: 1;
-      width: 100%;
-      display: block;
-      touch-action: manipulation;
-    }
-    .upgrade-bar {
-      height: 90px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.9);
-      border-top: 2px solid #ffd700;
-      z-index: 10;
-    }
-    .btn-upgrade {
-      background: linear-gradient(180deg, #ffd700, #ff8c00);
-      border: 2px solid #fff;
-      border-radius: 8px;
-      color: #000;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    .btn-upgrade:active { transform: scale(0.95); }
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; color: #fff; font-family: 'Press Start 2P', monospace; overflow: hidden; }
+    #game-container { position: relative; width: 100vw; height: 100vh; max-width: 480px; margin: 0 auto; background: url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover; display: flex; flex-direction: column; }
+    .hud-top { height: 60px; display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(0, 0, 0, 0.7); border-bottom: 2px solid #00ffcc; z-index: 10; }
+    .hud-pill { background: #111; border: 2px solid #00ffcc; padding: 6px 8px; border-radius: 6px; font-size: 8px; cursor: pointer; }
+    canvas { flex: 1; width: 100%; display: block; touch-action: manipulation; }
+    .upgrade-bar { height: 90px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; background: rgba(0, 0, 0, 0.9); border-top: 2px solid #ffd700; z-index: 10; }
+    .btn-upgrade { background: linear-gradient(180deg, #ffd700, #ff8c00); border: 2px solid #fff; border-radius: 8px; color: #000; font-family: 'Press Start 2P', monospace; font-size: 8px; font-weight: bold; cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    
+    /* Pause Modal */
+    #pause-modal { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 100; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
   </style>
 </head>
 <body>
@@ -84,7 +26,7 @@
     <div class="hud-top">
       <div class="hud-pill" id="city-wave-hud">CITY 1: WAVE 1/5</div>
       <div class="hud-pill" style="color: #ffd700;">🪙 <span id="coin-count">100</span></div>
-      <a href="index.html" class="hud-pill" style="color: #ff0055; text-decoration: none;">PAUSE</a>
+      <div class="hud-pill" style="color: #ff0055;" onclick="togglePause()">PAUSE</div>
     </div>
 
     <canvas id="gameCanvas"></canvas>
@@ -99,9 +41,28 @@
         <span id="speed-cost" style="margin-top: 4px; color: #111;">50 🪙</span>
       </button>
     </div>
+
+    <!-- Pause Overlay Modal -->
+    <div id="pause-modal">
+      <h2 style="color: #00ffcc; font-size: 16px;">GAME PAUSED</h2>
+      <button class="btn-upgrade" style="padding: 10px 20px;" onclick="togglePause()">RESUME</button>
+      <a href="index.html" class="btn-upgrade" style="padding: 10px 20px; text-decoration: none; background: #ff0055; color: #fff;">MAIN MENU</a>
+    </div>
   </div>
 
-  <script src="js/state.js?v=2.8.2"></script>
-  <script src="js/game.js?v=2.8.2"></script>
+  <script src="js/state.js?v=2.8.3"></script>
+  <script src="js/game.js?v=2.8.3"></script>
+  <script>
+    function togglePause() {
+      const modal = document.getElementById("pause-modal");
+      if (modal.style.display === "flex") {
+        modal.style.display = "none";
+        window.isPaused = false;
+      } else {
+        modal.style.display = "flex";
+        window.isPaused = true;
+      }
+    }
+  </script>
 </body>
 </html>

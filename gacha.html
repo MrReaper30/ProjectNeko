@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Neko - Gacha Vault</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body style="margin: 0; padding: 20px; background: #0c0d14 url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover; font-family: 'Press Start 2P', monospace; color: #fff; text-align: center;">
+
+  <div style="background: rgba(12, 13, 20, 0.92); border: 3px solid #ffd700; border-radius: 12px; padding: 20px; max-width: 380px; margin: 0 auto;">
+    <h1 style="color: #ffd700; font-size: 16px; margin-bottom: 5px;">GACHA VAULT</h1>
+    <p style="font-size: 8px; color: #aaa; margin-bottom: 20px;">SUMMON RARE CAT SKINS</p>
+
+    <div style="border: 2px dashed #ffd700; padding: 20px; background: #181824; border-radius: 8px; margin-bottom: 20px;">
+      <img id="gacha-display" src="assets/images/cats/cat_hero_v2.png" width="90" height="90" style="image-rendering: pixelated;" alt="Gacha Result">
+      <h3 id="gacha-result-name" style="font-size: 10px; color: #00ffcc; margin-top: 10px;">PULL TO SUMMON</h3>
+    </div>
+
+    <button style="font-family: 'Press Start 2P'; font-size: 9px; padding: 12px; background: linear-gradient(180deg, #ffd700, #ff8c00); border: none; font-weight: bold; width: 100%; border-radius: 6px; cursor: pointer;" onclick="pullGacha()">1x PULL (10 🐟)</button>
+
+    <br><br>
+    <a href="index.html" style="color: #00ffcc; text-decoration: none; font-size: 8px;">← MAIN MENU</a>
+  </div>
+
+  <script src="js/state.js"></script>
+  <script>
+    function pullGacha() {
+      if (GAME_STATE.sardines >= 10) {
+        GAME_STATE.sardines -= 10;
+        const skins = GAME_ASSETS.skins;
+        const randomSkin = skins[Math.floor(Math.random() * skins.length)];
+        
+        if (!GAME_STATE.unlockedSkins.includes(randomSkin.id)) {
+          GAME_STATE.unlockedSkins.push(randomSkin.id);
+        }
+        
+        saveGameState();
+        document.getElementById("gacha-display").src = randomSkin.sprite;
+        document.getElementById("gacha-result-name").innerText = "UNLOCKED: " + randomSkin.name;
+      } else {
+        alert("Not enough Sardines!");
+      }
+    }
+  </script>
+</body>
+</html>
