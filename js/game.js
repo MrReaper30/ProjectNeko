@@ -17,6 +17,12 @@ window.addEventListener("DOMContentLoaded", () => {
   const enemyImg = new Image();
   enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
 
+  // Wave & Enemy State
+  let enemiesPerWave = 5;
+  let enemiesRemaining = 5;
+  let waveKills = 0;
+  let waveEarnedCoins = 0;
+
   let enemyHp = 50;
   let maxEnemyHp = 50;
   let particles = [];
@@ -33,9 +39,14 @@ window.addEventListener("DOMContentLoaded", () => {
     const coins = document.getElementById("coin-count");
     const dmg = document.getElementById("dmg-cost");
     const spd = document.getElementById("speed-cost");
+    const waveHud = document.getElementById("city-wave-hud");
+    const enemyLeft = document.getElementById("enemy-left-count");
+
     if (coins) coins.innerText = GAME_STATE.coins;
     if (dmg) dmg.innerText = (GAME_STATE.stats.attackLevel * 20) + " 🪙";
     if (spd) spd.innerText = (GAME_STATE.stats.speedLevel * 50) + " 🪙";
+    if (waveHud) waveHud.innerText = `CITY ${GAME_STATE.currentCity + 1} | WAVE ${GAME_STATE.currentWave}/5`;
+    if (enemyLeft) enemyLeft.innerText = enemiesRemaining;
   }
 
   function triggerHitFX(x, y, damage) {
@@ -43,20 +54,22 @@ window.addEventListener("DOMContentLoaded", () => {
     enemyShakeX = 10;
     enemyHurtTimer = 8;
 
-    for (let i = 0; i < 10; i++) {
-      particles.push({
-        x: x,
-        y: y,
-        vx: (Math.random() - 0.5) * 8,
-        vy: (Math.random() - 0.5) * 8,
-        color: ['#00ffcc', '#ffd700', '#ff0055'][Math.floor(Math.random() * 3)],
-        size: Math.random() * 5 + 2,
-        life: 1.0
-      });
+    const particlesEnabled = document.getElementById("particles-toggle")?.checked ?? true;
+    if (particlesEnabled) {
+      for (let i = 0; i < 10; i++) {
+        particles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          color: ['#00ffcc', '#ffd700', '#ff0055'][Math.floor(Math.random() * 3)],
+          size: Math.random() * 5 + 2,
+          life: 1.0
+        });
+      }
     }
 
     slashEffects.push({ x: x, y: y, life: 1.0 });
-
     floatingTexts.push({
       x: x + (Math.random() - 0.5) * 15,
       y: y - 10,
@@ -65,12 +78,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function attackEnemy(customX, customY) {
-    let defaultEnemyX = canvas.width - 110;
-    let defaultEnemyY = canvas.height / 2;
-
-    let targetX = customX !== undefined ? customX : defaultEnemyX;
-    let targetY = customY !== undefined ? customY : defaultEnemyY;
+  function attackEnemy() {
+    let targetX = canvas.width - 110;
+    let targetY = canvas.height / 2;
 
     enemyHp -= GAME_STATE.stats.attack;
     triggerHitFX(targetX, targetY, GAME_STATE.stats.attack);
@@ -78,16 +88,43 @@ window.addEventListener("DOMContentLoaded", () => {
     if (enemyHp <= 0) {
       enemyHp = maxEnemyHp;
       GAME_STATE.coins += 15;
+      waveEarnedCoins += 15;
+      waveKills++;
+      enemiesRemaining--;
+
+      if (enemiesRemaining <= 0) {
+        showWaveSummary();
+      }
       saveGameState();
     }
     updateHUD();
   }
 
-  canvas.addEventListener("pointerdown", (e) => {
-    if (window.isPaused) return;
-    const rect = canvas.getBoundingClientRect();
-    attackEnemy(e.clientX - rect.left, e.clientY - rect.top);
-  });
+  function showWaveSummary() {
+    window.isPaused = true;
+    let bonusCoins = GAME_STATE.currentWave * 25;
+    let totalEarned = waveEarnedCoins + bonusCoins;
+    GAME_STATE.coins += bonusCoins;
+    saveGameState();
+
+    document.getElementById("summary-kills").innerText = waveKills;
+    document.getElementById("summary-base-coins").innerText = waveEarnedCoins;
+    document.getElementById("summary-bonus-coins").innerText = bonusCoins;
+    document.getElementById("summary-total-coins").innerText = totalEarned;
+
+    document.getElementById("wave-summary-modal").style.display = "flex";
+  }
+
+  window.nextWave = function() {
+    document.getElementById("wave-summary-modal").style.display = "none";
+    GAME_STATE.currentWave = (GAME_STATE.currentWave % 5) + 1;
+    enemiesRemaining = 5 + (GAME_STATE.currentWave * 2);
+    waveKills = 0;
+    waveEarnedCoins = 0;
+    saveGameState();
+    window.isPaused = false;
+    updateHUD();
+  };
 
   window.upgradeDamage = function() {
     let cost = GAME_STATE.stats.attackLevel * 20;
@@ -104,7 +141,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let cost = GAME_STATE.stats.speedLevel * 50;
     if (GAME_STATE.coins >= cost) {
       GAME_STATE.coins -= cost;
-      // Clamp minimum attack interval to 600ms
       GAME_STATE.stats.speed = Math.max(600, GAME_STATE.stats.speed - 150);
       GAME_STATE.stats.speedLevel += 1;
       saveGameState();
@@ -124,7 +160,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
       if (enemyHurtTimer > 0) enemyHurtTimer--;
 
-      // Controlled Auto Attack Rate
       let attackInterval = Math.max(600, GAME_STATE.stats.speed);
       if (Date.now() - lastAutoAttack > attackInterval) {
         attackEnemy();
@@ -133,7 +168,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     const centerY = canvas.height / 2 - 40;
 
     let playerIdleY = Math.sin(animTime) * 3;
@@ -158,7 +192,6 @@ window.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
-    // Health Bar
     ctx.fillStyle = "#222";
     ctx.fillRect(canvas.width - 120, centerY - 20, 100, 10);
     ctx.fillStyle = "#ff0055";
@@ -166,7 +199,6 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.strokeStyle = "#fff";
     ctx.strokeRect(canvas.width - 120, centerY - 20, 100, 10);
 
-    // Slash Effects
     for (let i = slashEffects.length - 1; i >= 0; i--) {
       let s = slashEffects[i];
       ctx.strokeStyle = "#ffffff";
@@ -179,7 +211,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (s.life <= 0) slashEffects.splice(i, 1);
     }
 
-    // Particles
     for (let i = particles.length - 1; i >= 0; i--) {
       let p = particles[i];
       p.x += p.vx;
@@ -191,7 +222,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (p.life <= 0) particles.splice(i, 1);
     }
 
-    // Floating Text
     ctx.font = "12px 'Press Start 2P'";
     for (let i = floatingTexts.length - 1; i >= 0; i--) {
       let ft = floatingTexts[i];
