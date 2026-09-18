@@ -2,47 +2,128 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Project Neko - Shop</title>
-  <link rel="stylesheet" href="css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Project Neko - Arcade Store</title>
+  <link rel="stylesheet" href="css/style.css?v=2.8.6">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body, html { margin: 0; padding: 0; background: #0c0d14; color: #fff; font-family: 'Press Start 2P', monospace; text-align: center; }
+    .store-container { max-width: 480px; margin: 0 auto; min-height: 100vh; padding: 15px; background: rgba(20, 20, 30, 0.95); border-left: 2px solid #00ffcc; border-right: 2px solid #00ffcc; }
+    
+    .currency-bar { display: flex; justify-content: space-around; background: #111; padding: 10px; border: 2px solid #333; border-radius: 8px; font-size: 8px; margin-bottom: 15px; }
+    
+    .nav-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-bottom: 15px; }
+    .tab-btn { background: #222; border: 1px solid #555; color: #aaa; padding: 8px 4px; font-family: 'Press Start 2P'; font-size: 6px; cursor: pointer; border-radius: 4px; }
+    .tab-btn.active { background: #00ffcc; color: #000; font-weight: bold; border-color: #fff; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .card { background: #181824; border: 2px solid #444; border-radius: 8px; padding: 10px; }
+    .btn-action { font-family: 'Press Start 2P'; font-size: 7px; padding: 8px; background: linear-gradient(180deg, #ffd700, #ff8c00); border: none; font-weight: bold; width: 100%; margin-top: 8px; cursor: pointer; border-radius: 4px; }
+  </style>
 </head>
-<body style="background: #111; color: #fff; font-family: 'Press Start 2P', monospace; text-align: center; padding: 20px;">
-  <h1>MEGA SHOP</h1>
-  
-  <div style="margin: 20px 0; border: 2px solid #555; padding: 10px; background: #222;">
-    <span style="margin-right: 15px;">🧶 Yarn: <b id="yarn-count">0</b></span>
-    <span>🐟 Sardines: <b id="sardine-count">0</b></span>
+<body>
+
+  <div class="store-container">
+    <h1 style="color: #ff0055; font-size: 16px; margin: 10px 0;">ARCADE STORE</h1>
+
+    <div class="currency-bar">
+      <span>🧶 <b id="yarn-count">0</b></span>
+      <span>🐟 <b id="sardine-count">0</b></span>
+      <span>🪙 <b id="coin-count">0</b></span>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('skins')">SKINS</button>
+      <button class="tab-btn" onclick="switchTab('gacha')">GACHA</button>
+      <button class="tab-btn" onclick="switchTab('exchange')">EXCHANGE</button>
+      <button class="tab-btn" onclick="switchTab('yarn-shop')">BUY YARN</button>
+    </div>
+
+    <!-- SKINS TAB -->
+    <div id="tab-skins" class="tab-content active">
+      <div id="skin-grid" class="grid-2"></div>
+    </div>
+
+    <!-- GACHA TAB -->
+    <div id="tab-gacha" class="tab-content">
+      <div class="card" style="border-color: #ffd700;">
+        <h3 style="font-size: 10px; color: #ffd700;">CAT VAULT PULL</h3>
+        <br>
+        <img id="gacha-img" src="assets/images/cats/cat_hero_v2.png" width="80" height="80" style="image-rendering: pixelated;">
+        <p id="gacha-status" style="font-size: 8px; color: #aaa; margin: 10px 0;">10 Sardines per Summon</p>
+        <button class="btn-action" onclick="pullGacha()">SUMMON (10 🐟)</button>
+      </div>
+    </div>
+
+    <!-- CURRENCY EXCHANGE TAB -->
+    <div id="tab-exchange" class="tab-content">
+      <div class="card" style="margin-bottom: 10px;">
+        <h4 style="font-size: 8px; color: #00ffcc;">FISH TO YARN</h4>
+        <p style="font-size: 7px; color: #888;">Trade 10 Sardines for 1 Yarn</p>
+        <button class="btn-action" onclick="exchangeCurrency('fishToYarn')">CONVERT (10 🐟 ➔ 1 🧶)</button>
+      </div>
+      <div class="card">
+        <h4 style="font-size: 8px; color: #00ffcc;">YARN TO FISH</h4>
+        <p style="font-size: 7px; color: #888;">Trade 1 Yarn for 10 Sardines</p>
+        <button class="btn-action" onclick="exchangeCurrency('yarnToFish')">CONVERT (1 🧶 ➔ 10 🐟)</button>
+      </div>
+    </div>
+
+    <!-- BUY YARN WITH MONEY TAB -->
+    <div id="tab-yarn-shop" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <img src="assets/images/ui/yarn_ball.png" width="32">
+          <h4 style="font-size: 8px;">10 YARN</h4>
+          <button class="btn-action" onclick="buyYarnRealMoney(10, '$0.99')">$0.99</button>
+        </div>
+        <div class="card">
+          <img src="assets/images/ui/yarn_ball.png" width="32">
+          <h4 style="font-size: 8px;">50 YARN</h4>
+          <button class="btn-action" onclick="buyYarnRealMoney(50, '$3.99')">$3.99</button>
+        </div>
+      </div>
+    </div>
+
+    <br><br>
+    <a href="index.html" style="color: #00ffcc; text-decoration: none; font-size: 8px;">← MAIN MENU</a>
   </div>
 
-  <h3>CAT SKINS</h3>
-  <div id="skin-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 500px; margin: 0 auto;"></div>
-
-  <br><br>
-  <a href="index.html" style="color: #00ffcc; text-decoration: none; font-size: 12px;">← Back to Game</a>
-
-  <script src="js/state.js"></script>
+  <script src="js/state.js?v=2.8.6"></script>
   <script>
-    function renderShop() {
+    function updateBalances() {
       document.getElementById("yarn-count").innerText = GAME_STATE.yarn;
       document.getElementById("sardine-count").innerText = GAME_STATE.sardines;
-      
+      document.getElementById("coin-count").innerText = GAME_STATE.coins;
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+      document.getElementById("tab-" + tabId).classList.add("active");
+      event.target.classList.add("active");
+    }
+
+    function renderSkins() {
       const grid = document.getElementById("skin-grid");
-      if (grid && typeof GAME_ASSETS !== "undefined") {
-        grid.innerHTML = GAME_ASSETS.skins.map(function(skin) {
-          var isUnlocked = GAME_STATE.unlockedSkins.includes(skin.id);
-          var isSelected = GAME_STATE.selectedSkin === skin.id;
-          
-          return '<div style="border: 2px solid #fff; padding: 10px; background: #222;">' +
-                   '<img src="' + skin.sprite + '" alt="' + skin.name + '" width="64" height="64" style="image-rendering: pixelated; display: block; margin: 0 auto 10px;" />' +
-                   '<h4 style="font-size: 10px; margin: 5px 0;">' + skin.name + '</h4>' +
-                   '<p style="font-size: 8px; margin-bottom: 8px;">' + (skin.cost === 0 ? "Free" : skin.cost + " 🧶") + '</p>' +
-                   '<button style="font-family: \'Press Start 2P\', monospace; font-size: 8px; padding: 6px 10px;" onclick="selectSkin(\'' + skin.id + '\', ' + skin.cost + ')">' +
-                     (isSelected ? "Equipped" : (isUnlocked ? "Equip" : "Buy")) +
-                   '</button>' +
-                 '</div>';
-        }).join("");
-      }
+      grid.innerHTML = GAME_ASSETS.skins.map(skin => {
+        const isUnlocked = GAME_STATE.unlockedSkins.includes(skin.id);
+        const isSelected = GAME_STATE.selectedSkin === skin.id;
+        return `
+          <div class="card">
+            <img src="${skin.sprite}" width="50" height="50" style="image-rendering: pixelated;">
+            <h4 style="font-size: 7px; margin: 5px 0;">${skin.name}</h4>
+            <p style="font-size: 6px; color: #ffd700;">${skin.cost === 0 ? "Free" : skin.cost + " 🧶"}</p>
+            <button class="btn-action" onclick="selectSkin('${skin.id}', ${skin.cost})">
+              ${isSelected ? "Equipped" : (isUnlocked ? "Equip" : "Buy")}
+            </button>
+          </div>
+        `;
+      }).join("");
     }
 
     function selectSkin(id, cost) {
@@ -52,18 +133,59 @@
           GAME_STATE.unlockedSkins.push(id);
           GAME_STATE.selectedSkin = id;
           saveGameState();
-          renderShop();
-        } else {
-          alert("Not enough Yarn!");
-        }
+          updateBalances();
+          renderSkins();
+        } else alert("Not enough Yarn!");
       } else {
         GAME_STATE.selectedSkin = id;
         saveGameState();
-        renderShop();
+        renderSkins();
       }
     }
 
-    window.addEventListener("DOMContentLoaded", renderShop);
+    function pullGacha() {
+      if (GAME_STATE.sardines >= 10) {
+        GAME_STATE.sardines -= 10;
+        const skins = GAME_ASSETS.skins;
+        const randomSkin = skins[Math.floor(Math.random() * skins.length)];
+        if (!GAME_STATE.unlockedSkins.includes(randomSkin.id)) GAME_STATE.unlockedSkins.push(randomSkin.id);
+        saveGameState();
+        updateBalances();
+        document.getElementById("gacha-img").src = randomSkin.sprite;
+        document.getElementById("gacha-status").innerText = "UNLOCKED: " + randomSkin.name;
+        renderSkins();
+      } else alert("Not enough Sardines!");
+    }
+
+    function exchangeCurrency(type) {
+      if (type === 'fishToYarn') {
+        if (GAME_STATE.sardines >= 10) {
+          GAME_STATE.sardines -= 10;
+          GAME_STATE.yarn += 1;
+          saveGameState();
+          updateBalances();
+        } else alert("Need 10 Sardines!");
+      } else if (type === 'yarnToFish') {
+        if (GAME_STATE.yarn >= 1) {
+          GAME_STATE.yarn -= 1;
+          GAME_STATE.sardines += 10;
+          saveGameState();
+          updateBalances();
+        } else alert("Need 1 Yarn!");
+      }
+    }
+
+    function buyYarnRealMoney(amount, price) {
+      alert("Simulated Purchase: Added " + amount + " Yarn for " + price);
+      GAME_STATE.yarn += amount;
+      saveGameState();
+      updateBalances();
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateBalances();
+      renderSkins();
+    });
   </script>
 </body>
 </html>
