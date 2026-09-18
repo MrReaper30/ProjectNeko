@@ -14,22 +14,34 @@ window.addEventListener("DOMContentLoaded", () => {
   const playerImg = new Image();
   playerImg.src = activeSkin.sprite;
 
-  const enemyImg = new Image();
-  enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
+  // Preload Enemy Sprites
+  const enemyImages = {
+    toxic: new Image(),
+    lava: new Image(),
+    king: new Image()
+  };
+  enemyImages.toxic.src = GAME_ASSETS.enemies.toxic_slime;
+  enemyImages.lava.src = GAME_ASSETS.enemies.lava_slime;
+  enemyImages.king.src = GAME_ASSETS.enemies.king_slime;
 
   let catHp = 9;
   let maxCatHp = 9;
 
   let playerX = 30;
   let enemyX = canvas.width - 110;
-  let enemySpeed = 0.8;
+
+  // Progressive Enemy Tracking
+  let totalEnemiesDefeated = 0;
+  let currentEnemyHp = 40;
+  let maxEnemyHp = 40;
+  let currentEnemySpeed = 0.8;
+  let currentEnemyReward = 15;
+  let currentEnemyImg = enemyImages.toxic;
 
   let enemiesRemaining = 5;
   let waveKills = 0;
   let waveEarnedCoins = 0;
 
-  let enemyHp = 50;
-  let maxEnemyHp = 50;
   let particles = [];
   let slashEffects = [];
   let floatingTexts = [];
@@ -47,6 +59,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const spd = document.getElementById("speed-cost");
     const waveHud = document.getElementById("city-wave-hud");
     const catHpHud = document.getElementById("cat-hp-hud");
+    const enemyLeft = document.getElementById("enemy-left-count");
 
     let atkLvl = GAME_STATE.stats.attackLevel || 1;
     let spdLvl = GAME_STATE.stats.speedLevel || 1;
@@ -56,15 +69,29 @@ window.addEventListener("DOMContentLoaded", () => {
     if (spd) spd.innerText = (spdLvl * 50) + " 🪙";
     if (waveHud) waveHud.innerText = `CITY ${GAME_STATE.currentCity + 1} | WAVE ${GAME_STATE.currentWave}/5`;
     if (catHpHud) catHpHud.innerText = `${catHp}/${maxCatHp}`;
+    if (enemyLeft) enemyLeft.innerText = enemiesRemaining;
   }
 
-  function respawnSlime() {
-    enemyHp = maxEnemyHp;
+  // Calculate Progressive Enemy Scaling
+  function respawnNextEnemy() {
+    totalEnemiesDefeated++;
+    
+    // Scale HP and Speed per enemy
+    maxEnemyHp = Math.floor(40 + (totalEnemiesDefeated * 18) * Math.pow(1.1, GAME_STATE.currentWave - 1));
+    currentEnemyHp = maxEnemyHp;
+    currentEnemySpeed = Math.min(2.5, 0.8 + (totalEnemiesDefeated * 0.08));
+    currentEnemyReward = 15 + Math.floor(totalEnemiesDefeated * 2);
+
+    // Swap Enemy Visual Sprites Based on Tier
+    if (totalEnemiesDefeated > 10) currentEnemyImg = enemyImages.king;
+    else if (totalEnemiesDefeated > 5) currentEnemyImg = enemyImages.lava;
+    else currentEnemyImg = enemyImages.toxic;
+
     enemyX = canvas.width - 110;
   }
 
   function attackEnemy() {
-    enemyHp -= GAME_STATE.stats.attack;
+    currentEnemyHp -= GAME_STATE.stats.attack;
     playerLungeX = 20;
     enemyShakeX = 10;
     enemyHurtTimer = 8;
@@ -72,14 +99,14 @@ window.addEventListener("DOMContentLoaded", () => {
     slashEffects.push({ x: enemyX + 40, y: canvas.height / 2, life: 1.0 });
     floatingTexts.push({ x: enemyX + 20, y: canvas.height / 2 - 20, text: "-" + GAME_STATE.stats.attack, life: 1.0 });
 
-    if (enemyHp <= 0) {
-      GAME_STATE.coins += 15;
-      waveEarnedCoins += 15;
+    if (currentEnemyHp <= 0) {
+      GAME_STATE.coins += currentEnemyReward;
+      waveEarnedCoins += currentEnemyReward;
       waveKills++;
       enemiesRemaining--;
 
       if (enemiesRemaining <= 0) showWaveSummary();
-      else respawnSlime();
+      else respawnNextEnemy();
 
       saveGameState();
     }
@@ -92,7 +119,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let totalEarned = waveEarnedCoins + bonusCoins;
     GAME_STATE.coins += bonusCoins;
 
-    // Convert coins to fish automatically
     let convertedFish = autoConvertCoinsToFish();
 
     document.getElementById("summary-kills").innerText = waveKills;
@@ -113,6 +139,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (GAME_STATE.currentWave >= 5) {
       GAME_STATE.currentWave = 1;
       catHp = 9;
+      totalEnemiesDefeated = 0;
     } else {
       GAME_STATE.currentWave += 1;
     }
@@ -120,7 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
     enemiesRemaining = 5 + (GAME_STATE.currentWave * 2);
     waveKills = 0;
     waveEarnedCoins = 0;
-    respawnSlime();
+    respawnNextEnemy();
     saveGameState();
     window.isPaused = false;
     updateHUD();
@@ -131,10 +158,11 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("gameover-modal").style.display = "none";
     GAME_STATE.currentWave = 1;
     catHp = 9;
+    totalEnemiesDefeated = 0;
     enemiesRemaining = 5;
     waveKills = 0;
     waveEarnedCoins = 0;
-    respawnSlime();
+    respawnNextEnemy();
     saveGameState();
     window.isPaused = false;
     updateHUD();
@@ -175,12 +203,14 @@ window.addEventListener("DOMContentLoaded", () => {
       if (enemyHurtTimer > 0) enemyHurtTimer--;
       if (catHurtTimer > 0) catHurtTimer--;
 
-      enemyX -= enemySpeed;
+      // Move Slime with Scaled Speed
+      enemyX -= currentEnemySpeed;
 
-      if (enemyX - playerX <= 90) {
+      // Proximity Hit Check
+      if (enemyX - playerX <= 85) {
         catHp -= 1;
         catHurtTimer = 10;
-        respawnSlime();
+        enemyX = canvas.width - 110; // Knockback to spawn point
         updateHUD();
 
         if (catHp <= 0) {
@@ -215,9 +245,9 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     let enemyIdleY = Math.cos(animTime) * 2;
-    if (enemyImg.complete) {
+    if (currentEnemyImg.complete) {
       ctx.save();
-      ctx.drawImage(enemyImg, enemyX + enemyShakeX, centerY + enemyIdleY, 80, 80);
+      ctx.drawImage(currentEnemyImg, enemyX + enemyShakeX, centerY + enemyIdleY, 80, 80);
       if (enemyHurtTimer > 0) {
         ctx.globalCompositeOperation = 'source-atop';
         ctx.fillStyle = 'rgba(255, 0, 85, 0.6)';
@@ -226,10 +256,11 @@ window.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
+    // Dynamic Enemy Health Bar
     ctx.fillStyle = "#222";
     ctx.fillRect(enemyX, centerY - 20, 80, 8);
     ctx.fillStyle = "#ff0055";
-    ctx.fillRect(enemyX, centerY - 20, Math.max(0, (enemyHp / maxEnemyHp) * 80), 8);
+    ctx.fillRect(enemyX, centerY - 20, Math.max(0, (currentEnemyHp / maxEnemyHp) * 80), 8);
     ctx.strokeStyle = "#fff";
     ctx.strokeRect(enemyX, centerY - 20, 80, 8);
 
