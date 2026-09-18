@@ -23,11 +23,11 @@ window.addEventListener("DOMContentLoaded", () => {
   let slashEffects = [];
   let floatingTexts = [];
 
-  // Animation States
   let animTime = 0;
   let playerLungeX = 0;
   let enemyShakeX = 0;
   let enemyHurtTimer = 0;
+  let lastAutoAttack = Date.now();
 
   function updateHUD() {
     const coins = document.getElementById("coin-count");
@@ -39,32 +39,26 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function triggerHitFX(x, y, damage) {
-    // Attack Lunge trigger
-    playerLungeX = 35;
-    
-    // Enemy Recoil + Red Flash trigger
-    enemyShakeX = 12;
-    enemyHurtTimer = 10;
+    playerLungeX = 25;
+    enemyShakeX = 10;
+    enemyHurtTimer = 8;
 
-    // Particle Explosion
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < 10; i++) {
       particles.push({
         x: x,
         y: y,
-        vx: (Math.random() - 0.5) * 12,
-        vy: (Math.random() - 0.5) * 12,
-        color: ['#00ffcc', '#ffd700', '#ff0055', '#ffffff'][Math.floor(Math.random() * 4)],
-        size: Math.random() * 6 + 2,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        color: ['#00ffcc', '#ffd700', '#ff0055'][Math.floor(Math.random() * 3)],
+        size: Math.random() * 5 + 2,
         life: 1.0
       });
     }
 
-    // Slash Line Effect
     slashEffects.push({ x: x, y: y, life: 1.0 });
 
-    // Floating Text
     floatingTexts.push({
-      x: x + (Math.random() - 0.5) * 20,
+      x: x + (Math.random() - 0.5) * 15,
       y: y - 10,
       text: "-" + damage,
       life: 1.0
@@ -95,8 +89,6 @@ window.addEventListener("DOMContentLoaded", () => {
     attackEnemy(e.clientX - rect.left, e.clientY - rect.top);
   });
 
-  let lastAutoAttack = Date.now();
-
   window.upgradeDamage = function() {
     let cost = GAME_STATE.stats.attackLevel * 20;
     if (GAME_STATE.coins >= cost) {
@@ -112,7 +104,8 @@ window.addEventListener("DOMContentLoaded", () => {
     let cost = GAME_STATE.stats.speedLevel * 50;
     if (GAME_STATE.coins >= cost) {
       GAME_STATE.coins -= cost;
-      GAME_STATE.stats.speed = Math.max(250, GAME_STATE.stats.speed - 100);
+      // Clamp minimum attack interval to 600ms
+      GAME_STATE.stats.speed = Math.max(600, GAME_STATE.stats.speed - 150);
       GAME_STATE.stats.speedLevel += 1;
       saveGameState();
       updateHUD();
@@ -121,20 +114,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function render() {
     if (!window.isPaused) {
-      animTime += 0.08;
-      
-      // Decay Attack Lunge
-      if (playerLungeX > 0) playerLungeX -= 3;
+      animTime += 0.05;
+
+      if (playerLungeX > 0) playerLungeX -= 2;
       if (playerLungeX < 0) playerLungeX = 0;
 
-      // Decay Enemy Shake
-      if (enemyShakeX > 0) enemyShakeX = -enemyShakeX * 0.7;
+      if (enemyShakeX > 0) enemyShakeX = -enemyShakeX * 0.6;
       else enemyShakeX = Math.abs(enemyShakeX) - 1;
 
       if (enemyHurtTimer > 0) enemyHurtTimer--;
 
-      // Auto Attack Logic
-      if (Date.now() - lastAutoAttack > GAME_STATE.stats.speed) {
+      // Controlled Auto Attack Rate
+      let attackInterval = Math.max(600, GAME_STATE.stats.speed);
+      if (Date.now() - lastAutoAttack > attackInterval) {
         attackEnemy();
         lastAutoAttack = Date.now();
       }
@@ -144,20 +136,16 @@ window.addEventListener("DOMContentLoaded", () => {
 
     const centerY = canvas.height / 2 - 40;
 
-    // 1. Idle Breathing Offset for Player
-    let playerIdleY = Math.sin(animTime) * 4;
+    let playerIdleY = Math.sin(animTime) * 3;
     let playerBaseX = 30 + playerLungeX;
 
-    // Render Player
     if (playerImg.complete) {
       ctx.drawImage(playerImg, playerBaseX, centerY + playerIdleY, 80, 80);
     }
 
-    // 2. Idle Breathing Offset for Enemy
-    let enemyIdleY = Math.cos(animTime) * 3;
+    let enemyIdleY = Math.cos(animTime) * 2;
     let enemyBaseX = canvas.width - 110 + enemyShakeX;
 
-    // Render Enemy with Red Hurt Tint
     if (enemyImg.complete) {
       ctx.save();
       ctx.drawImage(enemyImg, enemyBaseX, centerY + enemyIdleY, 80, 80);
@@ -178,20 +166,20 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.strokeStyle = "#fff";
     ctx.strokeRect(canvas.width - 120, centerY - 20, 100, 10);
 
-    // Render Slash Effects
+    // Slash Effects
     for (let i = slashEffects.length - 1; i >= 0; i--) {
       let s = slashEffects[i];
       ctx.strokeStyle = "#ffffff";
-      ctx.lineWidth = 4;
+      ctx.lineWidth = 3;
       ctx.beginPath();
-      ctx.moveTo(s.x - 20, s.y - 20);
-      ctx.lineTo(s.x + 20, s.y + 20);
+      ctx.moveTo(s.x - 15, s.y - 15);
+      ctx.lineTo(s.x + 15, s.y + 15);
       ctx.stroke();
       s.life -= 0.15;
       if (s.life <= 0) slashEffects.splice(i, 1);
     }
 
-    // Render Particles
+    // Particles
     for (let i = particles.length - 1; i >= 0; i--) {
       let p = particles[i];
       p.x += p.vx;
@@ -203,11 +191,11 @@ window.addEventListener("DOMContentLoaded", () => {
       if (p.life <= 0) particles.splice(i, 1);
     }
 
-    // Render Floating Text
+    // Floating Text
     ctx.font = "12px 'Press Start 2P'";
     for (let i = floatingTexts.length - 1; i >= 0; i--) {
       let ft = floatingTexts[i];
-      ft.y -= 1.5;
+      ft.y -= 1.2;
       ft.life -= 0.04;
       ctx.fillStyle = "#ffd700";
       ctx.globalAlpha = Math.max(0, ft.life);

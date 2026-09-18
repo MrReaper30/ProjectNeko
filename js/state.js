@@ -11,7 +11,7 @@ const GAME_STATE = {
     maxHp: 100,
     attack: 10,
     attackLevel: 1,
-    speed: 1000,
+    speed: 1500,
     speedLevel: 1
   }
 };
