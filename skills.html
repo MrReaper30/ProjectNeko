@@ -1,8 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="refresh" content="0; url=shop.html">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Neko - Skill Tree</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
-<body>
+<body style="margin: 0; padding: 20px; background: #0c0d14 url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover; font-family: 'Press Start 2P', monospace; color: #fff; text-align: center;">
+
+  <div style="background: rgba(12, 13, 20, 0.9); border: 3px solid #9900ff; border-radius: 12px; padding: 20px; max-width: 400px; margin: 0 auto;">
+    <h1 style="color: #9900ff; font-size: 18px; text-shadow: 2px 2px #000;">SKILL VAULT</h1>
+    <p style="font-size: 8px; color: #aaa; margin-bottom: 20px;">UPGRADE NEKO STATS</p>
+
+    <div style="display: flex; justify-content: space-around; margin-bottom: 20px; background: #1a1a26; padding: 10px; border-radius: 8px;">
+      <span style="font-size: 8px;"><img src="assets/images/ui/yarn_ball.png" width="16" style="vertical-align: middle;"> <b id="yarn-count">0</b></span>
+      <span style="font-size: 8px;"><img src="assets/images/ui/golden_sardine.png" width="16" style="vertical-align: middle;"> <b id="sardine-count">0</b></span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+      <div style="border: 2px solid #444; padding: 12px; background: #151520; border-radius: 8px; text-align: left;">
+        <h4 style="font-size: 10px; color: #00ffcc; margin: 0 0 5px 0;">⚔️ ATTACK POWER</h4>
+        <p style="font-size: 8px; color: #888; margin: 0 0 10px 0;">Increase damage per hit</p>
+
+        <button style="font-family: 'Press Start 2P'; font-size: 8px; padding: 8px; background: #00ffcc; border: none; font-weight: bold; width: 100%;" onclick="upgradeStat('attack', 20)">UPGRADE (20 🧶)</button>
+      </div>
+
+      <div style="border: 2px solid #444; padding: 12px; background: #151520; border-radius: 8px; text-align: left;">
+        <h4 style="font-size: 10px; color: #ff0055; margin: 0 0 5px 0;">❤️ MAX HEALTH</h4>
+        <p style="font-size: 8px; color: #888; margin: 0 0 10px 0;">Increase total hit points</p>
+        
+        <button style="font-family: 'Press Start 2P'; font-size: 8px; padding: 8px; background: #ff0055; color: #fff; border: none; font-weight: bold; width: 100%;" onclick="upgradeStat('maxHp', 30)">UPGRADE (30 🧶)</button>
+      </div>
+    </div>
+
+    <br><br>
+    <a href="index.html" style="color: #00ffcc; text-decoration: none; font-size: 9px;">← MAIN MENU</a>
+  </div>
+
+  <script src="js/state.js"></script>
+  <script>
+    function updateUI() {
+      document.getElementById("yarn-count").innerText = GAME_STATE.yarn;
+      document.getElementById("sardine-count").innerText = GAME_STATE.sardines;
+    }
+
+    function upgradeStat(stat, cost) {
+      if (GAME_STATE.yarn >= cost) {
+        GAME_STATE.yarn -= cost;
+        if (stat === 'attack') GAME_STATE.stats.attack += 5;
+        if (stat === 'maxHp') GAME_STATE.stats.maxHp += 20;
+        saveGameState();
+        updateUI();
+        alert("Stat Upgraded!");
+      } else {
+        alert("Not enough Yarn!");
+      }
+    }
+
+    window.addEventListener("DOMContentLoaded", updateUI);
+  </script>
 </body>
 </html>
