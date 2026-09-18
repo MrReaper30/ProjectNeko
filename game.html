@@ -2,112 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Combat - Project Neko</title>
-  <link rel="stylesheet" href="style.css?v=2.2.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Neko - Battle Engine</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #fff;
+      font-family: 'Press Start 2P', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #game-container {
+      position: relative;
+      width: 100vw;
+      max-width: 480px;
+      height: 100vh;
+      max-height: 800px;
+      background: url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.6);
+    }
+    .hud-pill {
+      background: #111;
+      border: 2px solid #00ffcc;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 8px;
+    }
+    canvas {
+      width: 100%;
+      height: 60%;
+      display: block;
+    }
+    .upgrade-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.85);
+    }
+    .btn-upgrade {
+      background: linear-gradient(180deg, #ffd700, #ff8c00);
+      border: 2px solid #fff;
+      border-radius: 8px;
+      padding: 10px;
+      color: #000;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body class="game-page">
-  <div class="combat-wrapper">
-    
-    <!-- Top HUD Bar: Coins Only -->
-    <header class="hud-top">
-      <div class="hud-pill"><span id="stage-display">CITY 1: WAVE 1/5</span></div>
-      <div class="hud-pill"><span id="coin-display">🪙 0</span></div>
-      <button class="hud-btn" onclick="togglePause()">⚙️ PAUSE</button>
-    </header>
+<body>
 
-    <div class="enemies-badge" id="enemies-left">
-      ENEMIES: 4 / 4
+  <div id="game-container">
+    <div class="hud-top">
+      <div class="hud-pill" id="city-wave-hud">CITY 1: WAVE 1/5</div>
+      <div class="hud-pill" style="color: #ffd700;">🪙 <span id="coin-count">0</span></div>
+      <a href="index.html" class="hud-pill" style="color: #ff0055; text-decoration: none;">PAUSE</a>
     </div>
 
-    <!-- Battle Stage -->
-    <main class="battle-stage">
-      <div class="unit-box player-box">
-        <div class="health-bar-container">
-          <span class="health-label">🐾 <span id="player-hp-text">9/9 HP</span></span>
-          <div class="health-bar-bg"><div id="player-hp-fill" class="hp-fill player-fill"></div></div>
-        </div>
-        <div id="player-sprite" class="character-sprite cat-hero">
-          <div class="cat-ears"></div>
-          <div class="cat-eyes"></div>
-        </div>
-      </div>
+    <canvas id="gameCanvas"></canvas>
 
-      <div class="unit-box enemy-box">
-        <div class="health-bar-container">
-          <span class="health-label" style="color:#2ed573;">SLIME</span>
-          <div class="health-bar-bg"><div id="enemy-hp-fill" class="hp-fill enemy-fill"></div></div>
-        </div>
-        <div id="enemy-sprite" class="character-sprite slime-enemy"></div>
-      </div>
-    </main>
-
-    <!-- Upgrades Bottom Panel -->
-    <footer class="upgrades-panel">
-      <button class="upgrade-btn" onclick="buyDamageBoost()">
-        <span class="upg-title">Damage <span id="dmg-lvl">Lv.1</span></span>
-        <span class="upg-sub" id="dmg-stats">ATK: 10</span>
-        <span class="upg-cost" id="dmg-buy-btn">20 🐟</span>
+    <div class="upgrade-bar">
+      <button class="btn-upgrade" onclick="upgradeDamage()">
+        ATK UP<br><br>
+        <span id="dmg-cost">20 🪙</span>
       </button>
-
-      <button class="upgrade-btn" onclick="buySpeedBoost()">
-        <span class="upg-title">Speed <span id="spd-lvl">Lv.1</span></span>
-        <span class="upg-sub" id="spd-stats">1000ms</span>
-        <span class="upg-cost" id="spd-buy-btn">50 🐟</span>
+      <button class="btn-upgrade" onclick="upgradeSpeed()">
+        SPEED UP<br><br>
+        <span id="speed-cost">50 🪙</span>
       </button>
-    </footer>
-
-    <!-- Pause Modal -->
-    <div id="pause-modal" class="modal-overlay">
-      <div class="modal-card">
-        <h2 class="modal-title">GAME PAUSED</h2>
-        <button class="menu-btn btn-play" onclick="togglePause()">RESUME</button>
-        <button class="menu-btn btn-close" onclick="window.location.href='index.html'">QUIT TO MENU</button>
-      </div>
     </div>
-
-    <!-- City Complete Victory Modal -->
-    <div id="victory-modal" class="modal-overlay">
-      <div class="modal-card">
-        <h2 class="modal-title" style="color:#00f5d4; font-size:1.4rem;">🎉 CITY CLEARED!</h2>
-        <div id="victory-summary" style="margin:12px 0;"></div>
-        <button class="menu-btn btn-play" onclick="nextWave()">NEXT CITY ▶</button>
-      </div>
-    </div>
-
-    <!-- Defeat Modal with Strategy Tips -->
-    <div id="defeat-modal" class="modal-overlay">
-      <div class="modal-card" style="max-width:350px;">
-        <h2 class="modal-title" style="color:#ff4757; font-size:1.4rem;">💀 YOU DIED!</h2>
-        
-        <div id="conversion-summary" style="margin-bottom:12px;"></div>
-
-        <div class="currency-bar" style="margin-bottom:12px;">
-          <span class="curr-pill">🐟 <span id="def-sardine-count">0</span></span>
-          <span class="curr-pill">🧶 <span id="def-yarn-count">0</span></span>
-        </div>
-
-        <div class="recommendation-card" style="background:rgba(255,255,255,0.08); border:1px solid #ffb703; padding:12px; border-radius:14px; margin-bottom:14px; text-align:left;">
-          <h4 style="color:#ffb703; font-size:0.85rem; font-weight:bold; margin-bottom:4px;">💡 STRATEGY TIP</h4>
-          <p id="recommendation-text" style="color:#ffffff; font-size:0.8rem; line-height:1.4;">
-            Boost your Attack Speed in combat or visit the Skill Tree from the Main Menu to unlock Critical Claw!
-          </p>
-        </div>
-
-        <button class="menu-btn btn-play" onclick="retryWave()">🔄 RETRY WAVE</button>
-        <button class="menu-btn btn-close" onclick="window.location.href='index.html'">🏠 QUIT TO MENU</button>
-      </div>
-    </div>
-
   </div>
 
-  <script src="js/state.js?v=2.2.0"></script>
-  <script src="js/game.js?v=2.2.0"></script>
-  <script>
-    function togglePause() {
-      const modal = document.getElementById('pause-modal');
-      modal.classList.toggle('active');
-    }
-  </script>
+  <script src="js/state.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>

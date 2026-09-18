@@ -3,7 +3,12 @@ window.addEventListener("DOMContentLoaded", () => {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  // Load active player sprite and enemy sprite
+  function resize() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+  }
+  resize();
+
   let activeSkin = GAME_ASSETS.skins.find(s => s.id === GAME_STATE.selectedSkin) || GAME_ASSETS.skins[0];
   const playerImg = new Image();
   playerImg.src = activeSkin.sprite;
@@ -11,18 +16,56 @@ window.addEventListener("DOMContentLoaded", () => {
   const enemyImg = new Image();
   enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
 
-  // DOM HUD Elements
-  const coinDisplay = document.getElementById("coin-count") || document.querySelector(".coins-count");
-  const dmgCostEl = document.getElementById("dmg-cost");
-  const speedCostEl = document.getElementById("speed-cost");
+  let enemyHp = 50;
+  let maxEnemyHp = 50;
+  let particles = [];
+  let floatingTexts = [];
 
   function updateHUD() {
-    if (coinDisplay) coinDisplay.innerText = GAME_STATE.coins;
-    if (dmgCostEl) dmgCostEl.innerText = (GAME_STATE.stats.attackLevel * 20) + " 🪙";
-    if (speedCostEl) speedCostEl.innerText = (GAME_STATE.stats.speedLevel * 50) + " 🪙";
+    const coins = document.getElementById("coin-count");
+    const dmg = document.getElementById("dmg-cost");
+    const spd = document.getElementById("speed-cost");
+    if (coins) coins.innerText = GAME_STATE.coins;
+    if (dmg) dmg.innerText = (GAME_STATE.stats.attackLevel * 20) + " 🪙";
+    if (spd) spd.innerText = (GAME_STATE.stats.speedLevel * 50) + " 🪙";
   }
 
-  // Upgrades using coins
+  function createHitEffect(x, y) {
+    for (let i = 0; i < 12; i++) {
+      particles.push({
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        color: ['#00ffcc', '#ffd700', '#ff0055'][Math.floor(Math.random() * 3)],
+        size: Math.random() * 6 + 2,
+        life: 1.0
+      });
+    }
+    floatingTexts.push({
+      x: x,
+      y: y,
+      text: "-" + GAME_STATE.stats.attack,
+      life: 1.0
+    });
+  }
+
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    enemyHp -= GAME_STATE.stats.attack;
+    createHitEffect(clickX, clickY);
+
+    if (enemyHp <= 0) {
+      enemyHp = maxEnemyHp;
+      GAME_STATE.coins += 15;
+      saveGameState();
+    }
+    updateHUD();
+  });
+
   window.upgradeDamage = function() {
     let cost = GAME_STATE.stats.attackLevel * 20;
     if (GAME_STATE.coins >= cost) {
@@ -31,8 +74,6 @@ window.addEventListener("DOMContentLoaded", () => {
       GAME_STATE.stats.attackLevel += 1;
       saveGameState();
       updateHUD();
-    } else {
-      alert("Not enough coins!");
     }
   };
 
@@ -40,41 +81,61 @@ window.addEventListener("DOMContentLoaded", () => {
     let cost = GAME_STATE.stats.speedLevel * 50;
     if (GAME_STATE.coins >= cost) {
       GAME_STATE.coins -= cost;
-      GAME_STATE.stats.speed = Math.max(200, GAME_STATE.stats.speed - 100);
       GAME_STATE.stats.speedLevel += 1;
       saveGameState();
       updateHUD();
-    } else {
-      alert("Not enough coins!");
     }
   };
 
-  function render() {
+  function loop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Render PixelLab Cat Sprite
-    if (playerImg.complete && playerImg.naturalWidth !== 0) {
-      ctx.drawImage(playerImg, 60, canvas.height / 2 - 40, 80, 80);
-    } else {
-      ctx.fillStyle = "#ffa500";
-      ctx.beginPath();
-      ctx.arc(100, canvas.height / 2, 40, 0, Math.PI * 2);
-      ctx.fill();
+    const centerY = canvas.height / 2 - 32;
+
+    // Draw Player Sprite
+    if (playerImg.complete) {
+      ctx.drawImage(playerImg, 40, centerY, 80, 80);
     }
 
-    // Render PixelLab Enemy Sprite
-    if (enemyImg.complete && enemyImg.naturalWidth !== 0) {
-      ctx.drawImage(enemyImg, canvas.width - 140, canvas.height / 2 - 40, 80, 80);
-    } else {
-      ctx.fillStyle = "#00ffcc";
-      ctx.beginPath();
-      ctx.arc(canvas.width - 100, canvas.height / 2, 40, 0, Math.PI * 2);
-      ctx.fill();
+    // Draw Enemy Sprite
+    if (enemyImg.complete) {
+      ctx.drawImage(enemyImg, canvas.width - 120, centerY, 80, 80);
     }
 
-    requestAnimationFrame(render);
+    // Enemy Health Bar
+    ctx.fillStyle = "#333";
+    ctx.fillRect(canvas.width - 130, centerY - 25, 100, 10);
+    ctx.fillStyle = "#ff0055";
+    ctx.fillRect(canvas.width - 130, centerY - 25, (enemyHp / maxEnemyHp) * 100, 10);
+
+    // Update Particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      let p = particles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life -= 0.05;
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, p.life);
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+      if (p.life <= 0) particles.splice(i, 1);
+    }
+
+    // Floating Damage Text
+    ctx.font = "10px 'Press Start 2P'";
+    for (let i = floatingTexts.length - 1; i >= 0; i--) {
+      let ft = floatingTexts[i];
+      ft.y -= 1.5;
+      ft.life -= 0.03;
+      ctx.fillStyle = "#ffd700";
+      ctx.globalAlpha = Math.max(0, ft.life);
+      ctx.fillText(ft.text, ft.x, ft.y);
+      if (ft.life <= 0) floatingTexts.splice(i, 1);
+    }
+    ctx.globalAlpha = 1.0;
+
+    requestAnimationFrame(loop);
   }
 
   updateHUD();
-  render();
+  loop();
 });
