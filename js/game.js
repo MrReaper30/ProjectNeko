@@ -17,11 +17,9 @@ window.addEventListener("DOMContentLoaded", () => {
   const enemyImg = new Image();
   enemyImg.src = GAME_ASSETS.enemies.toxic_slime;
 
-  // Cat 9 HP Logic
   let catHp = 9;
   let maxCatHp = 9;
 
-  // Slime Movement & Position
   let playerX = 30;
   let enemyX = canvas.width - 110;
   let enemySpeed = 0.8;
@@ -93,24 +91,28 @@ window.addEventListener("DOMContentLoaded", () => {
     let bonusCoins = GAME_STATE.currentWave * 25;
     let totalEarned = waveEarnedCoins + bonusCoins;
     GAME_STATE.coins += bonusCoins;
-    saveGameState();
+
+    // Convert coins to fish automatically
+    let convertedFish = autoConvertCoinsToFish();
 
     document.getElementById("summary-kills").innerText = waveKills;
     document.getElementById("summary-base-coins").innerText = waveEarnedCoins;
     document.getElementById("summary-bonus-coins").innerText = bonusCoins;
-    document.getElementById("summary-total-coins").innerText = totalEarned;
+    document.getElementById("summary-total-coins").innerText = `${totalEarned} 🪙 (➔ +${convertedFish} 🐟)`;
 
     document.getElementById("wave-summary-modal").style.display = "flex";
   }
 
+  window.exitToMenu = function() {
+    autoConvertCoinsToFish();
+    window.location.href = "index.html";
+  };
+
   window.nextWave = function() {
     document.getElementById("wave-summary-modal").style.display = "none";
-    
-    // Check if Entire City Completed (5 Waves)
     if (GAME_STATE.currentWave >= 5) {
       GAME_STATE.currentWave = 1;
-      catHp = 9; // Reset HP only on full city clear
-      alert("CITY CLEARED! HEALED TO 9 HP!");
+      catHp = 9;
     } else {
       GAME_STATE.currentWave += 1;
     }
@@ -125,6 +127,7 @@ window.addEventListener("DOMContentLoaded", () => {
   };
 
   window.restartCity = function() {
+    autoConvertCoinsToFish();
     document.getElementById("gameover-modal").style.display = "none";
     GAME_STATE.currentWave = 1;
     catHp = 9;
@@ -172,23 +175,21 @@ window.addEventListener("DOMContentLoaded", () => {
       if (enemyHurtTimer > 0) enemyHurtTimer--;
       if (catHurtTimer > 0) catHurtTimer--;
 
-      // Move Slime Forward
       enemyX -= enemySpeed;
 
-      // Proximity Attack Check (Distance <= 90px)
       if (enemyX - playerX <= 90) {
         catHp -= 1;
         catHurtTimer = 10;
-        respawnSlime(); // Knock back slime after dealing hit
+        respawnSlime();
         updateHUD();
 
         if (catHp <= 0) {
           window.isPaused = true;
+          autoConvertCoinsToFish();
           document.getElementById("gameover-modal").style.display = "flex";
         }
       }
 
-      // Auto Attack Trigger
       let attackInterval = Math.max(600, GAME_STATE.stats.speed);
       if (Date.now() - lastAutoAttack > attackInterval) {
         attackEnemy();
@@ -202,7 +203,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let playerIdleY = Math.sin(animTime) * 3;
     let playerBaseX = playerX + playerLungeX;
 
-    // Render Cat
     if (playerImg.complete) {
       ctx.save();
       ctx.drawImage(playerImg, playerBaseX, centerY + playerIdleY, 80, 80);
@@ -214,7 +214,6 @@ window.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
-    // Render Moving Slime
     let enemyIdleY = Math.cos(animTime) * 2;
     if (enemyImg.complete) {
       ctx.save();
@@ -227,7 +226,6 @@ window.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
-    // Slime HP Bar
     ctx.fillStyle = "#222";
     ctx.fillRect(enemyX, centerY - 20, 80, 8);
     ctx.fillStyle = "#ff0055";
@@ -235,7 +233,6 @@ window.addEventListener("DOMContentLoaded", () => {
     ctx.strokeStyle = "#fff";
     ctx.strokeRect(enemyX, centerY - 20, 80, 8);
 
-    // Render Slash Effects
     for (let i = slashEffects.length - 1; i >= 0; i--) {
       let s = slashEffects[i];
       ctx.strokeStyle = "#ffffff";
@@ -248,7 +245,6 @@ window.addEventListener("DOMContentLoaded", () => {
       if (s.life <= 0) slashEffects.splice(i, 1);
     }
 
-    // Render Floating Text
     ctx.font = "12px 'Press Start 2P'";
     for (let i = floatingTexts.length - 1; i >= 0; i--) {
       let ft = floatingTexts[i];

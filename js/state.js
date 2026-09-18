@@ -40,6 +40,17 @@ const GAME_ASSETS = {
   }
 };
 
+function autoConvertCoinsToFish() {
+  if (GAME_STATE.coins >= 10) {
+    let earnedFish = Math.floor(GAME_STATE.coins / 10);
+    GAME_STATE.sardines += earnedFish;
+    GAME_STATE.coins = GAME_STATE.coins % 10;
+    saveGameState();
+    return earnedFish;
+  }
+  return 0;
+}
+
 function saveGameState() {
   localStorage.setItem('neko_state', JSON.stringify(GAME_STATE));
 }
@@ -50,7 +61,6 @@ function loadGameState() {
     try {
       const parsed = JSON.parse(saved);
       Object.assign(GAME_STATE, parsed);
-      // Ensure missing levels from old saves default to 1
       if (!GAME_STATE.stats.attackLevel) GAME_STATE.stats.attackLevel = 1;
       if (!GAME_STATE.stats.speedLevel) GAME_STATE.stats.speedLevel = 1;
     } catch(e){}

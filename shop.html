@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Project Neko - Arcade Store</title>
-  <link rel="stylesheet" href="css/style.css?v=3.0.0">
+  <link rel="stylesheet" href="css/style.css?v=3.4.0">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -26,7 +26,6 @@
     .btn-action { font-family: 'Press Start 2P'; font-size: 7px; padding: 8px; background: linear-gradient(180deg, #ffd700, #ff8c00); border: none; font-weight: bold; width: 100%; margin-top: 6px; cursor: pointer; border-radius: 4px; box-shadow: 0 3px 0 #b36b00; }
     .btn-action:active { transform: translateY(2px); box-shadow: none; }
 
-    /* Casino Gacha Container & Rectangular Prize Ring */
     .gacha-casino-wrapper {
       position: relative;
       background: #11111a;
@@ -53,7 +52,6 @@
       font-size: 5px;
     }
 
-    /* 3-Reel Casino Slot Machine */
     .slot-machine {
       display: flex;
       justify-content: center;
@@ -152,7 +150,12 @@
 
     <!-- CURRENCY EXCHANGE TAB -->
     <div id="tab-exchange" class="tab-content">
-      <div class="card" style="margin-bottom: 10px;">
+      <div class="card" style="margin-bottom: 8px;">
+        <h4 style="font-size: 8px; color: #ffd700; margin-bottom: 4px;">COINS TO FISH</h4>
+        <p style="font-size: 6px; color: #888;">Trade 10 Coins for 1 Sardine</p>
+        <button class="btn-action" onclick="exchangeCurrency('coinsToFish')">CONVERT (10 🪙 ➔ 1 🐟)</button>
+      </div>
+      <div class="card" style="margin-bottom: 8px;">
         <h4 style="font-size: 8px; color: #00ffcc; margin-bottom: 4px;">FISH TO YARN</h4>
         <p style="font-size: 6px; color: #888;">Trade 10 Sardines for 1 Yarn</p>
         <button class="btn-action" onclick="exchangeCurrency('fishToYarn')">CONVERT (10 🐟 ➔ 1 🧶)</button>
@@ -193,7 +196,7 @@
     </div>
   </div>
 
-  <script src="js/state.js?v=3.0.0"></script>
+  <script src="js/state.js?v=3.4.0"></script>
   <script>
     function showArcadePopup(msg, title = "STORE NOTICE") {
       document.getElementById("popup-title").innerText = title;
@@ -206,6 +209,8 @@
     }
 
     function updateBalances() {
+      // Auto convert remaining coins on entering shop
+      autoConvertCoinsToFish();
       document.getElementById("yarn-count").innerText = GAME_STATE.yarn;
       document.getElementById("sardine-count").innerText = GAME_STATE.sardines;
       document.getElementById("coin-count").innerText = GAME_STATE.coins;
@@ -306,7 +311,18 @@
     }
 
     function exchangeCurrency(type) {
-      if (type === 'fishToYarn') {
+      if (type === 'coinsToFish') {
+        if (GAME_STATE.coins >= 10) {
+          let fish = Math.floor(GAME_STATE.coins / 10);
+          GAME_STATE.sardines += fish;
+          GAME_STATE.coins = GAME_STATE.coins % 10;
+          saveGameState();
+          updateBalances();
+          showArcadePopup("Converted Coins into " + fish + " Sardines!", "EXCHANGE SUCCESS");
+        } else {
+          showArcadePopup("Need at least 10 Coins!", "EXCHANGE FAILED");
+        }
+      } else if (type === 'fishToYarn') {
         if (GAME_STATE.sardines >= 10) {
           GAME_STATE.sardines -= 10;
           GAME_STATE.yarn += 1;
