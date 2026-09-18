@@ -1,16 +1,9 @@
 {
-  "name": "A.I Creator: Project Neko",
-  "short_name": "ProjectNeko",
+  "name": "Project Neko",
+  "short_name": "Neko",
   "start_url": "index.html",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0b0e14",
-  "theme_color": "#0b0e14",
-  "icons": [
-    {
-      "src": "assets/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+  "background_color": "#0c0d14",
+  "theme_color": "#00ffcc",
+  "orientation": "portrait"
 }
