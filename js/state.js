@@ -1,3 +1,18 @@
+const GAME_STATE = {
+  yarn: 100,
+  sardines: 50,
+  currentCity: 0,
+  currentWave: 1,
+  selectedSkin: 'cat_hero_v2',
+  unlockedSkins: ['cat_hero_v2'],
+  stats: {
+    hp: 100,
+    maxHp: 100,
+    attack: 15,
+    speed: 5
+  }
+};
+
 const GAME_ASSETS = {
   skins: [
     { id: 'cat_hero_v2', name: 'Cat Hero V2', sprite: 'assets/images/cats/cat_hero_v2.png', cost: 0, unlocked: true },
@@ -16,6 +31,19 @@ const GAME_ASSETS = {
   }
 };
 
-if (typeof module !== 'undefined') {
-  module.exports = { GAME_ASSETS };
+function saveGameState() {
+  localStorage.setItem('neko_state', JSON.stringify(GAME_STATE));
 }
+
+function loadGameState() {
+  const saved = localStorage.getItem('neko_state');
+  if (saved) {
+    try {
+      Object.assign(GAME_STATE, JSON.parse(saved));
+    } catch(e) {
+      console.error('State load error', e);
+    }
+  }
+}
+
+loadGameState();
