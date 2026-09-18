@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Project Neko - Battle Engine</title>
-  <link rel="stylesheet" href="css/style.css?v=2.8.9">
+  <link rel="stylesheet" href="css/style.css?v=3.0.0">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -25,10 +25,12 @@
       max-width: 480px;
       margin: 0 auto;
       background: url('assets/images/ui/game_backgroud_city_1.jpg') no-repeat center center/cover;
-      display: grid;
-      grid-template-rows: 50px 1fr 75px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
     .hud-top {
+      height: 50px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -47,10 +49,12 @@
     }
     canvas {
       width: 100%;
-      height: 100%;
+      height: calc(100vh - 130px) !important;
+      max-height: calc(100vh - 130px) !important;
       display: block;
     }
     .upgrade-bar {
+      height: 80px;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
@@ -65,7 +69,7 @@
       border-radius: 6px;
       color: #000;
       font-family: 'Press Start 2P', monospace;
-      font-size: 7px;
+      font-size: 8px;
       font-weight: bold;
       cursor: pointer;
       display: flex;
@@ -77,18 +81,13 @@
     .modal {
       display: none;
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.9);
       z-index: 100;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 12px;
-      padding: 20px;
-      text-align: center;
+      gap: 12px; padding: 20px; text-align: center;
     }
   </style>
 </head>
@@ -107,11 +106,11 @@
     <div class="upgrade-bar">
       <button class="btn-upgrade" onclick="upgradeDamage()">
         <span>ATK UP</span>
-        <span id="dmg-cost" style="margin-top: 3px; color: #111;">20 🪙</span>
+        <span id="dmg-cost" style="margin-top: 4px; color: #111;">20 🪙</span>
       </button>
       <button class="btn-upgrade" onclick="upgradeSpeed()">
         <span>SPEED UP</span>
-        <span id="speed-cost" style="margin-top: 3px; color: #111;">50 🪙</span>
+        <span id="speed-cost" style="margin-top: 4px; color: #111;">50 🪙</span>
       </button>
     </div>
 
@@ -146,8 +145,8 @@
     </div>
   </div>
 
-  <script src="js/state.js?v=2.8.9"></script>
-  <script src="js/game.js?v=2.8.9"></script>
+  <script src="js/state.js?v=3.0.0"></script>
+  <script src="js/game.js?v=3.0.0"></script>
   <script>
     function togglePause() {
       const modal = document.getElementById("pause-modal");

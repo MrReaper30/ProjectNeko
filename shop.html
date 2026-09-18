@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Project Neko - Arcade Store</title>
-  <link rel="stylesheet" href="css/style.css?v=2.9.0">
+  <link rel="stylesheet" href="css/style.css?v=3.0.0">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
@@ -23,7 +23,6 @@
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .card { background: #181824; border: 2px solid #444; border-radius: 8px; padding: 8px; transition: transform 0.2s; }
-    .card:hover { transform: translateY(-2px); }
     .btn-action { font-family: 'Press Start 2P'; font-size: 7px; padding: 8px; background: linear-gradient(180deg, #ffd700, #ff8c00); border: none; font-weight: bold; width: 100%; margin-top: 6px; cursor: pointer; border-radius: 4px; box-shadow: 0 3px 0 #b36b00; }
     .btn-action:active { transform: translateY(2px); box-shadow: none; }
 
@@ -53,7 +52,6 @@
       padding: 4px;
       font-size: 5px;
     }
-    .prize-item.highlight { border-color: #00ffcc; background: #00332c; box-shadow: 0 0 8px #00ffcc; }
 
     /* 3-Reel Casino Slot Machine */
     .slot-machine {
@@ -85,7 +83,6 @@
       100% { transform: translateY(50px); filter: blur(2px); }
     }
 
-    /* Modal Popup */
     #custom-popup {
       display: none;
       position: fixed;
@@ -104,9 +101,7 @@
       padding: 20px;
       max-width: 320px; width: 90%;
       text-align: center;
-      animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    @keyframes popIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   </style>
 </head>
 <body>
@@ -137,15 +132,13 @@
       <div class="gacha-casino-wrapper">
         <h3 style="font-size: 9px; color: #ffd700; margin-bottom: 8px;">RECTANGULAR PRIZE POOL</h3>
         
-        <!-- Rectangular Surrounding Prize Pool Grid -->
         <div class="prize-pool-ring">
-          <div class="prize-item" id="prize-0"><img src="assets/images/cats/cat_hero_v2.png" width="20"><br>HERO</div>
-          <div class="prize-item" id="prize-1"><img src="assets/images/cats/shadow_cat.png" width="20"><br>SHADOW</div>
-          <div class="prize-item" id="prize-2"><img src="assets/images/cats/cyber_cat.png" width="20"><br>CYBER</div>
-          <div class="prize-item" id="prize-3"><img src="assets/images/cats/emperor_cat.png" width="20"><br>EMPEROR</div>
+          <div class="prize-item"><img src="assets/images/cats/cat_hero_v2.png" width="20"><br>HERO</div>
+          <div class="prize-item"><img src="assets/images/cats/shadow_cat.png" width="20"><br>SHADOW</div>
+          <div class="prize-item"><img src="assets/images/cats/cyber_cat.png" width="20"><br>CYBER</div>
+          <div class="prize-item"><img src="assets/images/cats/emperor_cat.png" width="20"><br>EMPEROR</div>
         </div>
 
-        <!-- 3-Reel Slot Machine -->
         <div class="slot-machine">
           <div class="slot-reel" id="reel-1"><img src="assets/images/cats/cat_hero_v2.png"></div>
           <div class="slot-reel" id="reel-2"><img src="assets/images/cats/cat_hero_v2.png"></div>
@@ -200,7 +193,7 @@
     </div>
   </div>
 
-  <script src="js/state.js?v=2.9.0"></script>
+  <script src="js/state.js?v=3.0.0"></script>
   <script>
     function showArcadePopup(msg, title = "STORE NOTICE") {
       document.getElementById("popup-title").innerText = title;
@@ -263,7 +256,6 @@
       }
     }
 
-    /* CASINO 3-REEL SLOT MACHINE LOGIC */
     function spinCasinoGacha() {
       if (GAME_STATE.sardines < 10) {
         showArcadePopup("Need 10 Sardines to spin!", "INSUFFICIENT SARDINES");
@@ -285,7 +277,6 @@
       r2.classList.add("spinning");
       r3.classList.add("spinning");
 
-      // Random target outcome skin
       const skins = GAME_ASSETS.skins;
       const prizeSkin = skins[Math.floor(Math.random() * skins.length)];
 
@@ -303,7 +294,6 @@
         r3.classList.remove("spinning");
         r3.querySelector("img").src = prizeSkin.sprite;
 
-        // Unlock matched 3 skin
         if (!GAME_STATE.unlockedSkins.includes(prizeSkin.id)) {
           GAME_STATE.unlockedSkins.push(prizeSkin.id);
         }
